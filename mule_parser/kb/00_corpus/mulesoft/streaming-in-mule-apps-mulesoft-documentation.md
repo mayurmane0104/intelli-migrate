@@ -1,0 +1,220 @@
+# Streaming in Mule Apps | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/mule-runtime/latest/streaming-about](https://docs.mulesoft.com/mule-runtime/latest/streaming-about)
+
+---
+
+```
+<file:read path="bigFile.json">
+  <repeatable-file-store-stream
+    inMemorySize="1"
+    bufferUnit="MB"/>
+</file:read>
+```
+xml# Streaming in Mule Apps
+
+Mule 4 introduces repeatable streams as its default framework for handling streams. Repeatable streams enable you to:
+
+- 
+Read a stream more than once. 
+- 
+Have concurrent access to the stream. 
+
+As a component consumes the stream, Mule saves its content into a temporary buffer. The runtime then feeds the component from the temporary buffer, ensuring that each component receives the full stream, regardless of how much of the stream was already consumed by any prior component. This happens automatically and requires no special configuration by you, which prevents the need to find workarounds to save the stream elsewhere so you can access it again.
+
+All repeatable streams support parallel access, which means that you don’t need
+to worry about whether two components are trying to read the same stream when
+each component is running on a different thread. Mule automatically ensures
+that when component `A` reads the stream it doesn’t generate any side effects
+in component `B`.
+
+## Streaming Strategies
+
+You can configure how Mule handles streams with streaming strategies.
+
+### File-Stored Repeatable Stream
+
+File storage is the default streaming strategy in Mule 4.
+
+| File storage is only available in Mule Enterprise Edition (Mule EE). | 
+
+This strategy initially uses an in-memory buffer size of 512 KB. For larger streams, the strategy creates a temporary file to the disk to store the contents, without overflowing your memory.
+
+If you need to handle large or small files, you can change the buffer size
+(`inMemorySize`) to optimize performance:
+
+- 
+Configuring a larger buffer size increases performance by avoiding the number of times the runtime needs to write the buffer to your disk, but it also limits the number of concurrent requests your application can process. 
+- 
+Configuring a smaller buffer size saves memory load. 
+
+You can also set the buffer’s unit of measurement (`bufferUnit`).
+
+For example, if you know that you’re going to read a file that is always about 1 MB, you can configure a 1 MB buffer:
+
+Alternatively, if you know you’re always processing a file no larger than 10 KB, you can save memory:
+
+```
+<file:read path="smallFile.json">
+  <repeatable-file-store-stream
+    inMemorySize="10"
+    bufferUnit="KB"/>
+ </file:read>
+```
+xmlBased on performance testing, the default 512 KB buffer size configuration through this strategy does not significantly impact performance in most scenarios. However, you need to run tests to find the proper buffer size configuration for your needs.
+
+### In-Memory Repeatable Stream
+
+The in-memory strategy is the default configuration for the Mule Kernel (formerly called Mule Runtime Community Edition).
+
+This strategy defaults to a buffer size of 512 KB. For larger streams, the buffer is expanded by a default increment size of 512 KB until it reaches the configured maximum buffer size. If the stream exceeds this limit, the application fails.
+
+You can customize this behavior by setting the initial size of the buffer
+(`initialBufferSize`), the rate at which the buffer increases
+(`bufferSizeIncrement`), the maximum buffer size (`maxInMemorySize`), and the
+unit of measurement for the buffer size value (`bufferUnit`).
+
+For example, these settings configure an in-memory repeatable stream with a 512 KB initial size, which grows at a rate of 256 KB and allows up to 2000 KB (2 MB) of content in memory:
+
+```
+<file:read path="exampleFile.json">
+  <repeatable-in-memory-stream
+    initialBufferSize="512"
+    bufferSizeIncrement="256"
+    maxInMemorySize="2000"
+    bufferUnit="KB"/>
+ </file:read>
+```
+xmlBased on performance testing, the default 512 KB buffer size, and the 512 KB increment size configuration of this strategy does not significantly impact performance in most scenarios. However, you need to run tests and find the proper buffer size and size increment configuration for your needs.
+
+Every component in Mule 4 that returns an `InputStream` or a `Streamable`
+collection supports repeatable streams. These components include:
+
+- 
+File connector 
+- 
+FTP connector 
+- 
+Database connector 
+- 
+HTTP connector 
+- 
+Sockets connector 
+- 
+SalesForce connector 
+
+## Streaming Objects
+
+When an Anypoint Connector is configured to use auto-paging, Mule 4 automatically handles the paged output of the connector using a repeatable auto-paging framework. This framework is similar to repeatable streams because the connector receives the object, and Mule sets a configurable in-memory buffer to save the object. However, while repeatable streams measure the buffer size in byte measurements, the runtime measures the buffer size using instance counts when handling objects.
+
+| When streaming objects, the in-memory buffer size is measured in instance counts. | 
+
+When calculating the in-memory buffer size for repeatable auto-paging, you need to estimate the amount of memory each instance takes to avoid running out of memory.
+
+As with repeatable streams, you can use different strategies to configure how Mule handles the repeatable auto paging.
+
+### Repeatable File Store (Iterable)
+
+This configuration is the default for Mule Enterprise Edition. This strategy uses a default configured in-memory buffer of 500 objects. If your query returns more results than the buffer size, Mule serializes those objects and writes them to your disk. You can configure the number of objects Mule stores in the in-memory buffer. The more objects you save in-memory, the better performance you get from avoiding writes to disk.
+
+For example, you can set a buffer size of 100 objects in-memory for a query from the SalesForce Connector:
+
+```
+<sfdc:query query="dsql:...">
+  <ee:repeatable-file-store-iterable inMemoryObjects="100"/>
+</sfdc:query>
+```
+xmlNote that MuleSoft uses the Kryo framework for serialization because standard
+Java serialization requires the serialized object (and all its referenced objects)
+to implement the `Serializable` interface. The Kryo serializer, which does not
+have this limitation, is capable of serializing some objects that standard Java
+serialization cannot. However, Kryo cannot serialize everything. For example,
+instances of `org.apache.xerces.jaxp.datatype.XMLGregorianCalendarImpl` are not
+serializable, even through Kryo. MuleSoft recommends keeping your objects simple.
+
+| This option is only available on Mule EE. | 
+
+### Repeatable In-Memory (Iterable)
+
+This configuration, which is the default for the Mule Kernel, configures a default
+buffer size of 500 Objects. If the query result is larger than that, the buffer
+expands to a default increment size of 100 objects until it reaches the
+configured maximum buffer size. If the stream exceeds this limit, the app fails.
+You can customize the initial size of the buffer (`initialBufferSize`), the rate
+at which the buffer increases (`bufferSizeIncrement`), and the maximum buffer
+size (`maxBufferSize`).
+
+For example, this configuration sets an in-memory buffer of 100 objects that increments at 100 objects per increment and allows a maximum buffer size of 500 objects.
+
+```
+<sfdc:query query="dsql:...">
+  <repeatable-in-memory-iterable
+    initialBufferSize="100"
+    bufferSizeIncrement="100"
+    maxBufferSize="500" />
+ </sfdc:query>
+```
+xml## Consume Streams Promptly
+
+When a connector operation returns a stream (for example, when reading a file, querying a database, or receiving an HTTP response body), the stream keeps underlying resources open (file handles, database cursors, and network connections) until it’s fully consumed or until processing of the originating event completes.
+
+### Why Prompt Consumption Matters
+
+- 
+Resource exhaustion: Unconsumed streams keep resources (connections, file descriptors, and cursors) allocated. If many streams accumulate without being consumed, the application can run out of available resources and eventually hit `OutOfMemoryError`or connection pool exhaustion.
+- 
+Memory pressure: With repeatable streaming (the default), the runtime buffers stream content in memory or on disk. Large unconsumed streams occupy buffer space until the event completes. 
+- 
+Connection starvation: For HTTP and database operations, the underlying connection can’t return to the pool until the response stream is consumed or the event finishes. 
+
+### Recommendations
+
+This section describes best practices for consuming streams and minimizing resource retention.
+
+| Practice | Explanation | 
+|---|---|
+| Always consume or transform the payload | Use a DataWeave transformation, a `<logger>`component that accesses the payload, or a target variable to ensure the stream is fully consumed. | 
+| Avoid storing streams in variables without consuming them | If you assign a stream to a variable but never read it, the underlying resources remain open until the event completes. | 
+| Use  | When using  | 
+| Prefer non-repeatable streaming for single-read scenarios | If you only need to read the stream once, use  | 
+
+### Antipattern: Unconsumed Stream in Variable or Payload
+
+This example shows an antipattern where a stream is stored in a variable but never consumed:
+
+```
+<!-- ANTIPATTERN: Stream stored but never consumed -->
+<http:request url="http://api.example.com/large-data" target="apiResponse"/>
+<!-- The stream in 'apiResponse' holds the HTTP connection open until the event completes -->
+<logger message="Done"/>
+```
+xml```
+<!-- ANTIPATTERN: Reassigning the stream does NOT consume it -->
+<http:request url="http://api.example.com/large-data"/>
+<set-payload value="#[payload]"/>
+<!-- The stream reference is reassigned but its content is never read -->
+```
+xml### Correct: Consume the Stream via targetValue
+
+This example shows how to consume the stream via a target value:
+
+```
+<!-- CORRECT: DataWeave expression in targetValue forces stream consumption -->
+<http:request url="http://api.example.com/large-data" target="apiResponse"
+              targetValue="#[payload.items]"/>
+<logger message="#[vars.apiResponse]"/>
+```
+xmlFor information on what happens when unconsumed streams lead to memory exhaustion, see [What Happens After a FATAL_JVM_ERROR](mule-error-concept#fatal_jvm_errors).
+
+## Disabling Repeatable Streaming
+
+You can disable repeatable streaming through the `non-repeatable-stream` and `non-repeatable-iterable` strategies. The strategy to use depends on the type of stream.
+
+Use this option only if you are certain that there is no need to consume the stream several times and only if you need a very tight optimization for performance and resource consumption.
+
+When making that decision, consider the following:
+
+- 
+Although disabling repeatable streaming improves performance, the significance of that gain is proportional to the size of the streams. Unless you are working with large streams, it is likely that you can do something else in your app to provide a better optimization. 
+- 
+Disabling repeatable streaming means that the stream can only be read once. Keep in mind that your flow might contain components that require consumption of the full stream even if you do not explicitly specify that requirement. Examples include the Cache component ( `<ee:cache>`), some transformations through the Transform Message component (`<ee:transform>`), the For Each component (`<foreach>`) when iterating through a JSON array, and any other component that accesses the stream directly or through an expression.

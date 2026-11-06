@@ -1,0 +1,12 @@
+{
+  "id": "records_distinct_by",
+  "description": "Simple distinctBy on records list",
+  "function_name": "transform_distinct",
+  "output_format": "application/json",
+  "script": "%dw 2.0\noutput application/json\n---\npayload distinctBy $.Email",
+  "compare": {
+    "records": true,
+    "record_order": false,
+    "body": false
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "records": [
+    {
+      "Name": "Bob",
+      "Email": "b@test.com",
+      "IDInSfdc": "SF2",
+      "UserNameInSfdc": "bob@sfdc",
+      "IDInDb": "",
+      "UserNameInDb": ""
+    },
+    {
+      "Name": "Carol",
+      "Email": "c@test.com",
+      "IDInSfdc": "",
+      "UserNameInSfdc": "",
+      "IDInDb": "DB3",
+      "UserNameInDb": "carol@db"
+    },
+    {
+      "Name": "Alice",
+      "Email": "a@test.com",
+      "IDInSfdc": "SF1",
+      "UserNameInSfdc": "alice@sfdc",
+      "IDInDb": "DB1",
+      "UserNameInDb": "alice@db"
+    }
+  ],
+  "body": "Name,Email,IDInSfdc,UserNameInSfdc,IDInDb,UserNameInDb\nBob,b@test.com,SF2,bob@sfdc,,\nCarol,c@test.com,,,DB3,carol@db\nAlice,a@test.com,SF1,alice@sfdc,DB1,alice@db\n"
+}

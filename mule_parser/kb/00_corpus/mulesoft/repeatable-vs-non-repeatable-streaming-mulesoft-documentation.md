@@ -1,0 +1,98 @@
+# Repeatable vs. Non-Repeatable Streaming | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/mule-runtime/latest/tuning-repeatable-nonrepeatable](https://docs.mulesoft.com/mule-runtime/latest/tuning-repeatable-nonrepeatable)
+
+---
+
+```
+<file:read path="exampleFile.json">
+  <non-repeatable-stream />
+</file:read>
+```
+xml# Repeatable vs. Non-Repeatable Streaming
+
+Choose between non-repeatable and repeatable streaming to optimize flow performance in Mule. Non-repeatable streams let you read the payload once; repeatable streams support multiple or concurrent reads. Maximize flow performance by choosing the streaming strategy that matches how your flow consumes the payload:
+
+- 
+A non-repeatable stream (read payload only once) or 
+- 
+A repeatable stream (read payload more than once) 
+
+## Non-Repeatable Streaming
+
+The non-repeatable strategy disables repeatable streams. If your use case requires reading the payload only once, use the `non-repeatable-stream` parameter in the connector. See this example:
+
+## Repeatable Streaming
+
+Alternatively, if your use case requires reading the payload multiple times or concurrently, you can choose among these two strategies:
+
+- 
+File-store streaming 
+- 
+In-memory streaming 
+
+### File-Store Repeatable Stream
+
+When using the file-store repeatable stream strategy, configure these parameters to optimize performance:
+
+- 
+`inMemorySize`
+ Defines the buffer size stored in memory before Mule writes to disk.
+- 
+`bufferUnit`
+ Defines the unit of measurement for the buffer size.
+- 
+`eagerRead`
+ Determines whether Mule reads the buffer as soon as data is available (`true`) or waits until the buffer fills (`false`). The default value is`false`.
+
+When configuring `inMemorySize`, consider these trade-offs:
+
+- 
+Configure a larger buffer size to reduce disk writes and improve performance. However, larger buffers require more memory and can reduce the number of concurrent requests your application can handle. 
+- 
+Configure a smaller buffer size to reduce memory usage at the cost of slower response time. 
+
+This example configures a file-store repeatable stream with a buffer size of 1 MB:
+
+```
+<file:read path="bigFile.json">
+  <repeatable-file-store-stream
+    inMemorySize="1"
+    bufferUnit="MB"
+    eagerRead="true"/>
+</file:read>
+```
+xmlAlways run performance tests to find the optimal buffer size for your specific use case.
+
+### In-Memory Repeatable Stream
+
+When using the in-memory repeatable stream strategy, to manage larger or smaller files, configure these parameters:
+
+- 
+`initialBufferSize`
+ Defines the initial buffer size.
+- 
+`bufferSizeIncrement`
+ Defines how much the buffer grows each time it expands.
+- 
+`maxInMemorySize`
+ Defines the maximum amount of content stored in memory.
+- 
+`bufferUnit`
+ Defines the unit of measurement for buffer values.
+- 
+`eagerRead`
+ Defines whether Mule reads the buffer as soon as data is available (`true`) or waits until the buffer fills (`false`). The default value is`false`. The default buffer size is 512 KB. Adjust the buffer configuration based on your payload size and expected concurrency.
+
+This example configures an in-memory repeatable stream with an initial size of 512 KB, which grows at a rate of 256 KB and allows up to 2000 KB (2 MB) of content in memory:
+
+```
+<file:read path="exampleFile.json">
+  <repeatable-in-memory-stream
+    initialBufferSize="512"
+    bufferSizeIncrement="256"
+    maxInMemorySize="2000"
+    bufferUnit="KB"/>
+</file:read>
+```
+xmlAlways run performance tests to find the optimal buffer size for your specific use case.

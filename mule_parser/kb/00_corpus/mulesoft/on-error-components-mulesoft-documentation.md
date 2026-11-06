@@ -1,0 +1,170 @@
+# On-Error Components | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/mule-runtime/latest/on-error-scope-concept](https://docs.mulesoft.com/mule-runtime/latest/on-error-scope-concept)
+
+---
+
+![A palette menu for selecting error handling strategies in Mule applications](_images/mruntime-error-handler.png) 
+
+# On-Error Components
+
+When an error occurs in a Mule app, an Error Handler component routes the error
+to the first On-Error component (On Error Continue or On Error Propagate)
+configuration that matches the Mule error, such as `HTTP:NOT_FOUND`,
+`DB:CONNECTIVITY`, or `ANY` (the default for all Mule errors). If no error handling
+is configured for the error, the app follows a
+[default error handling](error-handling#default_error_handling) process.
+
+![A palette menu for selecting error handling strategies in Mule applications](_images/mruntime-error-handler.png) 
+
+## On-Error Components Behavior
+
+On-Error components differ in the way they affect their *owner*,
+that is, the Flow or Try scope where they are defined. Also, On-Error components can be defined inside a Global Error Handler, affecting the entire Mule application.
+
+### On Error Propagate
+
+Executes but propagates the error to a higher level, such as a containing scope (for example, to a Flow that contains a Try scope where the error occurs) or external flow containing a Flow Reference to the flow in which an error occurs. The error breaks the owner’s execution and propagates to that higher level, causing a failure at that level. In addition, any transaction the owner handles is rolled back. However, note that the transaction is not rolled back if another component (one that does not own On Error Propagate) created the transaction.
+
+![An error handling configuration using 'On Error Propagate' in a Mule flow](_images/mruntime-on-error-propagate.png) 
+
+### On Error Continue
+
+Executes and uses the result of the execution as the result of its owner, as if the owner completed the execution successfully. Any transaction the owner handles is committed. However, note that the transaction is not committed if another component (one that does not own On Error Continue) created the transaction.
+
+## Error Matching
+
+To help you identify and handle potential errors when designing a Mule app, On-Error components list the errors that the runtime engine and operations configured in the app can throw. You can select the errors you want to handle.
+
+- 
+Matching based on error type: On-Error components can perform matching based on [error types](mule-error-concept#error_types)you select. The list of selectable error types depends on the module and connector operations within the flow or scope to which the On-Error component applies. It also lists`EXPRESSION`and`STREAM_MAXIMUM_SIZE_EXCEEDED`errors, which the runtime can throw.![An error type selection menu in a Mule application’s error handling configuration](_images/mruntime-on-error-type-selection.png) 
+- 
+Matching based on a condition (for more advanced use cases): You can perform error matching based on a `when`condition that you define in the**When**field of an On-Error component. For example, you might map the component to fatal errors, which have error messages that contain the word "fatal":`<on-error-continue enableNotifications="true" logException="true" type="ANY" when='error.cause.message contains "fatal"'/>`xmlIn the example, every error that matches the `when`expression is handled by`on-error-continue`. You can also add a restrictive type such as`type="HTTP:CONNECTIVITY"`so that the error handler handles only the errors that match the specified type and condition.
+
+Note that matching conditions are evaluated sequentially, in the order in
+which the On-Error components reside in the error handler. For example, if
+you want to handle `VALIDATION:NOT_NULL` in one way but handle all other
+errors a different way, provide an On-Error component configuration
+for that error before a component that captures the remaining errors
+(identified as `ANY` by the second On-Error component). Remember that
+default error handling takes place for errors you do not explicitly match
+or use ANY to capture.
+
+## Configuration and Use
+
+In most cases, you configure On-Error components within the scope-like Error Handler component. Though each flow contains only one built-in Error Handler, the Error Handler can contain as many On-Error components as you require, and each On-Error component can contain any number of other components, such as Loggers and other components that you configure to handle errors captured by the On-Error component.
+
+Because an Error Handler component is built into Flow and Try components, you
+can use On-Error components for errors that occur within the scope of a flow or
+within a Try component. For examples, see
+[Using On-Error Components to Handle Messaging Errors](error-handling#on_error_continue).
+
+You can also use On-Error components in a separate Error Handler configuration
+that is referenced from a Flow component or Try scope (see
+[Referencing a Global Error Handler](error-handling#global_error_handler)).
+
+By default, On-Error components also log matching errors and enable error notifications for occurrences of the errors. You can disable these settings by modifying the component properties in Studio or by editing the configuration XML. You can also configure notification listeners in your Mule application so that they can react to the notification events.
+
+### Error Handling within a Flow
+
+Within a flow’s built-in Error Handler component, you can set up one or more
+On-Error components to match error types and expressions. The following example
+outlines the general structure for handling errors that occur within a given
+flow. One flow uses On Error Continue (`on-error-continue`) in its Error Handler
+component. The other flow uses On Error Propagate (`on-error-propagate`).
+
+```
+<flow name="catch">
+  <!-- flow logic -->
+  <error-handler>
+    <on-error-continue>
+      <!-- error handling logic -->
+    </on-error-continue>
+  </error-handler>
+</flow>
+<flow name="rollback">
+  <!-- flow logic -->
+  <error-handler>
+    <on-error-propagate>
+      <!-- error handling logic -->
+    </on-error-propagate>
+  </error-handler>
+</flow>
+```
+xmlFor examples, see
+[Using On-Error Components to Handle Messaging Errors](error-handling#on_error_continue).
+
+### Reuse of On-Error Scopes
+
+Just as you can share error handlers by exposing them globally and referencing them in flows and try scopes, you can also reuse On-Error components. You can define and name an On-Error component globally and then reference from an Error Handler component.
+
+```
+<on-error-propagate name="sharedPropagateHandler">
+  <logger message="An unhandled error has occurred."/>
+</on-error-propagate>
+<on-error-continue type="EXPRESSION" name="sharedContinueHandler">
+  <logger message="An expression failed to evaluate."/>
+</on-error-continue>
+<error-handler name="reusingHandlers">
+  <on-error ref="sharedContinueHandler"/>
+  <on-error-continue type="ROUTING">
+    <logger message="An expression failed to evaluate."/>
+  </on-error-continue>
+  <on-error ref="sharedPropagateHandler"/>
+</error-handler>
+```
+xmlFor other reuse examples, see
+[Referencing a Global Error Handler](error-handling#global_error_handler).
+
+## Error Handling Example
+
+The following error handlers are configured to produce
+`{ "MyError": "value was expected to be null" }` for a `VALIDATION:NOT_NULL`
+error, rather than `{ "messageANY" : "Some other error" }`. The string
+`value was expected to be null` is the description of the
+`VALIDATION:NOT_NULL` error. The Is Null component can throw this error.
+Is Null belongs to the Validation module.
+
+```
+<error-handler >
+  <on-error-continue
+    enableNotifications="true"
+    logException="true"
+    type="VALIDATION:NOT_NULL">
+    <ee:transform >
+      <ee:message>
+        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+MyError : error.description as String
+}]]></ee:set-payload>
+      </ee:message>
+    </ee:transform>
+  </on-error-continue>
+  <on-error-continue
+    enableNotifications="true"
+    logException="true"
+    type="ANY">
+    <ee:transform>
+      <ee:message >
+        <ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+"messageANY" : "Some other error"
+}
+]]></ee:set-payload>
+      </ee:message>
+    </ee:transform>
+  </on-error-continue>
+</error-handler>
+```
+xml## On-Error Components Reference
+
+| Field | Value | Description | 
+|---|---|---|
+| Type ( | Mule error type | A comma-separated list of Mule error types that defines the errors handled by this on-error strategy. | 
+| When ( | DataWeave Expression | A matching expression that defines the condition to trigger the execution of this on-error strategy. The expression must evaluate to a boolean value ( | 
+| Enable Notifications ( | Boolean | Specifies if this strategy fires a notification of type  | 
+| Log Exception ( | Boolean. | Specifies if the error is logged, at level  |

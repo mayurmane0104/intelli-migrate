@@ -1,0 +1,6 @@
+Resources:
+  {{resource_prefix}}Queue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: {{resource_prefix}}-queue
+      SqsManagedSseEnabled: true

@@ -1,0 +1,46 @@
+# Idempotent Message Validator | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/mule-runtime/latest/idempotent-message-validator](https://docs.mulesoft.com/mule-runtime/latest/idempotent-message-validator)
+
+---
+
+```
+#[
+    %dw 2.0
+    output text/plain
+    import dw::Crypto
+    ---
+    Crypto::hashWith(payload,'MD5')
+]
+```
+# Idempotent Message Validator
+
+The Idempotent Message Validator ensures that only unique messages continue through a flow’s execution by checking the unique ID of the incoming message. You can use any incoming attribute of the Mule message as an ID, or you can compute the ID by configuring a DataWeave expression. You can also use the DataWeave `Crypto` functions to compute hashes (SHA, MD5) from the data.
+
+## Message Hashing
+
+DataWeave enables you to import the `Crypto` library to execute hashing functions. Calculating a hash can be useful when you want to compute a unique ID for the Mule message. For example, if you want to get an MD5 hash from the payload and use it as the ID, open the Idempotent Message Validator properties in Anypoint Studio and set **ID Expression** (`idExpression` in XML) to the following DataWeave expression:
+
+## Examples
+
+- 
+The following example shows an Idempotent Message Validator configured to extract the query parameter `id`from the HTTP request and use that value as a unique identifier to filter the message:`<flow name="myFlow"> <http:listener doc:name="Listener" config-ref="HTTP_Listener_config" path="/"/> ... <idempotent-message-validator doc:name="Idempotent Message Validator" idExpression="#[attributes.queryParams.id]"/> ... </flow>`xml
+- 
+The next example shows an Idempotent Message Validator configured to hash the payload using a DataWeave expression, store the result in a persistent object store, and then use the processed message IDs as the unique identifier to filter the message: `<flow name="myFlow"> <http:listener doc:name="Listener" config-ref="HTTP_Listener_config" path="/"/> ... <idempotent-message-validator doc:name="Idempotent Message Validator" idExpression=" #[%dw 2.0 import dw::Crypto output application/octet-stream --- Crypto::hashWith(payload,'MD5')]"> <os:private-object-store alias="privateObjectStore" entryTtl="1" entryTtlUnit="MINUTES" maxEntries="10" /> </idempotent-message-validator> ... </flow>`xml
+
+## Parameter Reference
+
+| Name | Type | Description | Default Value | Required | 
+|---|---|---|---|---|
+| ID Expression | Expression | The expression Mule uses to generate the ID. You can use a DataWeave function to calculate the ID, or you can extract the ID from any existing value of the Mule message. | 
+ | No | 
+| Value Expression | Expression | This parameter is not used. Setting a value has no effect. | 
+ | No | 
+| Object Store | Object Store | Either a name to reference a global object store or a definition of a private object store where the component stores the processed message IDs. | Object Store created by the Object Store Manager. Not persistent, with an entry TTL of 5 MINUTES and an expiration interval of 6 SECONDS. | No | 
+| Store Prefix | String | Defines the prefix of the object store names. This value is used only for the internally built object store. | 
+ | No | 
+
+### Throws
+
+- 
+`MULE:DUPLICATE_MESSAGE`

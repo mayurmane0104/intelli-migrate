@@ -1,0 +1,102 @@
+# kb/05_eval/scoring_rubric.yaml
+# Evaluates generated migration output on 6 dimensions (0-10 each = 60 max)
+
+version: "2.0"
+
+dimensions:
+
+  correctness:
+    weight: 25
+    max_score: 10
+    criteria:
+      10: "Output exactly matches Mule flow behaviour for all test cases including edge cases"
+      8:  "Matches happy path and most edge cases; minor null-handling gap"
+      5:  "Happy path correct; missing error handling or null guards"
+      2:  "Partial translation; key processor missing or wrong AWS service chosen"
+      0:  "Wrong output, invented API, or hallucinated service"
+    auto_checks:
+      - "All golden_jar payloads produce matching output"
+      - "No invented boto3 client names"
+      - "No bare except: pass"
+      - "datetime.utcnow() absent"
+
+  security:
+    weight: 20
+    max_score: 10
+    criteria:
+      10: "Least-privilege IAM, all secrets in SM/SSM, PII masked in logs, input validated"
+      8:  "Secrets in SM/SSM; IAM could be tighter"
+      5:  "No hardcoded secrets but IAM is overly broad (*)"
+      2:  "Secrets in env vars (plaintext) or logs"
+      0:  "Hardcoded credentials in code"
+    auto_checks:
+      - "No AKIA* strings in generated code"
+      - "No 'Action': '*' in IAM policies"
+      - "No plaintext password= in code"
+
+  aws_patterns:
+    weight: 20
+    max_score: 10
+    criteria:
+      10: "Optimal AWS service selection, DLQ configured, idempotency addressed"
+      8:  "Correct service; DLQ missing or MaxConcurrency unset"
+      5:  "Correct service; no error-path infrastructure"
+      2:  "Suboptimal service (e.g. Lambda polling RDS instead of event-driven)"
+      0:  "Wrong service or anti-pattern (concurrent.futures in Lambda)"
+    auto_checks:
+      - "scatter-gather → Step Functions (not concurrent.futures)"
+      - "SQS queue has DLQ"
+      - "visibilityTimeout > Lambda timeout"
+
+  code_quality:
+    weight: 15
+    max_score: 10
+    criteria:
+      10: "PEP 8, type hints, docstrings, pure transform fn, no side effects in transform"
+      8:  "Type hints present; minor style issues"
+      5:  "No type hints; mixed concerns in transform fn"
+      2:  "Spaghetti code; boto3 inside transform fn"
+      0:  "Unrunnable code"
+    auto_checks:
+      - "transform() has no boto3 calls"
+      - "lambda_handler() has no business logic"
+      - "All functions have return type annotations"
+
+  observability:
+    weight: 10
+    max_score: 10
+    criteria:
+      10: "Structured JSON logs with requestId, flowName; CW alarm; X-Ray; dashboard"
+      8:  "Structured logs + alarm; no X-Ray"
+      5:  "Logs present but unstructured (print statements)"
+      2:  "Minimal logging; no alarms"
+      0:  "No logging"
+    auto_checks:
+      - "No bare print() statements"
+      - "logger = logging.getLogger() present"
+      - "CloudWatch alarm defined in IaC"
+
+  iac_completeness:
+    weight: 10
+    max_score: 10
+    criteria:
+      10: "All resources in CDK/SAM; no console-only resources; CI/CD pipeline included"
+      8:  "All resources in IaC; no pipeline"
+      5:  "Lambda defined; queue/table missing from IaC"
+      2:  "Partial IaC; major resources missing"
+      0:  "No IaC generated"
+    auto_checks:
+      - "Lambda function defined in CDK/SAM"
+      - "SQS/SNS resources defined if used"
+      - "IAM role defined, not inline *"
+
+thresholds:
+  PASS:         50   # out of 60
+  NEEDS_REVIEW: 35
+  FAIL:         0
+
+grading:
+  - range: [70, 80]  grade: "A — Production ready"
+  - range: [35, 49]  grade: "B — Minor remediation needed"
+  - range: [20, 34]  grade: "C — Significant rework required"
+  - range: [0,  19]  grade: "F — Reject, regenerate"

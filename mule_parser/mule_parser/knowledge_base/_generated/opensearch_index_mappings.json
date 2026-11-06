@@ -1,0 +1,80 @@
+{
+  "index_name": "mule-migration-kb",
+  "settings": {
+    "index": {
+      "knn": true,
+      "knn.algo_param.ef_search": 128
+    }
+  },
+  "mappings": {
+    "properties": {
+      "chunk_id": {
+        "type": "keyword"
+      },
+      "document_id": {
+        "type": "keyword"
+      },
+      "domain": {
+        "type": "keyword"
+      },
+      "kb_type": {
+        "type": "keyword"
+      },
+      "source": {
+        "type": "keyword"
+      },
+      "component": {
+        "type": "keyword"
+      },
+      "service": {
+        "type": "keyword"
+      },
+      "version": {
+        "type": "keyword"
+      },
+      "category": {
+        "type": "keyword"
+      },
+      "resource_type": {
+        "type": "keyword"
+      },
+      "complexity": {
+        "type": "keyword"
+      },
+      "tags": {
+        "type": "keyword"
+      },
+      "text": {
+        "type": "text"
+      },
+      "embedding": {
+        "type": "knn_vector",
+        "dimension": 384,
+        "method": {
+          "name": "hnsw",
+          "space_type": "cosinesimil",
+          "engine": "nmslib"
+        }
+      },
+      "metadata": {
+        "type": "object",
+        "enabled": true
+      }
+    }
+  },
+  "domains": [
+    "mule_component_kb",
+    "aws_mapping_kb",
+    "transformation_kb",
+    "migration_rules_kb",
+    "complexity_kb",
+    "security_kb",
+    "error_handling_kb",
+    "prompt_kb",
+    "validation_kb",
+    "best_practices_kb",
+    "codegen_examples_kb",
+    "connector_kb",
+    "migration_patterns_kb"
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "id": "inline_array_filter",
+  "description": "Inline array filter with optional vars.accountId guard",
+  "function_name": "transform_restraints",
+  "output_format": "application/json",
+  "script": "%dw 2.0\noutput application/json\n---\n{\n\tcustomerId: vars.customerId,\n\taccountRestraints: [\n\t\t{\"accountId\": \"ACCT10001\", \"status\": \"Active\"},\n\t\t{\"accountId\": \"ACCT10002\", \"status\": \"Active\"}\n\t] filter (vars.accountId == null or vars.accountId == '' or $.accountId == vars.accountId)\n}",
+  "compare": {
+    "records": true,
+    "record_order": true,
+    "body": false
+  }
+}

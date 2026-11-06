@@ -1,0 +1,108 @@
+version: "1.0"
+description: >
+  Rules engine for classifying a MuleSoft flow IR into one of the
+  canonical migration types. Evaluated top-to-bottom; first match wins.
+
+migration_types:
+  batch_simple:
+    description: Single-step batch with no parallel aggregation, no scatter-gather
+    aws_pattern: EventBridge Scheduler → Lambda (batch processor) → S3/DB
+    lambda_count: 2   # orchestrator + processor
+    requires_step_functions: false
+    triggers:
+      - capability: batch_job
+      - capability: scheduler_trigger
+    excludes:
+      - capability: parallel_scatter_gather
+      - capability: batch_aggregator
+      - capability: http_inbound
+    indicators:
+      - has_batch_job: true
+      - step_count_max: 1
+      - aggregator_present: false
+
+  batch_complex:
+    description: Multi-step batch with aggregation, scatter-gather, or parallel steps
+    aws_pattern: EventBridge → Step Functions → Lambda(s) → S3/DB/SQS
+    lambda_count: 4   # orchestrator + splitter + processor + aggregator
+    requires_step_functions: true
+    triggers:
+      - capability: batch_job
+    requires_any:
+      - capability: parallel_scatter_gather
+      - capability: batch_aggregator
+      - capability: parallel_foreach_iterator
+      - step_count_min: 2
+    indicators:
+      - has_batch_job: true
+      - has_parallel: true
+
+  api:
+    description: Synchronous HTTP API — request/response within 29s
+    aws_pattern: API Gateway → Lambda → (DB | S3 | downstream service)
+    lambda_count: 1   # single handler per HTTP resource+method
+    requires_step_functions: false
+    triggers:
+      - capability: http_inbound
+    excludes:
+      - capability: batch_job
+      - capability: scheduler_trigger
+    indicators:
+      - has_http_listener: true
+      - is_synchronous: true
+
+  event_driven:
+    description: Asynchronous event consumer (JMS, SQS, Kafka, SNS)
+    aws_pattern: SQS/MSK/EventBridge → Lambda → (DB | S3 | downstream)
+    lambda_count: 1
+    requires_step_functions: false
+    triggers:
+      - capability: jms_consumer
+      - capability: sqs_receive
+      - capability: kafka_consume
+      - capability: amqp_consumer
+    excludes:
+      - capability: http_inbound
+      - capability: batch_job
+
+  scheduler:
+    description: Pure time-triggered flow with no batch semantics
+    aws_pattern: EventBridge Scheduler → Lambda
+    lambda_count: 1
+    requires_step_functions: false
+    triggers:
+      - capability: scheduler_trigger
+    excludes:
+      - capability: batch_job
+      - capability: http_inbound
+
+  hybrid:
+    description: Mix of triggers or cross-type patterns; requires manual review flag
+    aws_pattern: Varies — Step Functions recommended as orchestrator
+    lambda_count: variable
+    requires_step_functions: true
+    manual_review_flag: true
+    triggers:
+      - multiple_trigger_types: true
+
+classification_algorithm:
+  steps:
+    1: Extract all capability keys from flow IR
+    2: Check for http_inbound → tentative type = api
+    3: Check for batch_job → tentative type = batch_simple
+    4: If batch_job AND (parallel_scatter_gather OR batch_aggregator OR step_count >= 2) → upgrade to batch_complex
+    5: If (jms_consumer OR kafka_consume OR sqs_receive) AND NOT http_inbound AND NOT batch_job → type = event_driven
+    6: If scheduler_trigger AND NOT batch_job AND NOT http_inbound → type = scheduler
+    7: If multiple tentative types → type = hybrid, set manual_review_flag
+    8: Emit classification result with lambda_count and requires_step_functions
+
+output_schema:
+  migration_type: string        # one of the keys above
+  lambda_count: integer
+  requires_step_functions: boolean
+  manual_review_flag: boolean
+  confidence: float             # 0.0–1.0
+  matched_capabilities: list
+  rationale: string
+
+

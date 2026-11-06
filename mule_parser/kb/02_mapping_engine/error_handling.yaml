@@ -1,0 +1,297 @@
+# Architecture Patterns — MuleSoft → AWS
+
+## Decision Algorithm
+
+'''
+1. Has http:listener?
+   YES → Pattern 1 (Simple API) or Pattern 2 (API + Async)
+   NO  → go to 2
+
+2. Has batch:job?
+   Has parallel/aggregator? → Pattern 4 (Complex Batch)
+   Single step?             → Pattern 3 (Simple Batch)
+
+3. Has scheduler:scheduler?
+   NO batch semantics → Pattern 5 (Scheduled Job)
+
+4. Has JMS/SQS/Kafka listener?
+   → Pattern 6 (Event Consumer)
+
+5. Has scatter-gather?
+   → Pattern 7 (Parallel Fan-Out)
+
+6. Has multiple inbound triggers?
+   → Pattern 8 (Hybrid / Multi-Channel)
+
+7. Has cross-system orchestration (>3 external calls)?
+   → Pattern 9 (Saga / Orchestration)
+
+8. Has SFTP + batch + notification chain?
+   → Pattern 10 (File Pipeline)
+'''
+
+---
+
+## Pattern 1 — Simple REST API
+
+**MuleSoft**: 'http:listener' → transform → single downstream call → response
+
+**AWS**:
+'''
+Client → API Gateway (HTTP API) → Lambda → (RDS | S3 | DynamoDB) → response
+'''
+
+**Terraform resources**:
+- 'aws_apigatewayv2_api' (HTTP API, not REST API unless OpenAPI spec required)
+- 'aws_apigatewayv2_integration'
+- 'aws_apigatewayv2_route'
+- 'aws_lambda_function'
+- 'aws_lambda_permission' (allow API GW invoke)
+
+**Lambda count**: 1 per resource+method combination
+
+**Timeout**: 29s max (API GW limit)
+
+**Rules**:
+- One Lambda per HTTP path+method (not one mega-Lambda)
+- Use Lambda function URL only if no auth/throttling needed
+- Always enable API GW access logging to CloudWatch
+
+---
+
+## Pattern 2 — API with Async Side Effect
+
+**MuleSoft**: 'http:listener' → sync response + 'async' scope → downstream processing
+
+**AWS**:
+'''
+Client → API Gateway → Lambda (sync, returns 202) → SQS → Lambda (async processor)
+'''
+
+**Terraform resources**: Pattern 1 resources + 'aws_sqs_queue' + 'aws_lambda_event_source_mapping'
+
+**Lambda count**: 2
+
+**Rules**:
+- Sync Lambda must complete in <29s
+- SQS visibility timeout = 6× Lambda timeout
+- DLQ required on async processor queue
+
+---
+
+## Pattern 3 — Simple Batch (Single Step)
+
+**MuleSoft**: 'scheduler' → 'batch:job' (1 step) → DB/S3 write
+
+**AWS**:
+'''
+EventBridge Scheduler → Lambda (orchestrator, reads source) 
+  → chunked processing in same Lambda or child Lambda invocations
+  → S3/RDS write
+'''
+
+**Terraform resources**:
+- 'aws_scheduler_schedule'
+- 'aws_lambda_function' (orchestrator)
+- 'aws_lambda_function' (processor — only if record count > 1000)
+- 'aws_iam_role' for scheduler to invoke Lambda
+
+**Lambda count**: 2
+
+**Rules**:
+- Max Lambda runtime 15 min — chunk large datasets
+- Use S3 as staging area for files > 6 MB
+- Emit CloudWatch metric for records processed/failed
+
+---
+
+## Pattern 4 — Complex Batch (Multi-Step / Parallel)
+
+**MuleSoft**: 'batch:job' with multiple 'batch:step', 'batch:aggregator', or scatter-gather
+
+**AWS**:
+'''
+EventBridge Scheduler → Step Functions (Express Workflow)
+  → Lambda: extract → S3 staging
+  → Step Functions Map state: Lambda per chunk (parallel)
+  → Lambda: aggregate → DB/S3 write
+  → Lambda: notify (SES/SNS)
+'''
+
+**Terraform resources**:
+- 'aws_sfn_state_machine'
+- 'aws_scheduler_schedule'
+- 'aws_lambda_function' × N (extract, process, aggregate, notify)
+- 'aws_s3_bucket' (staging)
+- 'aws_sqs_queue' (DLQ per processing Lambda)
+
+**Lambda count**: 4 (extract + process + aggregate + notify)
+
+**Step Functions state machine skeleton**:
+'''json
+{
+  "Comment": "Complex batch migration",
+  "StartAt": "Extract",
+  "States": {
+    "Extract": { "Type": "Task", "Resource": "${ExtractLambdaArn}", "Next": "ProcessChunks" },
+    "ProcessChunks": {
+      "Type": "Map",
+      "ItemsPath": "$.chunks",
+      "MaxConcurrency": 10,
+      "Iterator": { "StartAt": "ProcessChunk",
+        "States": { "ProcessChunk": { "Type": "Task", "Resource": "${ProcessLambdaArn}", "End": true }}},
+      "Next": "Aggregate"
+    },
+    "Aggregate": { "Type": "Task", "Resource": "${AggregateLambdaArn}", "Next": "Notify" },
+    "Notify": { "Type": "Task", "Resource": "${NotifyLambdaArn}", "End": true }
+  }
+}
+'''
+
+---
+
+## Pattern 5 — Scheduled Job
+
+**MuleSoft**: 'scheduler:scheduler' → business logic (no batch)
+
+**AWS**:
+'''
+EventBridge Scheduler (cron/rate) → Lambda
+'''
+
+**Lambda count**: 1
+
+**Cron translation**:
+| MuleSoft | EventBridge |
+|---|---|
+| 'frequency="1" timeUnit="HOURS"' | 'rate(1 hour)' |
+| 'frequency="30" timeUnit="MINUTES"' | 'rate(30 minutes)' |
+| cron '0 0 * * * ?' | 'cron(0 0 * * ? *)' |
+
+**Rules**: EventBridge cron uses '?' for day-of-week or day-of-month (not both).
+
+---
+
+## Pattern 6 — Event Consumer
+
+**MuleSoft**: 'jms:listener' / 'amqp:listener' / 'kafka:message-listener'
+
+**AWS**:
+'''
+SQS (or MSK) → Lambda (event processor)
+'''
+
+**Terraform resources**:
+- 'aws_sqs_queue' (main + DLQ)
+- 'aws_lambda_event_source_mapping'
+- 'aws_lambda_function'
+
+**Lambda count**: 1
+
+**Rules**:
+- 'batch_size': 10 for standard processing, up to 10000 for Kafka
+- 'maximum_batching_window_in_seconds': 5–30 for cost optimisation
+- 'bisect_batch_on_function_error = true' for SQS
+- DLQ 'maxReceiveCount = 3' before dead-lettering
+- Lambda must delete successfully processed messages (SQS handles on success return)
+
+---
+
+## Pattern 7 — Parallel Fan-Out (Scatter-Gather)
+
+**MuleSoft**: 'scatter-gather' with N branches
+
+**AWS**:
+'''
+Lambda (initiator) → Step Functions Parallel state
+  ├── Branch A: Lambda A
+  ├── Branch B: Lambda B
+  └── Branch C: Lambda C
+→ Lambda (merge results)
+'''
+
+**Rules**:
+- Each branch is independent; no shared mutable state
+- Use 'ResultPath' to merge branch outputs
+- Set branch-level 'Catch' for partial-failure handling
+- Total Parallel branches ≤ 40 (SF limit)
+
+---
+
+## Pattern 8 — Hybrid / Multi-Channel
+
+**MuleSoft**: Multiple inbound triggers (HTTP + scheduler, or HTTP + JMS)
+
+**AWS**:
+'''
+API Gateway → Lambda (sync path)
+                       ↓ shared business logic Lambda (invoked directly)
+EventBridge → Lambda (async path)
+'''
+
+**Rules**:
+- Extract shared business logic into a separate Lambda invoked synchronously
+- Do NOT share SQS queues between sync and async paths
+- Tag Lambdas clearly: 'trigger_type = http|scheduler|event'
+
+---
+
+## Pattern 9 — Saga / Long-Running Orchestration
+
+**MuleSoft**: Multi-connector flow with compensating transactions
+
+**AWS**:
+'''
+API Gateway or SQS → Step Functions Standard Workflow
+  → Lambda (step 1) → Lambda (step 2) → ... → Lambda (compensate on failure)
+'''
+
+**Rules**:
+- Use Standard Workflow (not Express) for audit trail
+- Implement compensating Lambda for each step that mutates state
+- Use 'Catch' on each 'Task' state with 'ResultPath: "$.error"'
+- Max execution duration: 1 year (Standard)
+
+---
+
+## Pattern 10 — File Pipeline (SFTP/FTP + Batch)
+
+**MuleSoft**: 'sftp:listener' / 'file:listener' → parse → transform → load
+
+**AWS**:
+'''
+S3 (file drop) → S3 Event Notification → SQS → Lambda (parser)
+  → S3 (parsed staging) → Step Functions (transform + load)
+  → RDS / DynamoDB / another S3
+'''
+
+*Terraform resources*:
+- 'aws_s3_bucket_notification'
+- 'aws_sqs_queue'
+- 'aws_lambda_event_source_mapping'
+- 'aws_lambda_function' × 3 (parser, transformer, loader)
+- aws_sfn_state_machine
+- AWS Transfer Family (if SFTP endpoint needed)
+
+**Lambda count**: 4 (ingest + parse + transform + load)
+
+**Rules**:
+- Files > 6 MB must be stored in S3, not passed in Lambda event
+- Use S3 multipart upload for files > 100 MB
+- Virus scan via Lambda@Edge or S3 Object Lambda before processing
+- Use S3 Intelligent-Tiering for archive staging buckets
+
+---
+
+## General Rules Across All Patterns
+
+| Rule | Detail |
+|------|--------|
+| No Lambda-to-Lambda synchronous chains > 2 deep | Use Step Functions instead |
+| All secrets via Secrets Manager | Never in env vars as plaintext |
+| All Lambdas in VPC if accessing RDS/ElastiCache | Use VPC endpoints for S3/SQS/DynamoDB |
+| X-Ray tracing enabled on all Lambdas | 'tracing_config { mode = "Active" }' |
+| Reserved concurrency set | Prevent noisy-neighbour runaway costs |
+| Lambda memory ≥ 512 MB for data-heavy transforms | CPU scales with memory |
+| Dead-letter queue on every async Lambda | 'dead_letter_config' in Terraform |
+| Tags on all resources | 'app', 'env', 'flow_origin', 'migration_version' |

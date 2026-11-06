@@ -1,0 +1,272 @@
+# Anypoint Platform Glossary | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/general/glossary](https://docs.mulesoft.com/general/glossary)
+
+---
+
+# Anypoint Platform Glossary
+
+Authorized short versions of some product names are presented in parentheses, for example: Anypoint Design Center (Design Center).
+
+## A
+
+- access management
+- 
+Anypoint Platform features that help you manage your account and configure access and permissions within your organization. A REST API provides programmatic control of access-related resources. 
+- agent
+- 
+A service, such as the Runtime Manager agent, that is used by or associated with Mule but is not a Mule-managed service component. An agent is registered with the Anypoint Runtime Manager and has the same lifecycle as the corresponding Mule instance, so you can initialize and destroy resources when the Mule instance starts or stops. 
+- Anypoint CLI
+- 
+A scripting and command-line tool for Anypoint Platform and Anypoint Platform Private Cloud Edition (Anypoint Platform PCE). 
+- Anypoint Design Center (Design Center)
+- 
+A cloud-based development environment for Mule runtime engine (Mule) applications and API definitions. 
+- Anypoint Design Center API Designer (API Designer)
+- 
+Web-based graphical environment for designing, documenting, and testing APIs. 
+- Anypoint Exchange (Exchange)
+- 
+A curated catalog of reusable assets such as APIs, policies, API spec fragments, API groups, GraphQL APIs, templates, examples, custom assets, rulesets, and integration assets such as connectors. 
+- Omni Gateway
+- 
+An Envoy-based, ultrafast lightweight API gateway designed to manage and secure APIs running anywhere. 
+- Anypoint Management Center (Management Center)
+- 
+A single web interface to administer Anypoint Platform, both on-premises and in the cloud. Manage APIs and users, analyze traffic, monitor SLAs, and troubleshoot underlying integration flows. 
+- Anypoint MQ (messaging queue)
+- 
+Enterprise-class cloud messaging that is fully integrated with Anypoint Platform. 
+- Anypoint Object Store v2
+- 
+Storage for data and states across batch processes and Mule components from within a single application. 
+- Anypoint Partner Manager v2
+- 
+The web-based user interface for partner configuration, document flow, and transaction monitoring. 
+- Anypoint Platform™
+- 
+A MuleSoft product to design, build, and manage APIs and integrations. 
+- Anypoint Platform Private Cloud Edition
+- 
+A special packaging of Anypoint Platform that is available for running on your own local servers. This implementation runs on Docker and Kubernetes, is compatible with Pivotal Cloud Foundry, and includes versions of Runtime Manager, API Manager, and Anypoint Exchange. 
+- Anypoint Runtime Fabric
+- 
+A container service that automates the configuration, coordination, and management (orchestration), and deployment of your Mule applications and gateways. Runtime Fabric runs on customer-managed infrastructure on AWS, Azure, virtual machines (VMs) or bare-metal servers. 
+- Anypoint Runtime Manager (Runtime Manager)
+- 
+A console where you deploy and manage applications built with any Mule. Deploy to servers in the cloud (currently handled by CloudHub) or on premises. Access the console in Anypoint Platform or download it as a standalone program that runs in a local server. Previously referred to as ARM. 
+- Anypoint Security
+- 
+Layers of features that secure your application network. These layers work together to protect both the application network and the network’s individual nodes by controlling access to APIs, enforcing policies, and proxying all inbound or outbound traffic to mitigate external threats and attacks. 
+- Anypoint Studio (Studio)
+- 
+An integrated development environment with visual and XML editors to design, debug and test Mule applications. Using the visual interface, you can drag and drop connectors, loggers, flow control, routers, data transformers, and much more to the design canvas. You can also debug and test from the Studio user interface. 
+- Anypoint Virtual Private Cloud (Anypoint VPC)
+- 
+Features that help you create a virtual, private, and isolated network segment in the cloud to host your CloudHub instances of Mule (CloudHub workers). 
+- Anypoint Visualizer
+- 
+Dynamically generated views of different aspects of an application network graph. 
+
+- API
+- 
+The entire API, including all its aspects. In Anypoint Platform, aspects of an API might also be called just API in context with the product that is managing them. For example, in Exchange, API might refer to the API specification, documentation, and catalog. In API Designer, API might refer to the API specification. In API Catalog, API might refer to the API instance, policies, and contracts. 
+
+- API aspects
+- 
+Parts of an API. Examples of API aspects include specifications, instances, catalog information, and documentation. 
+
+- API catalog information
+- 
+Properties related to an API’s entry in an API catalog, such as name, version, owner (contact), tags, and categories. In Anypoint Exchange, these properties are associated with APIs in asset portal information. 
+
+- API conformance
+- 
+API conformance indicates whether a validated API passes all of the required rules in one or more governance rulesets. If multiple profiles target an API, the API must pass all of the rulesets in all of those profiles to be conformant. API conformance applies only to API types supported by API Governance, such as REST API and AsyncAPI. 
+
+- API documentation
+- 
+Helps consumers understand and use the API, with content such as examples, use cases, and tutorials. 
+
+- API implementation
+- 
+A realization of the API specification to make the API functional. 
+
+- API instance
+- 
+An instantiation of the API implementation. An API can have multiple instances across different environments and gateways, which can be used by clients to make API calls. Instances that are configured but not deployed are also captured as part of this aspect. An instance can be either a proxy of an API that serves the upstream or an application endpoint. 
+
+- API specification
+- 
+Details the functional and expected behavior of an API, as well as the fundamental design philosophy and supported data types. It contains both documentation and API definitions to create a contract that people and software can read. 
+- API Governance
+- 
+Part of Anypoint Platform that enables you to apply governance rules to your APIs and monitor conformance to those rules. 
+- API Manager
+- 
+Part of Anypoint Platform that enables you to manage, govern, and secure your APIs. 
+- API Portal
+- 
+An access point where you can present an API to attract users. 
+- API proxy
+- 
+A feature of Anypoint API Manager that supplies a layer of protection against attacks on MuleSoft APIs. Manage APIs with the UI instead of having to write code. Formerly called API Gateway. 
+- APIkit
+- 
+APIkit is a tool for building Mule REST or SOAP APIs. Formerly called SOAPkit. 
+- application network
+- 
+A network that connects applications, data, and devices through APIs. The network allows consumers from other parts of the business to discover and use assets. 
+
+## C
+
+- CloudHub
+- 
+Integration platform as a service that lets you manage applications in the cloud. When deploying an application to the cloud through the Runtime Manager console, CloudHub is used in the background. 
+- clustering
+- 
+Using a set of Mule instances that act as, and can be managed as, a unit. A cluster is a virtual server composed of multiple nodes. You can manage cluster instances from the cloud. 
+- component
+- 
+- 
+In Anypoint Platform, a POJO, Spring bean, Java bean, or a script such as Groovy, Ruby, Python, or JavaScript that contains the business logic for processing messages passing through Mule. These components typically take the whole message - or just the payload - as input. They return an object that becomes the message payload for the next element in the message processor chain. 
+- 
+Generically, an architecturally specific portion of a software package. 
+ 
+- 
+- configuration builder
+- 
+A class that parses a configuration file. The default configuration builder is the `org.mule.config.MuleXmlConfigurationBuilder`class, which parses a Mule XML configuration file.
+- connector
+- 
+A self-contained component that allows you to integrate Mule applications with the APIs of other, external applications, such as Salesforce, CMIS, and Twitter. A set of connectors is included in Mule 4. Other connectors created by MuleSoft or third parties are available on Anypoint Exchange. 
+- control plane
+- 
+Programmatic access to network administration. In Anypoint Platform, the control plane consists of Anypoint Design Center, Anypoint Management Center, and Anypoint Exchange. 
+
+## D
+
+- dataloader.io
+- 
+The data loader for Salesforce. 
+- DataSense
+- 
+A feature of Anypoint Studio that uses message metadata to facilitate application design. With DataSense, Anypoint Studio proactively acquires information such as data type and structure, in order to prescribe how to accurately map or use this data in your application. 
+- DataWeave
+- 
+The DataWeave Language queries and transforms data for integrations. 
+
+## E
+
+- Edge
+- 
+Anypoint Security feature to help you manage edge security. 
+
+## F
+
+- flow
+- 
+Within a Mule application, a flow is a block of executable components, including any connector operations, that Mule runtime executes sequentially on a Mule event. A flow can also contain an event source, which triggers the creation of the event and the execution of the flow. 
+
+## G
+
+- governed APIs
+- 
+APIs are governed if they’re identified by the selection criteria of at least one governance profile. If an API is governed, all versions of that API are considered one governed API. Subscription limits are set based on your organization’s purchased capacity. The UI gives information about usage and shows alerts when you near or exceed your subscription capacity. 
+
+- governance profiles
+- 
+A governance profile applies selected governance rulesets to a filtered group of APIs. API Governance then validates the APIs against the rulesets to determine governance conformance. 
+
+## H
+
+- hybrid deployment
+- 
+Deploying a Mule Application via the cloud console of the Anypoint Runtime Manager to an on-premises server that hosts Mule runtime engine. This deployment is hybrid in the sense that the hosting of your application is on-premises, while application management is in the cloud. 
+
+## M
+
+- message filter
+- 
+A message processor that controls whether a message is processed by a filter. 
+- message processor
+- 
+A basic building block used to construct flows. A message processor controls how messages are sent and received within a flow. 
+- message receiver
+- 
+A Java class used by a connector to read the incoming data, package it as a message, and pass it to a service component’s inbound router. The message receiver can use a transformer if necessary to convert the data. 
+- mocking service
+- 
+Provides a public URI to test or explore an API. 
+- module
+- 
+A group of components. Modules add flexibility to your apps by allowing you to aggregate values, compress data, use Java features, and process JSON. 
+- Mule® application
+- 
+A Mule application is an integration solution built using the Mule runtime engine, which processes and transforms data through a series of flows. These flows consist of message sources and processors that define how messages are received, processed, and routed to destinations. Mule applications can handle various types of data, including messages from different external sources such as HTTP endpoints, and support sophisticated processing mechanisms like transactions and batch jobs. 
+- Mule configuration file (configuration XML)
+- 
+An XML file in which you configure Mule applications, domains, and policies. 
+- Mule Enterprise Edition (EE)
+- 
+The enterprise version of Mule, available for 30-day trial download. The Enterprise Edition includes full development cycles, testing, technical support, maintenance releases and hot fixes, and management and monitoring tools from MuleSoft. 
+- Mule® runtime engine (Mule® or Mule)
+- 
+Java-based integration runtime engine for Anypoint Platform. 
+
+## O
+
+- organization
+- 
+The container for everything in your Anypoint Platform account. 
+
+## P
+
+- Pivotal Cloud Foundry
+- 
+A cloud computing platform as a service (PaaS) provided by the company Pivotal. Anypoint Platform integrates with Pivotal Cloud Foundry, allowing you to deploy Mule applications to dynamically created virtual machines on your own private network. See deployment strategies. Previously referred to as PCF. 
+- policy
+- 
+An object that controls authentication, access, consumption rates, and service level access (SLA) to API resources. Anypoint Platform provides both preconfigured and tools to create custom policies. 
+
+## R
+
+- RAML®
+- 
+RESTful API Modeling Language (RAML) provides a specification language that you use to define an API. 
+- Runtime Manager agent
+- 
+The Runtime Manager agent mediates communication between the Anypoint Runtime Manager console and the Mule instances running on servers. Using the Mule agent, you can monitor and control Mule servers. Previously referred to as Runtime agent. 
+- runtime plane
+- 
+The contract between the control plane and data plane for runtime control. In Anypoint Platform, the runtime plane consists of Mule runtime engine and runtime services managed with tools like Anypoint Runtime Fabric. 
+
+## S
+
+- secrets manager
+- 
+A feature that stores and controls access to private keys, passwords, certificates, and other secrets. 
+
+## T
+
+- tokenization
+- 
+Substituting a non-sensitive equivalent for a sensitive data element. 
+- transformer
+- 
+A feature that transforms message payloads (data) to and from different types, such as the XSLT Transformer. Transformations can also be defined using DataWeave. 
+- transport
+- 
+A feature that carries messages on a specific messaging protocol, such as FTP. Several connectors incorporate transports. 
+
+## U
+
+- universal message object (UMO)
+- 
+Obsolete name for service component. UMO is still visible in some MuleSoft APIs. 
+
+## X
+
+- XA transaction
+- 
+A transaction that enlists multiple managed resources and provides guaranteed reliability. Mule runtime engine also supports multi-resource transactions that are not XA transactions. These transactions do not have guaranteed reliability.

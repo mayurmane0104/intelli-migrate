@@ -1,0 +1,31 @@
+# Usage and Pricing Metrics Reference | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/general/usage-metrics](https://docs.mulesoft.com/general/usage-metrics)
+
+---
+
+| Mule Runtime | Mule flow: Flow within a deployed and running Mule app that contains a Mule event source or route APIKit request | Flows are aggregated using a Max Concurrent model. The usage for a month is the highest number of flows that exist in a single given hour during a month. | 
+| Mule message: Container of the core information processed by the runtime | A Mule message counts as a single unit when an event source triggers it. Messages are aggregated using a total of all messages sent during a month. | 
+| Data throughput: Total amount of data transferred in and out of the infrastructure that runs Mule where the Mule app is deployed | Data throughput counts when the deployed application transfers data to execute its business logic, including but not limited to internal operational network traffic for monitoring, logs, and health checks. Data throughput is aggregated as a sum of all bytes during a month. | 
+| Cluster capacity: A set of workers or nodes that act as a single deployment target for a given Runtime Fabric instance | Allocatable CPU capacity of each node within the Runtime Fabric instance. | 
+| CPU Limit (Millicores): Maximum amount of CPU resources a worker node in Runtime Fabric can use | 
+The amount of CPU usage is aggregated over a specific period of time, such as an hour or a day. 
+The CPU limit configuration of each application is summarized at each environment ID, then at each business group, and then at the root organization ID for preproduction (sandbox) and production environment types separately. | 
+| CPU Reserve (Millicores): A guaranteed minimum amount of CPU resources allocated to a worker node in the Runtime Fabric instance | CPU reserve is aggregated by calculating the total amount of CPU resources allocated by the user to reserve for applications within the cluster or Runtime Fabric instance. | 
+| API Manager | API instances:  API instances in production, preproduction, and unclassified APIs (not associated with an environment) that are managed by API Manager after they are created using add, promote, or import options. | 
+API instances remain under management until they are deleted. Instances of API Manager are aggregated using a Max Concurrent model with three separate metrics for production, preproduction, and unclassified (APIs that aren’t associated with an environment). 
+|  | Data for API Manager is available starting in October 2024. |  | 
+| API Governance | API under Governance: APIs identified by the selection criteria of at least one of the governance profiles | 
+If an API is governed, all versions of that API are considered one governed API. Instances of API Governance are aggregated using a Max Concurrent model. The usage for a month is the highest number of APIs governed in a single given hour during a month. | 
+| Omni Gateway | Omni Gateway API call: Any access request received by Omni Gateway regardless of whether the response to the request is successful | Omni Gateway requests are aggregated as a total of all requests during a month. | 
+| LLM Proxy | Prompt tokens: Number of tokens an LLM Proxy in the prompts an LLM Proxy sends to a specific LLM Model | These tokens are the sum of all prompt tokens a specific LLM Proxy sends to a specific LLM Model during a month. A prompt sent to an LLM Proxy are considered an Omni Gateway API call and count towards the Omni Gateway API call metric. | 
+| Completion tokens: Number of tokens in the responses that an LLM Proxy receives from a specific LLM Model | These tokens are the sum of all response tokens a specific LLM Proxy receives from a specific LLM Model during a month. | 
+| Total tokens: Total number of tokens used in interactions between an LLM Proxy and a specific LLM Model | Some LLM Providers, such as Gemini, use thinking tokens. Total tokens are the sum of prompt tokens, completion tokens, and thinking tokens if applicable. | 
+| Composer | Composer task: Any action executed on a Composer connector, including but not limited to read, create, update, and delete | Composer tasks are aggregated as a total of all actions during a month. | 
+| RPA | Robotic Process Automation (“RPA”) bot minutes: The number of minutes running process automations across all bot sessions | A single bot can run multiple parallel sessions, with RPA bot minutes counting for each parallel session. You can configure multiple bots to run the same process, with RPA bot minutes counting for each of these separate bot sessions. Test runs or process runs in the test phase are also counted towards RPA bot minutes. | 
+| Anypoint MQ | Anypoint MQ API request: A request made to retrieve one or more messages from the Anypoint MQ APIs | Anypoint MQ uses API requests to calculate billing.
+Anypoint MQ API requests are calculated in the aggregate across all environments (including production, pre-production, sandbox, and design).
+Anypoint MQ API requests are available via API and aggregated on usage reports. | 
+| Object Store | Object Store API request: A request made to retrieve one or more messages from the Object Store APIs as further defined in the Object Store documentation | Each Object Store API request includes up to 100 KB of data. Object Store API requests over 100 KB count as multiple requests with no fractional units. Object Store API requests are available via API and aggregated on usage reports. | 
+| DataGraph | DataGraph orchestration: An API request made by Anypoint DataGraph to the source APIs to get data for the GraphQL API request made to Anypoint DataGraph | Orchestrations are not currently aggregated on usage reports. | 
+| Intelligent Document Processing (IDP) | Intelligent Document Processing (IDP) Document Pages: A single page processed by IDP | IDP document actions might process documents that have more than one page, with each page counting separately. When RPA executes document actions, it also counts towards document pages and additionally consumes the corresponding RPA Bot Minutes, accounting for the time the RPA process runs. |

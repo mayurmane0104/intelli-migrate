@@ -1,0 +1,12 @@
+{
+  "id": "query_param_filter",
+  "description": "Conditional vars.paymentOrders filter on queryParams",
+  "function_name": "transform_payment_orders",
+  "output_format": "application/json",
+  "script": "%dw 2.0\noutput application/json\n---\n{\n  PaymentOrders:\n    if (attributes.queryParams.paymentId? and attributes.queryParams.amount?)\n      vars.paymentOrders filter ($.PaymentId ~= attributes.queryParams.paymentId and $.Payments.PaymentDefinition.PaymentAmount.Amount ~= attributes.queryParams.amount)\n    else if (attributes.queryParams.paymentId?)\n      vars.paymentOrders filter ($.PaymentId ~= attributes.queryParams.paymentId)\n    else\n      vars.paymentOrders\n}",
+  "compare": {
+    "records": true,
+    "record_order": true,
+    "body": false
+  }
+}

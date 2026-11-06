@@ -1,0 +1,4 @@
+{
+  "required_terms": ["AWS::Events::Rule", "events.Rule"],
+  "forbidden_terms": ["ECS", "AppFlow", "Amazon MQ", "MSK", "Glue", "DynamoDB", "EMR", "Batch"]
+}

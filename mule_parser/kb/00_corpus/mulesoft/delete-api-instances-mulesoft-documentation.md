@@ -1,0 +1,22 @@
+# Delete API Instances | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/api-manager/latest/delete-api-task](https://docs.mulesoft.com/api-manager/latest/delete-api-task)
+
+---
+
+# Delete API Instances
+
+You can delete an API instance and its version if you no longer need to manage it from API Manager. Deleting an instance from API Manager does not delete its referenced asset from other locations, such as Anypoint Exchange (Exchange) or file system.
+
+You cannot delete an API specification that is currently used in one or more API instances or versions being managed in API Manager.
+
+To delete API instances from API Manager:
+
+- 
+Navigate to **Anypoint Platform**>**API Manager**.
+- 
+In **API Administration**, click the name of the API instance you want to delete.
+- 
+Select **Actions**>**Delete API**.
+- 
+Click **Delete**to confirm.Your API instance is now successfully deleted.

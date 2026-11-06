@@ -1,0 +1,41 @@
+# Output a Transformation to an Attribute or Variable (Design Center) | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/mule-runtime/latest/transform-to-change-target-output-design-center](https://docs.mulesoft.com/mule-runtime/latest/transform-to-change-target-output-design-center)
+
+---
+
+# Output a Transformation to an Attribute or Variable (Design Center)
+
+By default, the Transform component outputs to the payload of a Mule event. You can also output data to a variable or attribute that you create.
+
+Before you begin, you should set up a basic flow that sends the Transform component Input data.
+
+- 
+From the Mapping tab in the Transform component, click the title of the Output column, which should say Output Payload by default. 
+- 
+Select Add Transformation. 
+- 
+Select one of these types: - 
+Attributes 
+- 
+Variable 
+ 
+- 
+- 
+For a variable, provide a name. 
+- 
+Create or select a data type for the attribute or variable. 
+- 
+Map the portion of the Transformer input that you want to output to the attribute or variable. Note that you can check your mapping by adding a Logger after the Transformer, for example: - 
+Logger message for an attribute: `message.attributes`
+- 
+Logger message for the variable `myVar`:`vars.myVar`After deploying your app, the Logs should output your logger message. 
+ 
+- 
+
+## Remove an Output Transformation
+
+- 
+Click the title of the Output column. 
+- 
+Click the Trash Can icon for the transformation that you want to delete.

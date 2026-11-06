@@ -1,0 +1,10 @@
+Resources:
+  {{resource_prefix}}Api:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: {{resource_prefix}}-api
+  {{resource_prefix}}ApiDeployment:
+    Type: AWS::ApiGateway::Deployment
+    Properties:
+      RestApiId:
+        Ref: {{resource_prefix}}Api

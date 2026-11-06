@@ -1,0 +1,7 @@
+{
+  "template_id": "acm",
+  "name": "ACM Certificate Reference",
+  "service": "ACM",
+  "target": "ACM",
+  "required_variables": ["resource_prefix", "domain_name"]
+}

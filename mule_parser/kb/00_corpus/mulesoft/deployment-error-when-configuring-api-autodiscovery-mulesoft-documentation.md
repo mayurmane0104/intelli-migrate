@@ -1,0 +1,26 @@
+# Deployment Error When Configuring API Autodiscovery | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/api-manager/latest/troubleshooting-config-properties-apiid-error](https://docs.mulesoft.com/api-manager/latest/troubleshooting-config-properties-apiid-error)
+
+---
+
+`org.mule.runtime.deployment.model.api.DeploymentException: Failed to deploy artifact [accounts] Caused by: org.mule.runtime.api.exception.MuleRuntimeException: org.mule.runtime.deployment.model.api.DeploymentInitException: PropertyNotFoundException: Couldn't find configuration property value for key ${apiId} from properties provider Domain properties - within resolver Deployment properties trying to process key apiId - within resolver global-properties configuration attributes trying to process key apiId - within resolver environment properties provider trying to process key apiId - within resolver Deployment properties trying to process key apiId - within resolver External files trying to process key apiId - within resolver Deployment properties trying to process key apiId`text
+
+# Deployment Error When Configuring API Autodiscovery
+
+When you configure Mule Gateway for API autodiscovery, you might receive the following "failed to deploy artifact" error:
+
+## Cause
+
+This issue occurs if you did not add the `apiId` property in the `config.properties` file, and failed to modify the value for the `apiId` attribute in the `api-gateway:autodiscovery` element. The Autodiscovery process runs on a specific instance of API Manager. For that reason, you must specify a valid `apiId` of type `long`.
+
+If you deployed a proxy application through API Manager or downloaded the auto-generated proxy, this setting is automatically configured.
+
+## Solution
+
+To resolve this issue:
+
+- 
+Navigate to the config.properties file and append the following property and value pair: `apiId=[your-specific-value]`text
+- 
+In your <api-gateway:autodiscovery> element, set the `apiID`attribute to the`apiId`property in the config.properties file:`apiId=${apiId}`text

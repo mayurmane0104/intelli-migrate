@@ -1,0 +1,48 @@
+# Extract Payload Information to Variables | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/anypoint-code-builder/tut-slack-extract-payload-information](https://docs.mulesoft.com/anypoint-code-builder/tut-slack-extract-payload-information)
+
+---
+
+![A flow in the canvas UI with the *Add Component* button highlighted](_images/add-transform-from-canvas-slack.png) 
+
+# Extract Payload Information to Variables
+
+This section of the tutorial teaches you how to extract information from the payload into different variables to refer to those values later in the flow.
+
+## Before You Begin
+
+Complete these procedures:
+
+- 
+[Integrate Salesforce Data into Slack and Email Notifications](tut-slack-create-escalation-api).
+- 
+Configure your Salesforce integration. 
+
+## Extract Values From the Payload
+
+- 
+In Anypoint Code Builder, open your `new-case-salesforce.xml`file.
+- 
+Click the ![](_images/icon-plus.png) ( (**Add component**) icon after the**On New Case**Salesforce component:![A flow in the canvas UI with the *Add Component* button highlighted](_images/add-transform-from-canvas-slack.png)  
+- 
+Type `Transform`and select**Transform**.
+- 
+Configure the Transform Message component to extract data from the payload to variables: `<ee:transform doc:name="Extract Values from Case" > <ee:variables> <ee:set-variable variableName="casestatus">`**(1)**<![CDATA[%dw 2.0 output application/java --- payload.Status]]> </ee:set-variable> <ee:set-variable variableName="casenumber">**(2)**<![CDATA[%dw 2.0 output application/java --- payload.CaseNumber]]> </ee:set-variable> <ee:set-variable variableName="slackchannel">**(3)**<![CDATA["this-is-a-test"]]> </ee:set-variable> </ee:variables> </ee:transform>XML**1**`casestatus`retrieves the Salesforce case status:**New**,**Working**, or**Escalated**.**2**`casenumber`retrieves the case number created by Salesforce.**3**Set the `slackchannel`to the channel name that you set earlier in the tutorial.
+
+## Concatenate Your Values in The Payload
+
+Add a Set Payload component to concatenate the value of your variables in the resulting payload of your application:
+
+- 
+Click the ![](_images/icon-plus.png) ( (**Add component**) icon after the Transform Message component:![A flow in the canvas UI with the *Add Component* button highlighted](_images/add-set-payload-slack-case-canvas.png)  
+- 
+Type `set`and select**Set Payload**.
+- 
+Configure the Set Payload component with the following code: `<set-payload doc:name="Set Case Info" value='#["Case Number: " ++ (payload.CaseNumber default "") ++ ", Origin: " ++ (payload.Origin default "") ++ ", Case Type: " ++ (payload.Type default "") ++ ", Priority: " ++ (payload.Priority default "") ++ ", Status: " ++ (payload.Status default "")]'/>`XML
+- 
+Proceed to [Add a Condition to Your Flow Logic](tut-slack-add-condition-to-your-flow)to create a condition to send an email if the case is escalated or otherwise inform about the case in a Slack channel.
+
+[Create a Configuration File for Slack and Salesforce](tut-slack-create-config-files-sfdc)
+
+[Add a Condition to Your Flow Logic](tut-slack-add-condition-to-your-flow)

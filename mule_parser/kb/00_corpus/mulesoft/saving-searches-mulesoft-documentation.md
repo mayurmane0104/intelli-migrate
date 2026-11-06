@@ -1,0 +1,30 @@
+# Saving Searches | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/exchange/to-save-searches](https://docs.mulesoft.com/exchange/to-save-searches)
+
+---
+
+# Saving Searches
+
+As an Exchange administrator, you can save searches that your users can click to access assets within a business group.
+
+While users can view and click the searches, only an Exchange administrator can save, rename, or delete the saved searches.
+
+- 
+Change to the business group where you want to add saved searches. 
+- 
+Specify a search in the search field. 
+- 
+Click **Save this search**.
+- 
+In the Save Search window, specify the name for the search, and save the search name. 
+- 
+Select a **Save as**option.
+- 
+Click **Save**. The saved searches appear in the left navigation bar of the Assets page under the Organization Searches heading.
+- 
+To rename the search, under **My searches**in the left navigation bar, click the three dots menu next to the search name and select**Rename**.
+- 
+Enter a new name followed by pressing the Enter or Return key on your keyboard. 
+- 
+To delete the search, under **My searches**in the left navigation bar, click the three dots menu next to the search name and select**Delete**.

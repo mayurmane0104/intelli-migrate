@@ -1,0 +1,7 @@
+{
+  "template_id": "eventbridge",
+  "name": "EventBridge Scheduler",
+  "service": "EventBridge",
+  "target": "EventBridge",
+  "required_variables": ["resource_prefix", "function_name"]
+}

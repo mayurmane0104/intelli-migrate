@@ -1,0 +1,75 @@
+# Azure Service Bus Management Connector 1.0 | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/azure-service-bus-management-connector/latest](https://docs.mulesoft.com/azure-service-bus-management-connector/latest)
+
+---
+
+# Azure Service Bus Management Connector 1.0
+
+Anypoint Connector for Microsoft Azure Service Bus Management (Azure Service Bus Management Connector) enables management integration with Azure Service Bus on the cloud. This connector connects to the Azure REST API and supports management operations for queues, topics, and subscriptions. In addition, you can use the built-in management API to discover Azure Service Bus objects automatically and provision them.
+
+| This connector supports integrations with Azure Service Bus (cloud). It does not work with Microsoft Windows Service Bus (on-premise). To connect with Microsoft Windows Service Bus on-premise, use [Anypoint Connector for Microsoft Windows Service Bus](https://www.mulesoft.com/exchange/com.mulesoft.connectors/mule-microsoft-service-bus-connector/). | 
+
+To use the Azure management API for message integration with Azure Service Bus on the cloud, use the Anypoint Connector for Azure Service Bus.
+
+For compatibility information, see the Azure Service Bus Management Connector Release Notes.
+
+## Before You Begin
+
+To use this connector, you must be familiar with:
+
+- 
+The Microsoft Azure REST API 
+- 
+Anypoint connectors 
+- 
+Mule runtime engine (Mule) 
+- 
+Elements in a Mule flow 
+- 
+Global elements 
+- 
+How to create a Mule app using Anypoint Studio 
+
+Before creating an app, you must have access to:
+
+- 
+The Microsoft Azure target resource 
+- 
+Anypoint Studio or Anypoint Code Builder 
+
+## Common Use Cases For the Connector
+
+Common use cases for this connector include:
+
+- 
+Creating, modifying, and deleting a queue, topic, and subscription 
+- 
+Retrieving all queues, topics, and subscriptions from the Azure Service Bus instance 
+
+For examples, see [Examples](azure-service-bus-management-connector-examples).
+
+## Audience
+
+- 
+New user To create your Mule app, see: - 
+[Using Anypoint Studio to Configure Microsoft Azure Connector](azure-service-bus-management-connector-studio)
+- 
+[Additional Configuration Information](azure-service-bus-management-connector-config-topics)to help extend your understanding of Azure Service Bus Management connector
+- 
+[Examples](azure-service-bus-management-connector-examples), which provide one or more use cases for the connector
+ 
+- 
+- 
+Advanced user Read the following: 
+
+## Next Step
+
+After you complete the prerequisites and experiment with the examples, you are ready to create an app and configure the connector using [Anypoint Studio](azure-service-bus-management-connector-studio).
+
+## See Also
+
+- 
+[Use Exchange to Discover Connectors, Templates, and Examples](../../connectors/introduction/intro-use-exchange)
+- 
+[Salesforce Help](https://help.salesforce.com)

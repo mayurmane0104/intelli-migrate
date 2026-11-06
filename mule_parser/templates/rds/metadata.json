@@ -1,0 +1,7 @@
+{
+  "template_id": "rds",
+  "name": "RDS Connection Configuration",
+  "service": "RDS",
+  "target": "RDS",
+  "required_variables": ["resource_prefix"]
+}

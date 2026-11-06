@@ -1,0 +1,124 @@
+# Reviewing Alerts Concepts | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/api-manager/latest/using-api-alerts](https://docs.mulesoft.com/api-manager/latest/using-api-alerts)
+
+---
+
+# Reviewing Alerts Concepts
+
+Anypoint Platform alerts you about request behavior, performance issues, actions related to client application contracts, and runtime events.
+
+The platform supports three types of alerts:
+
+- 
+Instance alerts 
+- 
+Contracts alerts 
+- 
+Runtime alerts 
+
+Instance alerts and contracts alerts are managed by Anypoint API Monitoring.
+Runtime alerts are managed by Anypoint Runtime Manager (Runtime Manager).
+Refer to [Using Omni Gateway API Alerts](../../gateway/latest/flex-use-api-alerts) to learn how to use the new API Monitoring alerts.
+
+| Alerts aren’t available on Hyperforce deployments. | 
+
+## Instance Alerts
+
+Add and configure instance alerts that flag unusual behavior, such as:
+
+- 
+A response time over 60 seconds 
+- 
+More than 1000 requests in 30 seconds 
+
+API Manager enables you to add alerts to different types of instances:
+
+- 
+For **API instances**:- 
+**Policy Violation**An infraction of one or more policies governing the API occurs.
+- 
+**Request Count**Users request access to the API more times than allowed in a specified interval of time. Specify time interval values from 1 through 999999999. To prevent data bursts, intervals are implemented as sliding windows instead of as absolute minute boundaries. See[Sliding Windows](https://www.techopedia.com/definition/869/sliding-window).
+- 
+**Response Code**The API returns one of these HTTP codes upon receiving a request: 400, 401, 403, 404, 408, 500, 502, or 503.
+- 
+**Response Time**The response time of the API exceeds a specified timeout period.
+ 
+- 
+- 
+For **Agent Fabric assets (agents, MCP servers, LLMs)**:- 
+Availability or connectivity issues. 
+- 
+Broker or agent failure events. 
+- 
+Processing delays or exceeded capacity thresholds. 
+ 
+- 
+
+Instance alerts are triggered only when states change, although the first occurrence of a state change might be undetected due to newly created alerts not having defined states.
+
+When configuring an instance alert, you select Business Group users to receive email notifications about the alert. Notifications include information about events that trigger alerts as specified by severity level. Users receive the following:
+
+- 
+One email describes the alert: `Your API, CesarDemoAPI - Basic:151 (Environment: "NewOne"), has received greater than 2 requests within 1 consecutive periods of 1 minute.`
+- 
+Another email notifies you when the alert is resolved: `Your API Version, jsonplaceholderapi - 1.0.development, is no longer in an alert state. The number of policy violations was not greater than 1 in the last 1 consecutive periods of 1 minute.`
+
+After an alert is triggered, API Manager sends the first set of two notification emails and stops listening for alerts until the next alert period begins. This technique prevents repeated notification emails.
+
+| Alerts are sent from `no-reply@mulesoft.com`. This cannot be customized. | 
+
+The alert email can be sent before the corresponding sliding window has fully closed.
+
+Although the alert condition is evaluated based on the sliding window, the condition may be met before all metrics for the window arrive.
+For example: If the alert condition is set to "error count > 1 in a 5-minute window" and 10 errors occur within the first minute, the alert email is sent during that first minute, even though the sliding window continues to accumulate metrics for the remaining 4 minutes.
+
+## Contracts Alerts
+
+API Manager automatically notifies users when actions related to contracts occur. For instance, when a client application requests access to an instance, API Manager sends a notification with the status of the request. Depending on the configuration, status might indicate that the request is pending manual approval, or it might indicate that the request has been auto-approved.
+
+The following actions trigger contracts alerts:
+
+| Action | Recipient | Description | 
+|---|---|---|
+| Contract approved | Client application owners | User is notified that request access was approved. | 
+| Contract auto-approved | Organization administrators, environment administrators, contracts managers | User is notified that request access was auto-approved. | 
+| Contract pending | Organization administrators, environment administrators, contracts managers | User is notified that request access is pending. | 
+| Pending contract rejected | Client application owners | User is notified that request access was rejected. | 
+| Revoked contract restored | Client application owners | User is notified that request access was restored. | 
+| Approved contract revoked | Client application owners | User is notified that request access was revoked. | 
+| Contract tier changed | Client application owners | User is notified that the contract tier was changed. | 
+| Requested contract tier change approved | Client application owners | User is notified that a requested tier change was approved. | 
+| Requested contract tier change rejected | Client application owners | User is notified that a requested tier change was rejected. | 
+| Contract tier change requested | Organization administrators, environment administrators, contracts managers | User is notified that a contract tier change is pending review. | 
+
+| Action | Recipient | Description | 
+|---|---|---|
+| Contract approved | Client application owners | User is notified that request access was approved. | 
+| Contract auto-approved | Group administrators | User is notified that request access was auto-approved. | 
+| Approved contract revoked | Client application owners | User is notified that request access was revoked. | 
+| Revoked contract restored | Client application owners | User is notified that request access was restored. | 
+| Pending contract rejected | Client application owners | User is notified that request access was rejected. | 
+| Contract pending | Group administrators | User is notified that request access is pending. | 
+| Contract tier changed | Client application owners | User is notified that a contract tier change is pending review. | 
+| Requested contract tier change approved | Client application owners | User is notified that a requested tier change was approved. | 
+| Requested contract tier change rejected | Client application owners | User is notified that a requested tier change was rejected. | 
+| Contract tier change requested | Group administrators | User is notified that a contract tier change is pending review. | 
+
+| Contracts Alerts are sent from  | 
+
+## Runtime Alerts
+
+Alerts in Runtime Manager differ from API alerts and contracts alerts. For example, Runtime Manager flags CPU usage, secure data gateway status, and deployment success or failure. See [Alerts](../../runtime-manager/alerts-on-runtime-manager).
+
+## Omni Gateway Alerts
+
+Alerts for Omni Gateway differ from API alerts and contract alerts. For example, Omni Gateway includes **Alert Logic** options and the ability
+to customize the subject and message of **Email notifications**. See [Using Omni Gateway API Alerts](../../gateway/latest/flex-use-api-alerts)
+for more information.
+
+## Alert Rate Limits
+
+Anypoint Platform enforces rate limits that determine how often an alert is triggered, and how often email notifications are sent.
+
+See [Rate Limits on Alerts](../../runtime-manager/alerts-on-runtime-manager#rate-limits-on-alerts) for information on enforced limits.

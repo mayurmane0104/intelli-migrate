@@ -1,0 +1,39 @@
+# Mule Event Structure | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/mule-runtime/latest/about-mule-event](https://docs.mulesoft.com/mule-runtime/latest/about-mule-event)
+
+---
+
+![A Mule event including message, attributes, payload, and variables](_images/mule-concepts-d46f9.png) 
+
+# Mule Event Structure
+
+A Mule event contains the core information processed by the runtime, including the message payload, attributes, and variables. It travels through components inside your Mule app following the configured application logic. Understanding Mule events helps you design flows that process and transform data effectively.
+
+The Mule event is immutable, so every change to an instance of a Mule event results in the creation of a new instance.
+
+A Mule event is composed of two objects:
+
+- 
+A Mule Message contains a message payload and its associated attributes. 
+- 
+Variables are Mule event metadata that you use in your flow. 
+
+![A Mule event including message, attributes, payload, and variables](_images/mule-concepts-d46f9.png) 
+
+A Mule event source triggers the generation of a Mule event and dispatches that event to the flow. Event sources include triggers such as the Scheduler and listeners such as the HTTP Listener and On New or Updated File components.
+
+![A Mule event source sequence](_images/about-mule-event-2724e.png) 
+
+This sequence shows how a Mule event flows through your application:
+
+- 
+A trigger reaches the event source. 
+- 
+The event source produces a Mule event. 
+- 
+The Mule event travels sequentially through the components of a flow. 
+- 
+Each component interacts in a pre-defined manner with the Mule event. 
+
+In some cases when an issue occurs in an event source, the component doesn’t produce a Mule event. For example, invalid or incorrect paths in an HTTP listener configuration prevent the creation of a Mule event. Connectors log such issues in ERROR, WARN, or INFO messages.

@@ -1,0 +1,57 @@
+# Google Sheets Connector 1.1 | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/google-sheets-connector/latest](https://docs.mulesoft.com/google-sheets-connector/latest)
+
+---
+
+# Google Sheets Connector 1.1
+
+Anypoint Connector for Google Sheets (Google Sheets Connector) synchronizes data and automates business processes between Google Sheets and third-party applications, either on-premises or in the cloud.
+
+Google Sheets is a real-time spreadsheet tool with powerful functions to help teams efficiently perform multiple functions such as helping sales teams collaborate on leads and opportunities, and helping HR teams collaborate on candidates for interviewing and hiring.
+
+For compatibility information and fixed issues, see the Google Sheets Connector release notes.
+
+## Before You Begin
+
+To use this connector, you must be familiar with:
+
+- 
+The Google Sheets API and the Google Drive API (if planning to use the List Drive Files operation) 
+- 
+Anypoint Connectors 
+- 
+Mule runtime engine (Mule) 
+- 
+Elements and global elements in a Mule flow 
+- 
+Creating a Mule app using Anypoint Studio or Anypoint Code Builder 
+
+Before creating an app, you must have access to:
+
+- 
+The Google Sheets API target resource 
+- 
+Anypoint Studio or Anypoint Code Builder 
+
+## Common Use Case for the Connector
+
+Common use cases for the connector include the following:
+
+- 
+Improve sales operations Automate a workflow in which a Google Sheets spreadsheet is auto-populated every time a new lead is created in Salesforce. This sales team can then use the spreadsheet to collaborate on further research. 
+- 
+Enhance customer service Catalog all incoming issues in a spreadsheet and set up automatic rules to alert the team when an issue starts approaching SLA deadlines. 
+- 
+Optimize HR processes When a new candidate reaches out via an applicant tracking system such as Workday or Greenhouse, capture the candidate details in a spreadsheet so that other stakeholders can review and contact the appropriate candidates. 
+
+## Next Step
+
+After you complete the prerequisites, you are ready to create your own app and configure the connector using [Anypoint Studio](google-sheets-connector-studio).
+
+## See Also
+
+- 
+[Use Exchange to Discover Connectors, Templates, and Examples](../../connectors/introduction/intro-use-exchange)
+- 
+[Salesforce Help](https://help.salesforce.com)

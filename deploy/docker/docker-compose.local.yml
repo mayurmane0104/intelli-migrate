@@ -1,0 +1,89 @@
+version: '3.8'
+
+# This file is for local development ONLY.
+# It spins up only the backing infrastructure (Postgres, ChromaDB, RabbitMQ, Redis)
+# and exposes their ports so you can run the Next.js frontend and Python backend natively on your local machine.
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: migration_studio
+    ports:
+      - "${POSTGRES_PORT:-5435}:5432"
+    volumes:
+      - postgres_data_local:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d migration_studio"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  chromadb:
+    image: chromadb/chroma:0.6.3
+    restart: unless-stopped
+    ports:
+      - "${CHROMA_PORT:-8004}:8000"
+    volumes:
+      - chroma_data_local:/chroma/chroma
+    environment:
+      ANONYMIZED_TELEMETRY: "FALSE"
+      ALLOW_RESET: "TRUE"
+    healthcheck:
+      # curl is built into the chromadb image – no Python process overhead.
+      # /api/v2/heartbeat is the canonical endpoint in ChromaDB 0.6+.
+      test:
+        [
+          "CMD",
+          "curl",
+          "--silent",
+          "--fail",
+          "--max-time", "4",
+          "http://127.0.0.1:8000/api/v2/heartbeat",
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  rabbitmq:
+    image: rabbitmq:3.13-management-alpine
+    restart: unless-stopped
+    ports:
+      - "${RABBITMQ_PORT:-5672}:5672"
+      - "${RABBITMQ_MGMT_PORT:-15672}:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-studio_user}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASS:-studio_secure_password}
+      RABBITMQ_DEFAULT_VHOST: ${RABBITMQ_VHOST:-studio_vhost}
+    volumes:
+      - rabbitmq_data_local:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "check_running"]
+      interval: 30s
+      timeout: 30s
+      retries: 19
+      start_period: 90s
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis_data_local:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data_local:
+  chroma_data_local:
+  rabbitmq_data_local:
+  redis_data_local:

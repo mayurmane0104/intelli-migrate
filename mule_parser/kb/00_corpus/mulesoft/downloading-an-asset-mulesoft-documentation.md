@@ -1,0 +1,42 @@
+# Downloading an Asset | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/exchange/to-download-an-asset](https://docs.mulesoft.com/exchange/to-download-an-asset)
+
+---
+
+# Downloading an Asset
+
+Download lets you download a copy of the asset, or in the case of a Custom asset, the optional file attached to the asset when it was created.
+
+After creating a REST asset, Exchange generates a Mule 4 connector. Exchange also generates an OAS 2.0 version for RAML assets, and a RAML version for OAS 2.0 and OAS 3.0 assets. After you create a new REST asset, it can take a few minutes for these assets to appear in the **Download** menu.
+
+When you change the asset name, description, labels, or categories of the REST asset, Exchange updates these attributes for the generated connectors.
+
+RAML versions have been automatically generated for all OAS assets published since [January 12, 2019](../release-notes/exchange/anypoint-exchange-release-notes#january-2019), and OAS 2.0 versions have been automatically generated for all RAML assets published since that date. If you find an older asset that does not include one of these versions, you can generate all versions by downloading the asset and uploading it again.
+
+Click **Download** from the asset details pane.
+
+The results vary by file type:
+
+- 
+REST API RAML If you choose **As RAML**, the original RAML file downloads as a zip file. If you choose**As OAS**, Exchange downloads the API specification as a zip file containing a JSON file for the specification in OAS 2.0 format. If you choose**As Mule 4 connector**, it downloads as a jar file you can add to a Studio 7 Mule project.
+- 
+REST API OAS If you choose **As RAML**, Exchange downloads the API specification as a zip file containing a RAML file for the specification. If you choose**As OAS**, it downloads as a zip file containing a file in the original format of either JSON or YAML. If you choose**As Mule 4 connector**, it downloads as a jar file you can add to a Studio 7 Mule project.
+- 
+SOAP API WSDL Downloads as a WSDL file. 
+- 
+Connector Downloads as a jar file. 
+- 
+Template Downloads as a jar or zip file. 
+- 
+Example Downloads as a zip file. 
+- 
+Policy If you choose **As Mule policy**, Exchange downloads the policy as a JAR file. If you choose**As Policy definition**, Exchange downloads the definition YAML file.
+- 
+Custom with a file Downloads the same format file that you uploaded, but the file name is based on your application name. For example, if you upload a text file for the Inventory Distribution project, Exchange downloads `inventory-distribution.txt`.
+- 
+Custom without a file The **Download**button does not appear.
+- 
+API Group The **Download**button does not appear.
+- 
+AsyncAPI Downloads the API specification as a zip file containing a YAML file for the specification and a JSON file that contains the metadata of the asset.

@@ -1,0 +1,78 @@
+# Requesting Access | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/exchange/to-request-access](https://docs.mulesoft.com/exchange/to-request-access)
+
+---
+
+![The Create new application dialog showing fields to update for an OAuth authentication](_images/ex2-edit-app2.png) 
+
+# Requesting Access
+
+To register a client application to an existing API instance or API Group instance, the client application requests access. When the owner of the instance approves the request, a contract is created between the client application and the instance, and the client application is registered.
+
+Instances that are protected by a client ID enforcement policy require client applications to provide a client ID and optional client secret. The client ID and client secret credentials are automatically created when the client application is registered.
+
+An instance owner can use API Manager to view all API contracts ever created for an
+API instance or API Group instance. An API or API Group consumer can use the **My Applications** page in Exchange to view
+the API contracts created between an API instance or API Group instance and that consumer’s client
+applications.
+
+API providers can view, manage, and revoke these contracts by following the steps in
+[Managing API Instance Contracts on API Manager](../api-manager/latest/manage-client-apps-latest-task).
+
+Both API instance owners and the owners of a specific client application can request access to that client application. All other users must request access from either of these owners. For access to a client application created by another user, request that either the client application owner or the API instance owner grant access to you by adding your user account to the application owners list in Anypoint API Manager.
+
+If terms and conditions are set for an asset, you are prompted to accept the terms before access is granted, and the created contract includes the terms and conditions.
+
+- 
+Click an API or API Group asset to view more details. 
+- 
+Click **Request access**.
+- 
+Choose the instance from the list. 
+- 
+If you are using an existing application, choose from the list of applications. An application and its instance use the same client provider. If an organization administrator has configured [multiple client providers](../api-manager/latest/configure-multiple-credential-providers)in Anypoint API Manager, then the application list shows only the applications that use the same client provider as the selected instance.
+- 
+If you do not have an application to which to provide access, click **Select application > Create a new application**.For more information, see the Create a New Application section. 
+- 
+Choose the service-level agreement (SLA) value for the application. 
+- 
+Click **Request access**.The **Request API Access**menu opens to show that the access was automatically granted or submitted for review. This screen lists the client ID and client secret for this access instance.
+
+## Create a New Application
+
+Choose from the screens that follow for what to provide:
+
+- 
+If an organization uses OAuth authentication, this screen appears: ![The Create new application dialog showing fields to update for an OAuth authentication](_images/ex2-edit-app2.png)  Specify: - 
+The application name. 
+- 
+An optional description for the application. 
+- 
+An optional application URL for where the app resides. If not specified, the app is assumed to be in the Runtime Manager. 
+- 
+An optional URL for an OAuth 2 callback. 
+ 
+- 
+- 
+If an organization has external authentication, this screen appears: ![The Edit application dialog showing fields to update for an external authentication](_images/ex2-edit-app.png)  Specify the same values as above, but also: The OAuth 2 grant type: - 
+Implicit Grant 
+- 
+Authorization Code Grant 
+- 
+Refresh Token 
+ 
+- 
+
+## API Group Access
+
+In Exchange, each API Group is an asset with a portal. The **Group instances** page on the portal lists all of that API Group’s instances.
+
+When a developer requests access to the API Group for a client application, the developer selects an API Group instance, selects or creates a client application, and optionally selects a service-level agreement (SLA).
+
+A client application can access an API either through a contract with only that API or through a contract with one or more API Groups that include the API. In this latter case, the least restrictive available contract for the API is applied.
+
+## See Also
+
+- 
+[Search to compare grant types](https://www.google.com/search?q=oauth2+implicit+grant+vs+authorization+code+grant+refresh+token&oq=oauth2+implicit+grant+vs+authorization+code+grant+refresh+token)

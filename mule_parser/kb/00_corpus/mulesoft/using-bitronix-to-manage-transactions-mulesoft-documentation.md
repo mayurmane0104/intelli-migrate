@@ -1,0 +1,122 @@
+# Using Bitronix to Manage Transactions | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/mule-runtime/latest/using-bitronix-to-manage-transactions](https://docs.mulesoft.com/mule-runtime/latest/using-bitronix-to-manage-transactions)
+
+---
+
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:bti="http://www.mulesoft.org/schema/mule/ee/bti"
+      xsi:schemaLocation="
+       http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+       http://www.mulesoft.org/schema/mule/ee/bti http://www.mulesoft.org/schema/mule/ee/bti/current/mule-bti-ee.xsd">
+    <bti:transaction-manager/>
+...
+</mule>
+```
+xml# Using Bitronix to Manage Transactions
+
+Bitronix Transaction Manager allows Mule to automatically recover interrupted transactions on restart.
+
+If a Mule instance crashes or loses connectivity to a resource manager (such as a JMS broker, database, etc.), this can cause a transaction to fail abnormally between the prepare phase and the commit phase of the two-phase commit protocol (2PC). In this case, the transaction manager needs to run a recovery process to complete any in-flight transaction that was taking place during the failure. While this kind of failure is unlikely, a mechanism is needed to retain data consistency when this happens.
+
+## Using Bitronix in a Single Application
+
+To configure an application to use Bitronix, declare the transaction manager outside of your flows, as shown below.
+
+## Using Bitronix in All Applications in a Mule Domain
+
+To use Bitronix in all applications associated with a Mule domain, define Bitronix as the transaction manager in your domain configuration file, as shown below. Doing so causes all applications associated with the domain to use Bitronix, without needing to declare the transaction manager in individual applications.
+
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<domain:mule-domain
+        xmlns:bti="http://www.mulesoft.org/schema/mule/ee/bti"
+        xmlns="http://www.mulesoft.org/schema/mule/core"
+        xmlns:domain="http://www.mulesoft.org/schema/mule/ee/domain"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xsi:schemaLocation="
+               http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+               http://www.mulesoft.org/schema/mule/ee/domain http://www.mulesoft.org/schema/mule/ee/domain/current/mule-domain-ee.xsd
+http://www.mulesoft.org/schema/mule/ee/bti http://www.mulesoft.org/schema/mule/ee/bti/current/mule-bti-ee.xsd">
+	<bti:transaction-manager/>
+    <!-- ... -->
+</domain:mule-domain>
+```
+xmlSee [Shared Resources](shared-resources) for information about domains.
+
+## Adding Bitronix from Anypoint Studio
+
+You can add Bitronix to your application or domain from Studio, by following these steps:
+
+- 
+Go to the **Global Elements**tab.
+- 
+Click on **Create**button.
+- 
+Search for `Bitronix Transaction Manager`.![A configuration tab for selecting a global element type with options including Bitronix Transaction Manager in Anypoint Studio](_images/bitronix-studio.png)  
+
+## Configuring the Bitronix Transaction Manager
+
+The default configuration values for Bitronix are suitable for most use cases. However, if you wish to customize the transaction manager, you can do so by using system properties or the `wrapper.conf` file located in the `$MULE_HOME/conf` directory.
+
+The table below lists configuration attributes for Bitronix.
+
+| Configuration Attribute | Description | Default value | 
+|---|---|---|
+| 
+ | Timeout for XA transactions, in seconds. | 60 | 
+| 
+ | Recovery execution interval for XA transactions, in seconds. | 60 | 
+| 
+ | Unique ID for the transaction manager to register in the XA transaction logs. This value must be unique for each Mule instance. | Combination of the host IP and, if running in HA, the cluster node ID. | 
+
+### Configuring a Pooling Data Source for Databases
+
+Bitronix integration provides a data source connection pool for the Database connector, which you must use whenever you want to implement resource pooling in the Database connector.
+
+You can configure a shared Pooling Data Source for all connections. This improves connection utilization when those data sources are not heavily used by applications.
+
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<mule-domain xmlns="http://www.mulesoft.org/schema/mule/ee/domain"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:db="http://www.mulesoft.org/schema/mule/db"
+      xmlns:bti="http://www.mulesoft.org/schema/mule/ee/bti"
+      xmlns:spring="http://www.mulesoft.org/schema/mule/spring"
+      xsi:schemaLocation="
+               http://www.mulesoft.org/schema/mule/ee/bti http://www.mulesoft.org/schema/mule/ee/bti/current/mule-bti-ee.xsd
+               http://www.mulesoft.org/schema/mule/ee/domain http://www.mulesoft.org/schema/mule/ee/domain/current/mule-domain-ee.xsd
+               http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
+    <spring:config name="springConfig" files="domain-config/datasource-beans.xml"/>
+    <bti:transaction-manager/>
+    <bti:xa-data-source-pool name="pooledDataSource" dataSource-ref="jdbcDataSource"/>
+    <db:generic-config name="dbConfig" dataSource-ref="pooledDataSource"/>
+</mule-domain>
+```
+xmlThe table below lists configuration attributes for Pooling Data Source.
+
+| Attribute | Description | Required | Default value | 
+|---|---|---|---|
+| 
+ | Identifies the pool so that the connector can reference it. | Yes | |
+| 
+ | Reference to the JDBC data source object. An  | Yes | |
+| 
+ | Defines the minimal amount of connections that can be in the pool. | No | 4 | 
+| 
+ | Defines the maximum amount of connections that can be in the pool. | No | 16 | 
+| 
+ | Defines the number of seconds an idle connection can stay in the pool before it is closed. | No | 60 | 
+| 
+ | Determines how many connections at a time will try to acquire when the pool is exhausted. | No | 1 | 
+| 
+ | The number of seconds a client calling  | No | 30 | 
+| 
+ | Determines how many statements are cached per pooled connection. 0 means caching is disabled. | No | 5 | 
+
+## Transaction Recovery
+
+Mule includes a transaction recovery procedure that is executed automatically, no configuration is needed. When Mule restarts after a system crash, it connects to all of the resources involved in XA transactions and starts the transaction recovery process, leaving all systems in a consistent state.

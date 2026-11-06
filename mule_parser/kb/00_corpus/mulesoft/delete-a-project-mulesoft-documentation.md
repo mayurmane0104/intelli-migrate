@@ -1,0 +1,20 @@
+# Delete a Project | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/design-center/design-delete-project](https://docs.mulesoft.com/design-center/design-delete-project)
+
+---
+
+# Delete a Project
+
+You can delete an API-specification project or an API-fragment project. If you have already published a project, deleting it in API Designer does not delete it from Anypoint Exchange.
+
+| The deletion of a project is final. Deleting a project does  | 
+
+## Procedure
+
+To delete a project, use one of these methods:
+
+- 
+If the project is not open, select the project in Design Center’s **Projects**page, and then click the Delete icon in the top-right corner of the page.
+- 
+If the project is open, click the gear icon in API Designer’s top-right corner and then select **Delete**.

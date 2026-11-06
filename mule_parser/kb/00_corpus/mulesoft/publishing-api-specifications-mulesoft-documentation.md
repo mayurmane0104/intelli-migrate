@@ -1,0 +1,63 @@
+# Publishing API Specifications | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/design-center/design-publish](https://docs.mulesoft.com/design-center/design-publish)
+
+---
+
+# Publishing API Specifications
+
+When you want to share your API specification with other developers, you can publish it to Anypoint Exchange.
+
+## Before You Begin
+
+It is a good practice to remove unreferenced files before publishing a project to Anypoint Exchange. An *unreferenced* file is not referenced from the project’s root file, either directly or indirectly.
+
+For example, if the file `example.raml` is among the files in a project but the root file of the project does not reference `example.raml` with an `!include` tag, the root file doesn’t reference `example.raml` directly. If none of the files in the chain of references from the root file directly references `example.raml`, it is not referenced indirectly from the root file. Therefore, `example.raml` is unreferenced and should probably not be among the files in the project.
+
+If you do not remove them before you begin, unreferenced files are detected when you select the option to publish to Exchange, and you are given options on whether or not to publish them.
+
+## Publish an API Specification
+
+- 
+In API Designer, open the API-specification project that you want to publish. 
+- 
+If the specification has dependencies, click the refresh button beside `Exchange Dependencies`to ensure that Design Center has the latest status and content from all dependencies.
+- 
+Click **Publish**and then click**Publish to Exchange**.![The publish dialog shown when you publish from API Designer to Exchange](_images/apid-publish-dialog-api-specs.png) 
+
+| 1 | Asset version: The version number to be displayed in theVersionsection of the page that Anypoint Exchange creates for the project. For a description of this field, see[Asset Version](#asset-version). | 
+| 2 | API version: The version number of the API specification. For a description of this field, see[API Version](#api-version).
+ | 
+| 3 | LifeCycle State: The lifecycle state of the asset. Assets can be published from API Designer asDevelopmentorStable. Assets cannot be deprecated from API Designer. | 
+| 4 | Business group ID: The ID of the business unit in Anypoint Platform to which the project belongs. | 
+| 5 | Asset name: The name that Anypoint Exchange uses to identify the published project. | 
+| 6 | Asset ID: A unique ID that Anypoint Exchange uses to identify the published project. You should use the default unless there is a published asset with the same ID. | 
+
+- 
+After completing the required fields, click **Publish to Exchange**.If your project includes files that are not referenced by the root file either directly or indirectly, a dialog asks you to confirm that you want to publish the project including the unreferenced files. By default, API Designer excludes them from the published project in Anypoint Exchange. 
+
+| If you are using a version of Anypoint Platform released prior to April 2017 and want to add the asset to API Manager while publishing to Exchange, select Add to API Manager. This functionality is not available in later versions and instead you can link API instances in API Manager to assets in Exchange. | 
+
+## Asset Version
+
+Anypoint Exchange requires an asset version number for each API specification published. The asset version must be specified using semantic versioning rules. For details, see [Change the Version of an Asset](../exchange/to-change-raml-version).
+
+The content of the **Asset version** field on the publish dialog depends on the following:
+
+- 
+If you are publishing the specification for the first time, you can use any valid number based on the semantic versioning scheme. A typical starting version is `1.0.0`.
+- 
+If you are republishing the specification, API Designer automatically populates the **Asset version**field with the existing patch level number incremented by 1. You can change this number, but the republish fails if you use a version number that has already been used to publish a stable version of this API.
+- 
+If you are republishing the specification and select `Development`, you can use the same number as a previously published development version of the API, but not the same number as a previously published stable version.
+
+## API Version
+
+Anypoint Exchange requires an API version number for each API specification published.
+
+The content and state of the **API version** field in the publish dialog depends on the following:
+
+- 
+If the specification already includes a version, you cannot update it in the publish dialog. 
+- 
+If the specification does not include a version, you must enter the version in the **API version**field.

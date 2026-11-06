@@ -1,0 +1,208 @@
+# Editing an Asset | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/exchange/to-describe-an-asset](https://docs.mulesoft.com/exchange/to-describe-an-asset)
+
+---
+
+`[MuleSoft.com][1] [1]: https://mulesoft.com`text
+
+# Editing an Asset
+
+You can edit an asset’s portal, change its name, icon, description, tags, categories, and custom fields; and add portal pages with content. Each page has a maximum limit of 1,024,000 characters in Markdown format.
+
+All versions of an asset have the same name, icon, description, and computed average rating.
+
+Each minor version of an asset has its own tags, categories, custom fields, and content pages, including an optional page of terms and conditions.
+
+In Exchange, open the asset list and select the asset. Exchange shows the asset portal.
+
+## Edit Asset Portal Information
+
+You can change the asset icon, name, description, contact name, and contact email.
+
+- 
+Click the edit pen icon in the asset details page. 
+- 
+To change the icon, click the edit pen icon, select an image file, then click **Open**.
+- 
+To change the asset portal name, enter the new asset portal name. 
+- 
+To change the description, enter a new asset description in the **Description**field.
+- 
+To change the contact name or email, enter a new contact name and email in the corresponding field. 
+- 
+To cancel the changes, click the **X**icon.
+- 
+To save the changes, click the **check**icon.
+
+| Before the August 2019 release, the versions of an asset could have different names or icons. After the August 2019 release, a updated asset information applies to all versions of the asset. | 
+
+## Add and Remove Categories
+
+When searching for assets, categories can be used to filter the search results.
+
+- 
+In the asset details pane, click **Add categories**. If there are already categories added for the asset, click**Categories**.
+- 
+Click **Add category**and select from the list of categories.
+- 
+Click **Add value**and select from the list of values.
+- 
+To remove a category, click the trash can icon. 
+- 
+To remove a value from a category, click the **X**from the value text.
+
+## Add and Remove Asset Tags
+
+When searching for assets, tags can be used to filter the search results. Tags can only be lower case, and upper case tags are converted to lowercase. Special characters are permitted.
+
+- 
+In the asset details pane, click **Add tags**. If there are already tags added for the asset, click**Tags**.
+- 
+Click **Add a tag**and select from the list of tags.
+- 
+Press the enter or return key on your keyboard. 
+- 
+To remove tags, click **Tags**, then click the**X**next to the tag text.
+
+## Edit Asset Documentation
+
+You can change the documentation for an asset.
+
+- 
+Select **Edit documentation**.
+- 
+Enter the new portal content. 
+- 
+In the editor, you can change the appearance of text and insert code samples, block quotes, and horizontal lines. 
+- 
+Add images and videos as described below. 
+- 
+After you write the main page, click **Save**to save as a draft or**Publish**. You can edit and save a draft any number of times before publishing. Drafts are not visible to other users until they are published.
+- 
+Add secondary pages and terms and conditions as described below. 
+- 
+After you edit and save all your pages, click **Publish**to publish the portal.
+- 
+Your asset portal is now visible to everyone in the organization. 
+
+### Add an Image
+
+You can copy and paste an image directly into the Exchange page:
+
+- 
+Click **Edit documentation**.
+- 
+Select **Visual**tab.
+- 
+If your image is on your computer, drag the image to the Exchange page, or copy and paste to the Exchange page. If the image is on a web server, copy the image and paste it into the Exchange page. 
+
+Alternatively, select the image icon in the editor and provide a URL to an illustration available on the web.
+
+In the **Markdown** tab, use this syntax to reference a web served image:
+
+`![some alt text](http://www.example.com/image/png.png)`
+
+Images uploaded before May 2019 can be accessed without authentication, and images uploaded after May 2019 require authentication. To disable unauthenticated access to an image uploaded before May 2019, download it, delete it, and upload it again.
+
+### Add Secondary Pages
+
+You can add more pages to the asset portal.
+
+- 
+Select **Edit documentation**.
+- 
+In the left navigation bar, click **Add New Page**.
+- 
+Press the enter or return key on your keyboard to create the page. You can create as many pages as needed. 
+- 
+To delete a page, click **Delete Page**.
+- 
+In Exchange Portals, click **Add Content Pages**.
+- 
+Add a description to the page. Secondary pages support the same options as the main page. 
+- 
+To save a draft of a new page, click **Save**. Secondary pages are listed in the left navigation bar.
+- 
+To edit a draft, select the name of the page from the list in the left navigation bar and click **Edit**
+- 
+To cancel your edits, click **Cancel**.
+- 
+After you edit and save all your pages, click **Publish**for each page that you want to publish.
+
+In **Editing draft** mode, you can reorder pages by clicking the page name and dragging the page up or down in the left navigation bar.
+
+All page names are validated:
+
+- 
+Page name length must be from 1 to 128 characters. 
+- 
+A page name cannot be the reserved name `home`.
+- 
+Page names cannot be the name of an existing page. 
+- 
+Page names cannot contain these characters: `@``*``+``/``_``\`
+- 
+Page names cannot start with `.`
+
+The required page **Home** has the URL `pages/home`, and the optional page **Terms and conditions** has the URL `pages/.terms`.
+
+For other new pages, Exchange sets a URL that contains a page ID of three alphanumeric characters, a hyphen, and three more alphanumeric characters, such as `pages/1a2-b3c/Formats`. Changing the page name from **Formats** to **Formatting** changes the URL to `pages/1a2-b3c/Formatting`, and the old URL automatically redirects to the new URL.
+
+Pages created before the October 31, 2022 update have URLs with no page ID, such as `pages/Messages`. Changing the page name from **Messages** to **Messaging** changes the URL to the new format, such as `pages/de4-56f/Messaging`, and the old URL automatically redirects to the new URL.
+
+For backward compatibility with the Anypoint CLI, each page with a URL with the new format has an automatic redirect, from a URL with the old format, such as `pages/Pagename`, to the new URL, such as `pages/78g-h9i/Pagename`.
+
+A link to another page contains the link text in square brackets and the URL in parentheses: `[the page about messaging](pages/de4-56f/Messaging)`
+
+### Specify Terms and Conditions
+
+Terms and conditions can be added for API assets only. Users are prompted to accept the terms and conditions when requesting API access.
+
+- 
+Select an asset and click **Edit documentation**.
+- 
+In the left navigation bar, click **Add Terms and Conditions**.
+- 
+Use the editor to specify the terms and conditions for this asset. 
+- 
+To save the terms and conditions page as a draft, click **Save**.
+- 
+To delete the terms and conditions page, click **Delete Page**.
+- 
+To publish the terms and conditions page, click **Publish**.
+
+### API Groups
+
+If any API in an API Group has a terms and conditions page, then the API Group has a terms and conditions page that cannot be deleted and that shows the terms and conditions of the underlying APIs.
+
+Optionally, you may add more terms and conditions to the API Group’s terms and conditions page.
+
+### Editor Notes
+
+- 
+To use the link control, type text, select the text, and click the link control to specify the link URL. 
+- 
+If your Exchange session times out while you’re editing, select all the text on the page and copy it to your clipboard. Then after you log back in, you can paste the content back into the page and save your draft. When a timeout occurs, unsaved content is purged. 
+- 
+You can access international characters by pressing and holding a character. 
+- 
+If you are editing descriptions for many assets, instead of clicking an asset to open it from Exchange, instead right-click the asset and click Open Link in New Window to open the asset in a new browser window. Otherwise, after you publish an asset, control returns to the start of the filter/search list. 
+- 
+Keyboard shortcuts (work in Visual and Markdown): Bold: ctrl-b/cmd-b, Italics: ctrl-i/cmd-i, Heading: ctrl-d/cmd-d, Blockquote: ctrl-e/cmd-e, Code Block: ctrl-j/cmd-j, Numbered List: ctrl-o/cmd-o, Bullet List: ctrl-u/cmd-u, Insert Link: ctrl-k/cmd-k. 
+
+### Markdown Notes
+
+- 
+Anypoint Exchange uses GitHub Markdown. 
+- 
+Maximum limit of 1,024,000 Markdown characters per page. 
+- 
+Basic HTML 5 code elements are supported in Markdown, such as div, button, a, ul, ol, table, p, span, pre, and code. 
+- 
+Insert a link: `[MuleSoft.com](http://www.mulesoft.com)`or:
+- 
+Insert a YouTube video: `![linkname](https://www.youtube.com/embed/YOUR_YOUTUBE_ID_HERE)`
+ For example:`![](https://www.youtube.com/embed/K3tuHUZ1J04)`
+- 
+Use syntax highlighting: ````javascript const myBool = true; const myNumber = 5; const myString = "abc"; ````text

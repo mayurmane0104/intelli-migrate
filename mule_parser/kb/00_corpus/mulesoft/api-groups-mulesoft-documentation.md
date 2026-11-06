@@ -1,0 +1,106 @@
+# API Groups | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/api-manager/latest/api-groups-landing-page](https://docs.mulesoft.com/api-manager/latest/api-groups-landing-page)
+
+---
+
+Locations API
+
+# API Groups
+
+Using API Groups enables you to bundle your APIs and resources to solve specific user needs. Instead of using individual resources and APIs from a list, the users can request access to and use these in a package that solves a specific problem for them.
+
+When you create an API Group, you can customize instances of that group with different SLAs and rate limit conditions based on the problem the instance must solve. You can then publish the API Group to Anypoint Exchange so that users can subscribe to the package.
+
+Because each API Group instance can include several API instances, and each instance can be included in multiple API Group instance solutions, package customization options are limitless.
+
+## How API Groups Work
+
+As an API Group Administrator, you create an API Group for a specific organization and environment. API Groups are versioned, like the APIs contained within them, to more easily incorporate updates.
+
+Each API Group can have multiple instances and each API Group instance can have multiple API instance. These API Group instances can exists in different environments, such as production and sandbox.
+
+The following graphic illustrates how you can implement API Groups in different environments:
+![API Group Hierarchy](_images/api-groups-architecture.png)
+
+
+In this example, we have two business groups: `ORG A` and `ORG B`. Each of these business groups has two environments: `Sandbox` and `Production`. `ORG A` has two APIs: `Twitter` and `Facebook`, and one instance of each of these APIs in the two environments. `ORG B` has two APIs: `Instagram` and `Snapchat`, and one instance of each of these APIs in the two environments.
+
+`ORG A` has one API Group called `Social Media` with one version `V1`. `Social Media V1` has two API Group instances:
+
+- 
+API Group instance `QA`in`Sandbox`environment.This instance has 4 API instances: `Facebook v1`(QA) and`Twitter v1`(QA) from`ORG A`and`Instagram v1`(QA) and`Snapchat v1`(QA) from`ORG B`.
+- 
+API Group instance `PROD`in`Production`environment.This instance has 4 API instances: `Facebook v1`(PROD) and`Twitter v1`(PROD) from`ORG A`and`Instagram v1`(PROD) and`Snapchat v1`(PROD) from`ORG B`.
+
+The API Group instance `QA` is published and an asset called `API Group Social Media V1` is created. If the API Group instance `PROD` is published, no asset is created. In this case, `PROD` is linked only to the existing asset because the API Group `Social Media` and the version `v1` are the same.
+
+## API Groups Example
+
+To better understand how API Groups facilitate API consumer engagement, consider the needs of a fictitious company named Good Weather, which forecasts atmospheric conditions for a given location and time by using meteorology.
+
+Good Weather enables customers to access requested results using the following APIs:
+
+- 
+Locations API 
+- 
+Forecast API 
+- 
+Current Conditions API 
+- 
+Indices API 
+- 
+Weather Alarms API 
+- 
+Alerts API 
+- 
+Imagery API 
+- 
+Tropical API 
+- 
+Translations API 
+
+### Example Problem Statement
+
+The process that Good Weather customers follow to access and use the APIs is not efficient, requiring:
+
+- 
+Searching the Good Weather company portal to find appropriate APIs to actualize a business flow To determine the precise API they need, customers have to search a long list of APIs on the portal. This difficulty is compounded when developers modify the existing APIs or introduce additional APIs. 
+- 
+Changing multiple API service plans individually to adopt a service-wide change This complicates the task of upgrading or downgrading of services. 
+- 
+Working to access each element of an API when API access is approved The API packaging does not restrict access down to the individual call and data elements. This introduces security issues and unnecessary overhead. 
+
+### Example Solution using API Groups
+
+Using API Groups, Good Weather can package different APIs based on consumer requirements and scenarios, with specific SLAs that do not conflict with the requirements for other consumers. Good Weather can quickly adapt and absorb API changes. Using API Groups:
+
+- 
+Good Weather can package different sets of APIs to target different consumers' requirements. 
+- 
+API consumers can access a collection of related APIs instead of individual APIs, simplifying asset discovery on the Good Weather portal. 
+- 
+API Groups can enforce governance using SLA plans that can be modified with a single click. 
+
+The following table illustrates the API Group packages that Good Weather created to meet their business requirements:
+
+| Trial | Base | Enterprise | 
+|---|---|---|
+| Locations API | Locations API | |
+| Forecast API | Forecast API | Forecast API | 
+| Current Conditions API | Current Conditions API | |
+| Weather Alarms API | Weather Alarms API | |
+| Alerts API | ||
+| Imagery API | ||
+| Translations API | 
+
+## API Group Permissions
+
+To perform all tasks pertaining to API groups, the API Group Administrator permission is required. This permission is set at the business group-level and gives the user access to:
+
+- 
+Create, update, and delete API Groups within the business group 
+- 
+View all API instances in the business group to be able to add API instances to the API Group 
+- 
+Configure SLA tiers and manage contracts with API Groups

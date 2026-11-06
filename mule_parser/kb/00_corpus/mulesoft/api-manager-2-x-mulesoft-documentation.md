@@ -1,0 +1,20 @@
+# API Manager 2.x | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/api-manager/latest](https://docs.mulesoft.com/api-manager/latest)
+
+---
+
+# API Manager 2.x
+
+If you created an Anypoint Platform account prior to November 2017, use the API Manager 1.x documentation listed in the version menu in the sidebar.
+
+If you created an Anypoint Platform account after November 2017:
+
+- 
+Use API Manager 2.x to manage APIs. 
+- 
+Use Design Center to author and update RAML specifications. Applications are automatically deployed to CloudHub when you use Design Center to develop your APIs. 
+- 
+Use API Manager to deploy an API proxy to other servers. 
+- 
+You can manage Mule runtime engine 4.x APIs only with API Manager 2.x.

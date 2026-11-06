@@ -1,0 +1,15 @@
+# aws_lambda_powertools.utilities.streaming.transformations.gzip API documentation
+
+**Source:** [https://docs.aws.amazon.com/powertools/python/latest/api/utilities/streaming/transformations/gzip.html](https://docs.aws.amazon.com/powertools/python/latest/api/utilities/streaming/transformations/gzip.html)
+
+---
+
+# Module `aws_lambda_powertools.utilities.streaming.transformations.gzip`
+
+## Classes
+
+- `class GzipTransform (**transform_options)`
+- 
+## Expand source code`class GzipTransform(BaseTransform): """ Gzip data transform. Returns a gzip.GzipFile instead that reads data from the input stream: https://docs.python.org/3/library/gzip.html#gzip.GzipFile Example ------- >>> from aws_lambda_powertools.utilities.streaming import S3Object >>> from aws_lambda_powertools.utilities.streaming.transformations import GzipTransform >>> >>> s3object = S3Object(bucket="bucket", key="key") >>> reader = s3object.transform(GzipTransform()) >>> for line in reader: >>> print(line) """ def transform(self, input_stream: IO[bytes]) -> GzipFile: return GzipFile(fileobj=input_stream, mode="rb", **self.transform_options)`Gzip data transform. Returns a gzip.GzipFile instead that reads data from the input stream: [https://docs.python.org/3/library/gzip.html#gzip.GzipFile](https://docs.python.org/3/library/gzip.html#gzip.GzipFile)## Example`>>> from aws_lambda_powertools.utilities.streaming import S3Object >>> from aws_lambda_powertools.utilities.streaming.transformations import GzipTransform >>> >>> s3object = S3Object(bucket="bucket", key="key") >>> reader = s3object.transform(GzipTransform()) >>> for line in reader: >>> print(line)`### Ancestors- [BaseTransform](base.html#aws_lambda_powertools.utilities.streaming.transformations.base.BaseTransform)
+- typing.Generic
+ ### Inherited members

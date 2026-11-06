@@ -1,0 +1,97 @@
+# Developing Integrations Using MuleSoft Vibes | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/anypoint-code-builder/int-ai-developing-integrations](https://docs.mulesoft.com/anypoint-code-builder/int-ai-developing-integrations)
+
+---
+
+![Flow depicting how the trust layer works, including the steps of the flow](_images/acb-einstein-trust-layer.png) 
+
+# Developing Integrations Using MuleSoft Vibes
+
+To develop, manage, or maintain your applications, use MuleSoft Vibes in Anypoint Code Builder. It is a purpose-built assistant for the development lifecycle, available directly in the IDE. It integrates with the [MuleSoft MCP Server](../mulesoft-mcp-server/) and supports many capabilities, such as:
+
+- 
+Developing API specifications 
+- 
+Creating and configuring applications 
+- 
+Searching for assets 
+- 
+Deploying and managing instances 
+- 
+Managing custom metadata 
+
+All of these actions are driven by natural language messages.
+
+When you generate an integration, MuleSoft Vibes transforms your business logic into a Mule application. The generated application includes:
+
+- 
+Flows 
+- 
+Connector configurations 
+- 
+A sample `config.properties`file
+- 
+Dependencies required for connectors, such as Salesforce and HTTP 
+
+These capabilities are powered by large language models (LLMs) that run within the Salesforce Shared Trust Boundary.
+
+| MuleSoft Vibes is available on US, EU, Canada, and Japan cloud hosts. | 
+
+## Before You Begin
+
+Before you start creating your API spec, make sure you meet the following prerequisites:
+
+- 
+Make sure you have the [required Anypoint Code Builder permissions](start-configure-permissions#permissions).
+- 
+Ensure you have the following permissions to use MuleSoft Vibes: - 
+**Mule Developer Generative AI User**
+ 
+- 
+- 
+Make sure Einstein is enabled in Access Management. For more information, see [Enabling Einstein for Anypoint Platform](../access-management/enabling-agentforce).
+
+| MuleSoft Vibes always uses the permissions of the Anypoint Platform user who is logged into Anypoint Code Builder, and can only execute actions that the authenticated user has permission to perform in Anypoint Platform. | 
+
+## Unified MuleSoft Vibes Experience
+
+MuleSoft Vibes provides a single panel where you can develop integrations and API specifications. Unlike earlier versions of generative features, it does not insert output through a separate panel. Instead, it writes directly into your project files when you grant edit permissions.
+
+Depending on your settings, MuleSoft Vibes can:
+
+- 
+Request approval before writing to your files. 
+- 
+Write automatically if **Auto-approve**is enabled in the MuleSoft Vibes settings.
+
+For details on configuring permissions and server connections, see [Troubleshooting AI Features in Anypoint Code Builder](troubleshoot-generative-ai).
+
+## Provide Additional Context
+
+You can improve the accuracy of generated outputs by adding extra context to MuleSoft Vibes. Besides the message you send in the panel, you can attach these types of input:
+
+- 
+**Files**– Add a requirements file or other reference documents.
+- 
+**Folders**– Provide an entire project folder for MuleSoft Vibes to consider.
+- 
+**Terminal Input**– Share terminal outputs as context for the request.
+
+This context helps MuleSoft Vibes generate flows and API specifications that align more closely with your requirements.
+
+## Trust Layer
+
+The Einstein trust layer bridges Anypoint Platform and the LLMs, as shown in this flow:
+
+![Flow depicting how the trust layer works, including the steps of the flow](_images/acb-einstein-trust-layer.png) 
+
+| 1 | You create a message based on your use case and send it to MuleSoft Vibes. | 
+| 2 | To minimize inaccurate responses, messages are grounded with MuleSoft proprietary data and user context. | 
+| 3 | To ensure safe data transfer to external LLMs, the message is sent via a secure gateway. | 
+| 4 | All data remains within Salesforce-managed boundaries. | 
+| 5 | After the LLM generates a response, the content is returned through the secure gateway. | 
+| 6 | MuleSoft validates the generated output to ensure compatibility with the MuleSoft ecosystem. | 
+| 7 | Anypoint Code Builder logs the interaction for monitoring before surfacing the validated response. | 
+
+| This feature uses AI models that can produce inaccurate or harmful responses. Review the generated output for accuracy and safety before using it. You assume responsibility for the output when making business decisions. |

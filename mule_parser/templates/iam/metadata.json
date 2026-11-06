@@ -1,0 +1,7 @@
+{
+  "template_id": "iam",
+  "name": "Least Privilege IAM Role",
+  "service": "IAM",
+  "target": "IAM Role",
+  "required_variables": ["resource_prefix"]
+}

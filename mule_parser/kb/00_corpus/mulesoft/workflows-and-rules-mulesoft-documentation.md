@@ -1,0 +1,120 @@
+# Workflows and Rules | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/anypoint-code-builder/vibes-workflows-commands](https://docs.mulesoft.com/anypoint-code-builder/vibes-workflows-commands)
+
+---
+
+`When generating RAML files, enforce this naming pattern: <domain>-<capability>-api. If the API title or baseUri doesn't follow the pattern, return a warning and suggest a corrected value.`text
+
+# Workflows and Rules
+
+Use workflows and rules to customize how MuleSoft Vibes operates within your project.
+
+Rules define natural-language constraints that MuleSoft Vibes follows when generating content.
+
+Use rules to enforce organizational conventions, ensure consistent error handling, and maintain coding standards across your workspace.
+
+You can define rules at two levels:
+
+- 
+**Global**– Applies to all messages sent to Mulesoft Vibes.
+- 
+**Workspace**– Applies only to the active workspace.
+
+Workflows create predefined multi-step tasks that MuleSoft Vibes executes automatically.
+
+Workflows let you streamline repeated development steps and can be triggered using slash commands (for example, `/workflow-name`) in the Mulesoft Vibes panel.
+
+## Add Workflows or Rules
+
+- 
+Open MuleSoft Vibes in the sidebar. 
+- 
+Select **Settings**.
+- 
+In the **Rules and Workflows**section, add a rule or a workflow.
+- 
+Select **Add Rule**or**Add Workflow**.
+- 
+Provide the required information: - 
+For rules, enter the natural-language instruction to follow. 
+- 
+For workflows, enter a name, an optional description, and the steps the workflow must run. 
+ 
+- 
+- 
+Select **Save**.
+
+You can edit or delete existing rules and workflows from the same section.
+
+### Rule Examples
+
+You can use rules to guide how MuleSoft Vibes generates or validates content. For example:
+
+- 
+**Naming convention rule**: Instruct MuleSoft Vibes to ensure that all API names follow your organization’s naming standards.
+- 
+**Validation rule**: Require that every API specification includes version information before generating related files.
+- 
+**Security rule**: Ask MuleSoft Vibes to flag endpoints that expose sensitive data without authentication.
+
+Example rule text to enter in **Add Rule**:
+
+#### Workflow Examples
+
+Workflows define a sequence of steps that MuleSoft Vibes executes to complete a task. For example:
+
+- 
+**API design validation workflow**: Validate an API specification, check naming conventions, verify security requirements, and generate a summary of issues.
+- 
+**API creation workflow**: Generate an API specification, apply validation rules, suggest improvements, and save the final version to the workspace.
+- 
+**Troubleshooting workflow**: Analyze an error, identify the root cause, propose a fix, and update the configuration if needed.
+
+Example workflow definition to enter in **Add Workflow**:
+
+`Name: api-design-review Description: Run governance checks before publishing a RAML spec. Steps: 1. Validate RAML syntax and required metadata. 2. Check naming conventions from workspace rules. 3. Check for unsecured endpoints that expose sensitive fields. 4. Summarize findings with required fixes and suggested improvements.`text
+
+## Add Commands
+
+Commands provide quick shortcuts for interacting with MuleSoft Vibes.
+You can invoke any command by typing `/` in the message input box.
+
+MuleSoft Vibes includes several built-in commands.
+
+| Command | Description | 
+|---|---|
+| 
+ | Create a new rule based on the current conversation. | 
+| 
+ | Start a new chat that carries over context from your current task. | 
+| 
+ | Report a malfunctioning output by creating a GitHub issue with the MuleSoft Vibes format. | 
+
+Workflows that you define also appear as commands under **Workflow Commands**.
+You can trigger them the same way by typing `/` followed by the workflow name.
+
+Example command usage:
+
++
+
+`/api-design-review`command
+
+## Enforce Organizational Conventions with Rulesets
+
+Define and apply organizational conventions with rulesets across your development workflows using natural language.
+
+By creating rules at the global or workspace level, you can standardize how MuleSoft Vibes generates APIs, integrations, and related assets.
+
+Rulesets help you:
+
+- 
+Enforce naming and design standards across teams 
+- 
+Apply consistent validation and security requirements 
+- 
+Reduce manual review by guiding generation upfront 
+
+Because rules are written in natural language, you can describe expectations without needing formal configuration or code.
+
+MuleSoft Vibes applies these rules automatically when processing messages and executing workflows.

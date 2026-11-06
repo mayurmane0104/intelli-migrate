@@ -1,0 +1,4 @@
+{
+  "required_terms": ["AWS::SSM::Parameter", "ssm.StringParameter"],
+  "forbidden_terms": ["password:", "secret:", "ECS", "AppFlow", "Amazon MQ", "MSK", "Glue", "DynamoDB", "EMR", "Batch"]
+}

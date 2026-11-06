@@ -1,0 +1,7 @@
+{
+  "template_id": "sqs",
+  "name": "SQS Queue",
+  "service": "SQS",
+  "target": "SQS",
+  "required_variables": ["resource_prefix"]
+}

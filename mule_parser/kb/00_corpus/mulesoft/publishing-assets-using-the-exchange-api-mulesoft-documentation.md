@@ -1,0 +1,455 @@
+# Publishing Assets Using the Exchange API | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/exchange/exchange-api](https://docs.mulesoft.com/exchange/exchange-api)
+
+---
+
+```
+curl --location --request POST 'https://anypoint.mulesoft.com/accounts/login' \
+     --header 'Content-Type: application/json' \
+     --header 'Accept: application/json' \
+     --data-raw '{
+        "username":"ANYPOINT_USERNAME",
+        "password":"ANYPOINT_PASSWORD"
+     }' | jq -r ".access_token"
+```
+# Publishing Assets Using the Exchange API
+
+With the Exchange API, you can publish and consume assets, add documentation pages, add or edit categories, and even manage your public portals. This page shows several examples using the Exchange API, and the complete API documentation is at the [API documentation portal](https://anypoint.mulesoft.com/exchange/portals/anypoint-platform/f1e97bc6-315a-4490-82a7-23abe036327a.anypoint-platform/exchange-experience-api/).
+
+The API supports all Exchange asset types, for example:
+
+- 
+REST APIs 
+- 
+SOAP APIs 
+- 
+HTTP APIs 
+- 
+AsyncAPI specifications 
+- 
+API fragments 
+- 
+Connectors 
+- 
+Mule applications 
+- 
+Examples 
+- 
+Templates 
+- 
+Policies 
+- 
+Custom assets 
+
+New assets count toward your organization’s [asset limit](to-create-an-asset#asset-limits).
+
+## Prerequisites
+
+To benefit from this documentation, you must be familiar with Exchange, programming concepts, and command line operations on your computer or server.
+
+You must have a unique artifact ID and organization ID to publish your asset. The artifact ID consists of the group ID, asset ID, and version.
+
+## Tasks Required to Publish an Asset to Exchange
+
+Perform these tasks to publish an asset to Exchange and add metadata using Exchange APIs:
+
+## Find Your Organization ID
+
+To find your organization ID:
+
+- 
+Log in to Anypoint Platform and click **Access Management**.
+- 
+Click the name of the top-level organization or a business group, and view your organization ID in the organization information screen. 
+- 
+Copy the organization ID and use it when you try out examples. 
+
+## Authentication
+
+The Exchange API requires authentication with an access token or a connected application.
+
+## Obtain an Access Token
+
+- 
+Log in to Anypoint Platform. 
+- 
+Obtain an access token with a cURL command. 
+
+You can also use Postman or another application for sending HTTP commands.
+
+Replace `ANYPOINT_USERNAME` with your Anypoint Platform user account name and replace `ANYPOINT_PASSWORD` with your password.
+
+Use this access token in your API calls.
+
+Your organization administrator sets the expiration time for access tokens to a value from 15 to 180 minutes. If you perform a search or other operation that requires more time, you must request an additional token.
+
+## Use Connected Application Authentication
+
+To use connected application authentication:
+
+- 
+Provide basic authentication and define the username as `~~~Client~~~`and the password as`clientID~?~clientSecret`.- 
+Replace `clientID`with the client ID.
+- 
+Replace `clientSecret`with the client secret.
+ 
+- 
+
+## Publish an Asset
+
+With Exchange API version 2 you can publish assets to Exchange either by submitting multipart form data or by passing a POM file that contains the data.
+
+The API can also upload assets to Exchange either synchronously or asynchronously.
+
+The API can upload all supported asset types, including REST APIs, SOAP APIs, HTTP APIs, AsyncAPI specifications, API fragments, connectors, Mule applications, examples, templates, policies, and custom assets.
+
+The following example shows how to publish a REST API (RAML specification).
+
+### Specify Asset Properties
+
+Each API call to create an asset specifies multipart properties:
+
+| Property | Description | Required or Optional | 
+|---|---|---|
+| name | The asset name that is visible on the Exchange portal page. | Required | 
+| description | The description of the asset. | Optional | 
+| type | The type of asset to be created. | Required if the type cannot be inferred from the file extension | 
+| dependencies | A string of comma-separated dependencies, defined as  | Optional | 
+| keywords | A string of comma-separated values to be saved as an asset’s attributes, for example,  | Optional | 
+| tags | A string of comma-separated values to post as the asset’s tags, for example,  | Optional | 
+| fields | A JSON array whose items are objects with properties key and value, which represent custom fields. The custom field must be configured in your organization. The example of uploading a custom asset includes custom fields. | Optional | 
+| fields.key | A string of comma-separated values to post as the asset’s custom fields. Replace  | Optional | 
+| categories | A JSON array whose items are objects with properties key and value, which represent custom fields. The custom field must be configured in your organization. The example of uploading a custom asset includes custom fields. | Optional | 
+| categories.key | A string of comma-separated values to post as the asset’s categories. Replace  | Optional | 
+| contactName | Name of a person to contact about the asset. | Optional | 
+| contactEmail | Email address of a person to contact about the asset. | Optional | 
+| properties | Some asset types require additional properties specified with the properties prefix, such as  | Required for some properties and some asset types | 
+
+The following example uses multipart form data to upload a RAML API specification to Exchange.
+
+Download the file used in this example from the [asset creation](https://anypoint.mulesoft.com/exchange/portals/anypoint-platform/f1e97bc6-315a-4490-82a7-23abe036327a.anypoint-platform/exchange-experience-api/minor/2.0/pages/Asset%20Creation/) page on the Exchange API developer portal.
+
+Replace `/file-path/training-american-flights-api-1.0.0-raml.zip` with your local file path:
+
+```
+curl -v \
+  -H 'Authorization: bearer ANYPOINT_TOKEN' \
+  -H 'x-sync-publication: true' \
+  -F 'name=RAML asset name' \
+  -F 'description=Description of the asset' \
+  -F 'keywords=this, is, the, best, raml' \
+  -F 'dependencies=68ef9520-24e9-4cf2-b2f5-620025690913:training-american-flight-data-type:1.0.1,68ef9520-24e9-4cf2-b2f5-620025690913:training-american-flights-example:1.0.1' \
+  -F 'properties.mainFile=american-flights-api.raml' \
+  -F 'properties.apiVersion=v1' \
+  -F 'files.raml.zip=@/file-path/training-american-flights-api-1.0.0-raml.zip' \
+https://anypoint.mulesoft.com/exchange/api/v2/organizations/:organizationId/assets/:groupId/:assetId/:version
+```
+### Specify Synchronous or Asynchronous Publication
+
+To use the synchronous method, add the header `x-sync-publication:true`.
+
+To use the asynchronous method, add the header `x-sync-publication:false` or send a request with no `x-sync-publication` header.
+
+If the asset is published asynchronously, then a response like this is returned:
+
+```
+{
+"publicationStatusLink":"https://anypoint.mulesoft.com/exchange/api/v2/organizations/67ac7cde-c02c-457f-b826-da2474e63d5a/assets/67ac7cde-c02c-457f-b826-da2474e63d5a/wsdl-asset/1.0.0/publication/status/d47a22a5-90f6-49eb-bfd0-d9fff575e022"
+}
+```
+The endpoint `publicationStatusLink` provides the asset publication status.
+
+### Set Mutable Data
+
+This example shows how to create your asset and set the mutable data describing it in the same request. The mutable data of an asset includes categories, custom fields, tags, and documentation pages.
+
+The asset publication endpoint creates a new asset. If the asset already exists, the request fails with error 409 (conflict). Do not try to change the mutable data of an existing version. Instead, create a new patch version with the updated mutable data. For example, if the current version is 1.2.3, create version 1.2.4.
+
+This example publishes the category and custom field, which have the keys `categoryKey` and `fieldKey`. Publication fails if the category or the custom field is not configured for your organization.
+
+In the documentation archive file sent as `files.docs.zip`, include each documentation page as a Markdown file in the root directory of the archive with a name such as `Getting Started.md`. Replace `Getting Started` with the title of the page. To include a terms and conditions page, put the content in a file named `terms.md`. Include resources such as images in the optional subdirectory `resources`. Specify the page order with the property `pageOrder` on the root of the main object in the optional file `config.json`:
+
+```
+{
+ "pageOrder": ["home", "Getting Started", "Examples"]
+}
+```
+```
+curl --location --request POST 'https://anypoint.mulesoft.com/exchange/api/v2/organizations/:organizationId/assets/:groupId/:assetId/:version' \
+--header 'Authorization: bearer YOUR_TOKEN' \
+--header 'x-sync-publication: true' \
+--form 'type="custom"' \
+--form 'name="Comprehensive Test"' \
+--form 'tags="1, 2, 3, 4"' \
+--form 'categories.categoryKey="value1, value2"' \
+--form 'fields.fieldKey="value1, value2"' \
+--form 'contactName="Max Mule"' \
+--form 'contactEmail="maxmule@example.com"' \
+--form 'files.docs.zip=@"/file-path/docs.zip"'
+```
+### Set Categories and Fields as JSON Collections
+
+To set or change categories and custom fields in JSON format within the multipart form, send an array of objects that contain the properties key and value.
+
+If the categories and custom fields are not configured for your organization, the request fails.
+
+To delete all categories or custom fields, send an empty array:
+
+```
+--form 'categories="[]"'
+--form 'fields="[]"'
+```
+In the multipart form, data in JSON format has priority, so this example does not set `categoryKey2` or `fieldKey2`.
+
+Example:
+
+```
+curl --location --request POST 'https://anypoint.mulesoft.com/exchange/api/v2/organizations/:organizationId/assets/:groupId/:assetId/:version' \
+--header 'Authorization: bearer YOUR_TOKEN' \
+--header 'x-sync-publication: true' \
+--form 'type="custom"' \
+--form 'name="Comprehensive Test"' \
+--form 'tags="1, 2, 3, 4"' \
+--form 'categories="[{"key":"categoryKey", "value":"value1, value2"}]"' \
+--form 'categories.categoryKey2="value3"' \
+--form 'fields="[{"key":"fieldKey", "value":"value1, value2"}]"' \
+--form 'fields.fieldKey2="value3"' \
+--form 'files.docs.zip=@"/file-path/docs.zip"'
+```
+### Set Lifecycle State
+
+A new asset version is in either the `development` state or the default `stable` state (also known as `published`). An asset version must be stable before being deprecated.
+
+To use Exchange API version 2 to create an asset and set its lifecycle state, add the property `status` to the multipart request. If the state is not specified, the asset is created with the default `stable` state.
+
+The following REST API asset example shows how to create an asset and set its lifecycle state:
+
+- 
+Log in to Anypoint Platform and download the [https://exchange-files.anypoint.mulesoft.com/68ef9520-24e9-4cf2-b2f5-620025690913/689ce62f6cdfc382f974087bec28af21d3e9b2d525b74a3ab4a90b549e16eba7.zip?response-content-disposition=attachment%3B%20filename%3Dtraining-american-flights-api-1.0.0-raml.zip&Expires=1771053074&Key-Pair-Id=APKAJ3T3QD2CMFEXRAJA&Signature=irKCgALj61kdDfYr4ozcYuGf4B1kcFR0JgDAiVFxwDc8WBbkn-dQA1](https://exchange-files.anypoint.mulesoft.com/68ef9520-24e9-4cf2-b2f5-620025690913/689ce62f6cdfc382f974087bec28af21d3e9b2d525b74a3ab4a90b549e16eba7.zip?response-content-disposition=attachment%3B%20filename%3Dtraining-american-flights-api-1.0.0-raml.zip&Expires=1771053074&Key-Pair-Id=APKAJ3T3QD2CMFEXRAJA&Signature=irKCgALj61kdDfYr4ozcYuGf4B1kcFR0JgDAiVFxwDc8WBbkn-dQA1)zTJ2lJ7bBtzK7n6FbA3n3quczeuEeDu8BIPxt77B7x-nMS6LNVjLTbj2r89XJVbcbyjhVg0UyWQUUl-7u3YNwVpW-5KltWOaiHtwgQOLatVCQXNg0S2zetAXlxCAfbM2YWiiTWgdWcu3CgbQuTzzFYfjlTJrbVHq8QHwXJpVivW3QaSYtJwhjgf7D3CaIePNrN9UwkQCWTyyta0Ne2x6ROBegLkjlGhL1RpmA3gYCuvV2VFezaWkjsMorEow6D5Ty~eafsDYF8k-EaxOO9xpNJtXXQ__[example file].
+- 
+Replace `/file-path/training-american-flights-api-1.0.0-raml.zip`with the local path of the downloaded file.
+- 
+Replace `ANYPOINT_TOKEN`,`:organizationId`,`:groupId`,`:assetId`, and`:version`with values specific to your implementation.
+- 
+Set the property `status`to`development`or`published`.
+- 
+Execute: 
+
+```
+curl -v \
+    -H 'Authorization: bearer ANYPOINT_TOKEN' \
+    -H 'x-sync-publication: true' \
+    -F 'name=RAML asset name' \
+    -F 'description=Description of the asset' \
+    -F 'keywords=best, raml' \
+    -F 'status=development' \
+    -F 'properties.mainFile=american-flights-api.raml' \
+    -F 'properties.apiVersion=v1' \
+    -F 'files.raml.zip=@/file-path/training-american-flights-api-1.0.0-raml.zip' \   https://anypoint.mulesoft.com/exchange/api/v2/organizations/:organizationId/assets/:groupId/:assetId/:version
+```
+To use the Exchange API version 1 to create an asset and set its lifecycle state, send the status property as a field.
+
+### Uploading Images to be Used as Asset Icons
+
+Upload an image to use as an asset icon by using the publish endpoint. Icons that display in the Exchange portal can help users find your asset. Icons can be company logos or any other images. The following file types are supported:
+
+- 
+GIF 
+- 
+JPG 
+- 
+JPEG 
+- 
+PNG 
+- 
+SVG 
+
+Asset icons are version agnostic. They are not replaced by new icons when assets are versioned.
+
++
+The following example shows how to upload a .png file image to use as an asset icon. To specify the asset, replace the identifiers `:groupId`, `:assetId`, and `:version` with values specific to your implementation. Ensure that `files.icon.png` has the same file type as `my-asset-icon.png`.
+
+```
+curl -v \
+    -H 'Authorization: bearer ANYPOINT_TOKEN' \
+    -H 'x-sync-publication: true' \
+    -F 'name=My asset name' \
+    -F 'description=Asset with an uploaded icon' \
+    -F 'files.raml.zip=@/file-path/training-american-flights-api-1.0.0-raml.zip' \
+    -F 'files.icon.png=@/file-path/my-asset-icon.png' \
+https://anypoint.mulesoft.com/exchange/api/v2/organizations/:organizationId/assets/:groupId/:assetId/:version
+```
+### Troubleshoot Publishing Errors
+
+When publishing custom connectors, a timeout error can occur. This can happen if schema definitions import other schemas with external references are private or unreachable from the internet.
+
+To resolve this issue, remove external references that are private or not reachable from the internet.
+
+## Describe Your Assets
+
+After publishing your assets, enrich their metadata and make them easier to discover by adding optional [tags](to-describe-an-asset#add-asset-tags), [categories](to-manage-categories), and [custom fields](to-manage-custom-fields).
+
+### Add Tags
+
+The following example shows how to insert or replace tags on an asset. Each asset is uniquely identified by the combination of its group ID, asset ID, and version. To specify the asset, replace the identifiers `:groupId`, `:assetId`, and `:version`.
+
+Note that this command replaces any existing tags on the asset.
+
+```
+curl 'https://anypoint.mulesoft.com/exchange/api/v2/assets/:groupId/:assetId/:version/tags' \
+  -X 'PUT' \
+  -H 'accept: application/json' \
+  -H 'authorization: bearer ANYPOINT_TOKEN' \
+  -H 'content-type: application/json' \
+  -d '[{"value":"rest-api"}, {"value":"documentation"}]'
+```
+### Add Categories
+
+Categories are managed fields that the organization administrator adds and maintains.
+
+The following example uses a previously created category with the name `apiType` and sets that category value to `System API` on the asset. Each asset is uniquely identified by the combination of its group ID, asset ID, and version. To specify the asset, replace the identifiers `:groupId`, `:assetId`, and `:version`.
+
+```
+curl -X PUT \
+https://anypoint.mulesoft.com/exchange/api/v2/assets/:groupId/:assetId/:version/tags/categories/apiType \
+  -H 'Authorization: bearer ANYPOINT_TOKEN' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "tagValue": ["System API"]
+  }'
+```
+### Add Custom Fields
+
+This example uses a previously created custom field with name `subType` and sets that category value to `OAS` on the asset. Each asset is uniquely identified by the combination of its group ID, asset ID, and version. To specify the asset, replace the identifiers `:groupId`, `:assetId`, and `:version`.
+
+```
+curl -X PUT \
+https://anypoint.mulesoft.com/exchange/api/v2/assets/:groupId/:assetId/:version/tags/fields/subType \
+  -H 'Authorization: bearer ANYPOINT_TOKEN' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "tagValue": ["OAS"]
+  }'
+```
+### Promote Lifecycle State
+
+[Asset lifecycle states](lifecycle) have three possible promotions:
+
+- 
+`development`to`stable`
+- 
+`stable`to`deprecated`
+- 
+`deprecated`to`stable`
+
+The `stable` state is also known as `published`.
+
+In this example, replace `ANYPOINT_TOKEN`, `:groupId`, `:assetId`, and `:version` with values specific to your implementation, and replace `:status` with one of `development`, `published`, or `deprecated`.
+
+```
+curl -X https://anypoint.mulesoft.com/exchange/api/v2/assets/:groupId/:assetId/:version/status \
+    -H 'Authorization: bearer ANYPOINT_TOKEN' \
+    -d '{"status": ":status"}'
+```
+### Update Asset Metadata
+
+This example shows how to update the mutable metadata that describes an existing asset without changing the version number or creating a new version of the asset. This mutable data includes categories, custom fields, tags, and documentation pages.
+
+The key `categoryKey` publishes the category and the key `fieldKey` publishes the custom field. Publication fails if the category or the custom field is not configured for your organization.
+
+Uploading a documentation file named `files.docs.zip` updates the asset’s documentation. The root directory of the archive includes each documentation page as a Markdown file with a name such as `Getting Started.md`. Each other page replaces `Getting Started` in the file name with the title of the page. An optional terms and conditions page uses the file name `terms.md`. The optional subdirectory `resources` includes resources such as images. The property `pageOrder` on the root of the main object in the optional file `config.json` specifies the page order:
+
+```
+{
+ "pageOrder": ["home", "Getting Started", "Examples"]
+}
+```
+```
+curl --location --request PATCH 'https://anypoint.mulesoft.com/exchange/api/v2/organizations/:organizationId/assets/:groupId/:assetId/:version/mutabledata' \
+--header 'Authorization: bearer YOUR_TOKEN' \
+--form 'tags="1, 2, 3, 4"' \
+--form 'categories.categoryKey="value1, value2"' \
+--form 'fields.fieldKey="value1, value2"' \
+--form 'files.docs.zip=@"/file-path/docs.zip"'
+```
+The mutable data updates asynchronously and the request returns a response similar to this:
+
+`{ "mutableDataStatusLink":"https://anypoint.mulesoft.com/exchange/api/v2/organizations/:organizationId/assets/:groupId/:assetId/:version/mutabledata/status/170d1e6f-d567-48e2-a2f4-00b2e3951be6" }`A call to `mutableDataStatusLink` displays the publication status:
+
+```
+curl https://anypoint.mulesoft.com/exchange/api/v2/organizations/:organizationId/assets/:groupId/:assetId/:version/mutabledata/status/170d1e6f-d567-48e2-a2f4-00b2e3951be6 \
+--header 'Authorization: bearer YOUR_TOKEN'
+```
+If the request provides no authentication header, it fails with the error **Unauthorized**.
+
+## Add and Update Documentation Pages
+
+Each Exchange asset has associated documentation to provide an overview and other information about the asset. Adding or updating documentation with the Exchange API requires the Exchange administrator or Exchange contributor permissions.
+
+To add or update documentation using the Exchange API:
+
+- 
+Add a new page in draft mode. 
+- 
+Add content to the page. 
+- 
+Publish the draft. 
+
+### Add a New Page in Draft Mode
+
+To add a new documentation page, use this command and replace `:groupId`, `:assetId`, and `:version` with the values for your asset:
+
+```
+curl https://anypoint.mulesoft.com/exchange/api/v2/assets/:groupId/:assetId/:version/portal/draft/pages \
+  -X POST \
+  -H 'Authorization: bearer ANYPOINT_TOKEN' \
+  -H 'Content-Type: application/json' \
+  -d '{ "pagePath": "Security" }'
+```
+When the command succeeds, it returns the `pageId` value for the newly created page.
+
+Exchange shows the new draft page on the asset’s Exchange portal page under the default Home page. To edit this page and publish the draft, use either the portal user interface or the Exchange API.
+
+### Add Content to the Page
+
+Documentation pages are written in GitHub Markdown, described in detail in the [Markdown Notes](to-describe-an-asset#markdown-notes).
+
+To add your Markdown content, use this command and replace `:pageId` with the page ID you obtained earlier.
+
+```
+curl https://anypoint.mulesoft.com/exchange/api/v2/assets/:groupId/:assetId/:version/portal/draft/pages/:pageId \
+  -X PUT \
+  -H 'Authorization: bearer ANYPOINT_TOKEN' \
+  -H 'Content-Type: text/markdown' \
+  -d 'markdown *content* for this page'
+```
+### Publish the Draft
+
+Publishing the draft publishes all the pages and content associated with the asset and currently in draft status. When the content is ready, change the page’s draft status to published:
+
+```
+curl https://anypoint.mulesoft.com/exchange/api/v2/assets/:groupId/:assetId/:version/portal \
+  -X PATCH  \
+  -H 'Authorization: bearer ANYPOINT_TOKEN'
+```
+## Add Runtime Information to Your Asset
+
+After the API asset includes all the information necessary for consumers to discover, learn, and understand your API, add the server or instance information so consumers can invoke the API. Replace `:groupId`, `:assetId`, and `:versionGroup` with the group ID, asset ID, and version ID of the API asset:
+
+```
+curl https://anypoint.mulesoft.com/exchange/api/v2/assets/:groupId/:assetId/versionGroups/:versionGroup/instances/external \
+  -X POST \
+  -H 'Authorization: bearer ANYPOINT_TOKEN' \
+  -d '{
+    "name": "Production - US",
+    "endpointUri": "http://dog.domain.tld.com/much/doge",
+    "isPublic": false
+  }'
+```
+## See Also
+
+- 
+[EU Exchange](https://eu1.anypoint.mulesoft.com/exchange/)
+- 
+[Exchange API](https://anypoint.mulesoft.com/exchange/portals/anypoint-platform/f1e97bc6-315a-4490-82a7-23abe036327a.anypoint-platform/exchange-experience-api/)

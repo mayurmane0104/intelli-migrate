@@ -1,0 +1,87 @@
+# Creating Client Applications with the Connected App Feature | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/api-manager/latest/manage-client-apps-connected-apps-concept](https://docs.mulesoft.com/api-manager/latest/manage-client-apps-connected-apps-concept)
+
+---
+
+`curl --location --request POST 'https://anypoint.mulesoft.com/accounts/api/v2/oauth2/token' \ --header 'Content-Type: application/json' \ --data-raw '{ "grant_type": "client_credentials", "client_id": "<connected-app-client-id>", "client_secret": "<connected-app-client-secret>" }'`ssh
+
+# Creating Client Applications with the Connected App Feature
+
+For automation use cases, you can use the Connected App feature to create and manage client applications.
+
+Connected apps help users delegate their access without sharing sensitive credentials or giving full control of their applications to third parties. Actions taken by connected apps are audited, and users can revoke access at any time.
+
+## Creating a Connected App
+
+To create a connected app, see [Anypoint Platform Connected Apps for Developers](../../access-management/connected-apps-developers).
+
+When you create the connected app to manage client applications, ensure that you:
+
+- 
+Select **App acts on its own behalf (client credentials)**for**Type**.
+- 
+Add the **Application Creator**scope.
+- 
+Select your root organization for the **Business Group**associated with the**Application Creator**scope.
+
+The new connected app can now create client applications and manage the client applications that it creates.
+
+## Client Application Management
+
+When a connected app creates a client application, the owner of the connected app is the owner of the new client application. The owner can add additional users as owners by using API Manager.
+
+The connected app can manage the client application it created, and can perform the following actions:
+
+- 
+Add users as client application owners 
+- 
+Request access to an API instance 
+- 
+Request a tier change 
+- 
+Reset a client applications secret 
+
+You can’t add a connected app as an owner of a client application. Connected apps can only manage the client applications they create.
+
+## Creating a Client Application with the API Manager API
+
+After creating your connected app, you can make requests to the API Manager API to create and manage client applications.
+
+This section only demonstrates how to create a client application. For more information about the API Manager API requests to manage client applications, see [API Manager API Documentation](https://anypoint.mulesoft.com/exchange/portals/anypoint-platform/f1e97bc6-315a-4490-82a7-23abe036327a.anypoint-platform/api-manager-api/).
+
+To create a client application with the API Manager API:
+
+- 
+Collect the following information to obtain your Authorization Token: - 
+`<connected-app-client-id>`:**Id**of your connected app
+- 
+`<connected-app-client-secret>`:**Secret**of your connected app
+ 
+- 
+- 
+Execute the following request to obtain your Authorization Token after replacing the placeholders with the following: 
+- 
+Collect the following information to create your client application: - 
+`<your-org-id>`:**Organization ID**for the organization where you want to create the connected app
+- 
+`<instance-id>`: API instance ID of the API instance you’re creating a client application for
+- 
+Client Application parameters: - 
+`name`: Name of the application
+- 
+`description`: Description of the application
+- 
+`url`: URL of the application
+- 
+`redirectURI`: An array of redirect Uris
+- 
+`grantTypes`: An array of Grant Types, for example:`"password"`,`"implicit"`,`"client_credentials"`,`"authorization_code"`, and`"refresh_token"`
+- 
+`apiEndpoints`: “true” or “false” value indicating whether to automatically register the redirect URIs.
+ 
+- 
+ 
+- 
+- 
+Execute the following request to create your client application after replacing the placeholders with the following: `curl --X POST 'https://anypoint.mulesoft.com/apiplatform/repository/v2/organizations/<your-org-id>/applications?apiVersionId=<instance-id>' \ --header 'Authorization: bearer <anypoint_token>' \ --header 'Content-Type: application/json' \ --data '{ "redirectUri": ["http://example.com/"], "apiEndpoints": false, "name": "Sample Client Apps Name", "description": "Create this App for Sample Client Apps via API 1", "url": "https://www.example.com/app-test1" } '`ssh

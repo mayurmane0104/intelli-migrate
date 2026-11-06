@@ -1,0 +1,13 @@
+{
+  "id": "scatter_bidirectional_merge",
+  "description": "Scatter-gather bidirectional mergeWith, distinctBy, field-presence sort, CSV output (Testing_batch pattern)",
+  "function_name": "transform_users",
+  "output_format": "application/csv",
+  "ir_relative": "../frontend/IR_Outputs/Testing_batch/Testing_batch_unknown_20260619_145846_a7bd26.json",
+  "ir_dataweave_index": 0,
+  "compare": {
+    "records": true,
+    "record_order": true,
+    "body": true
+  }
+}

@@ -1,0 +1,10 @@
+Resources:
+  {{resource_prefix}}Workflow:
+    Type: AWS::StepFunctions::StateMachine
+    Properties:
+      StateMachineName: {{resource_prefix}}-workflow
+      DefinitionString: '{}'
+      RoleArn:
+        Fn::GetAtt:
+          - {{resource_prefix}}Role
+          - Arn

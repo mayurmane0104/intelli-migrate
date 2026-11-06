@@ -1,0 +1,311 @@
+# Amazon Transcribe examples using AWS CLI - AWS Command Line Interface
+
+**Source:** [https://docs.aws.amazon.com/cli/latest/userguide/cli_transcribe_code_examples.html](https://docs.aws.amazon.com/cli/latest/userguide/cli_transcribe_code_examples.html)
+
+---
+
+The following code examples show you how to perform actions and implement common scenarios by using the AWS Command Line Interface with Amazon Transcribe.
+
+*Actions* are code excerpts from larger programs and must be run in context. While actions show you how to call individual service functions, you can see actions in context in their related scenarios.
+
+Each example includes a link to the complete source code, where you can find instructions on how to set up and run the code in context.
+
+###### Topics
+
+## Actions
+
+    The following code example shows how to use `create-language-model`.
+
+- **AWS CLI**
+- 
+            
+                    **Example 1: To create a custom language model using both training and tuning data.**The following `create-language-model`example creates a custom language model. You can use a custom language model to improve transcription performance for domains such as legal, hospitality, finance, and insurance. For language-code, enter a valid language code. For base-model-name, specify a base model that is best suited for the sample rate of the audio that you want to transcribe with your custom language model. For model-name, specify the name that you want to call the custom language model.`aws transcribe create-language-model \ --``language-code`language-code \ --`base-model-name`base-model-name \ --model-name`cli-clm-example`\ --input-data-config S3Uri="s3://amzn-s3-demo-bucket/Amazon-S3-Prefix-for-training-data",TuningDataS3Uri="s3://amzn-s3-demo-bucket/Amazon-S3-Prefix-for-tuning-data",DataAccessRoleArn="arn:aws:iam::AWS-account-number:role/IAM-role-with-permissions-to-create-a-custom-language-model"Output: `{ "LanguageCode": "language-code", "BaseModelName": "base-model-name", "ModelName": "cli-clm-example", "InputDataConfig": { "S3Uri": "s3://amzn-s3-demo-bucket/Amazon-S3-Prefix/", "TuningDataS3Uri": "s3://amzn-s3-demo-bucket/Amazon-S3-Prefix/", "DataAccessRoleArn": "arn:aws:iam::AWS-account-number:role/IAM-role-with-permissions-create-a-custom-language-model" }, "ModelStatus": "IN_PROGRESS" }`For more information, see [Improving Domain-Specific Transcription Accuracy with Custom Language Models](https://docs.aws.amazon.com/transcribe/latest/dg/custom-language-models.html)in the*Amazon Transcribe Developer Guide*.**Example 2: To create a custom language model using only training data.**The following `create-language-model`example transcribes your audio file. You can use a custom language model to improve transcription performance for domains such as legal, hospitality, finance, and insurance. For language-code, enter a valid language code. For base-model-name, specify a base model that is best suited for the sample rate of the audio that you want to transcribe with your custom language model. For model-name, specify the name that you want to call the custom language model.`aws transcribe create-language-model \ --language-code``en-US`\ --`base-model-name`base-model-name \ --model-name`cli-clm-example`\ --input-data-config S3Uri="s3://amzn-s3-demo-bucket/Amazon-S3-Prefix-For-Training-Data",DataAccessRoleArn="arn:aws:iam::AWS-account-number:role/IAM-role-with-permissions-to-create-a-custom-language-model"Output: `{ "LanguageCode": "en-US", "BaseModelName": "base-model-name", "ModelName": "cli-clm-example", "InputDataConfig": { "S3Uri": "s3://amzn-s3-demo-bucket/Amazon-S3-Prefix-For-Training-Data/", "DataAccessRoleArn": "arn:aws:iam::your-AWS-account-number:role/IAM-role-with-permissions-to-create-a-custom-language-model" }, "ModelStatus": "IN_PROGRESS" }`For more information, see [Improving Domain-Specific Transcription Accuracy with Custom Language Models](https://docs.aws.amazon.com/transcribe/latest/dg/custom-language-models.html)in the*Amazon Transcribe Developer Guide*.- 
+                    For API details, see [CreateLanguageModel](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/transcribe/create-language-model.html)in*AWS CLI Command Reference*.
+ 
+- 
+                    
+
+The following code example shows how to use `create-medical-vocabulary`.
+
+- **AWS CLI**
+- 
+            
+                    **To create a medical custom vocabulary**The following `create-medical-vocabulary`example creates a custom vocabulary. To create a custom vocabulary, you must have created a text file with all the terms that you want to transcribe more accurately. For vocabulary-file-uri, specify the Amazon Simple Storage Service (Amazon S3) URI of that text file. For language-code, specify a language code corresponding to the language of your custom vocabulary. For vocabulary-name, specify what you want to call your custom vocabulary.`aws transcribe create-medical-vocabulary \ --vocabulary-name``cli-medical-vocab-example`\ --`language-code`language-code \ --vocabulary-file-uri`https://amzn-s3-demo-bucket.AWS-Region.amazonaws.com/the-text-file-for-the-medical-custom-vocabulary.txt`Output: `{ "VocabularyName": "cli-medical-vocab-example", "LanguageCode": "language-code", "VocabularyState": "PENDING" }`For more information, see [Medical Custom Vocabularies](https://docs.aws.amazon.com/transcribe/latest/dg/how-vocabulary-med.html)in the*Amazon Transcribe Developer Guide*.- 
+                    For API details, see [CreateMedicalVocabulary](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/transcribe/create-medical-vocabulary.html)in*AWS CLI Command Reference*.
+ 
+- 
+                    
+
+The following code example shows how to use `create-vocabulary-filter`.
+
+- **AWS CLI**
+- 
+            
+                    **To create a vocabulary filter**The following `create-vocabulary-filter`example creates a vocabulary filter that uses a text file that contains a list of words that you wouldn't want to appear in a transcription. For language-code, specify the language code corresponding to the language of your vocabulary filter. For vocabulary-filter-file-uri, specify the Amazon Simple Storage Service (Amazon S3) URI of the text file. For vocabulary-filter-name, specify the name of your vocabulary filter.`aws transcribe create-vocabulary-filter \ --``language-code`language-code \ --vocabulary-filter-file-uri`s3://amzn-s3-demo-bucket/vocabulary-filter.txt`\ --vocabulary-filter-name`cli-vocabulary-filter-example`Output: `{ "VocabularyFilterName": "cli-vocabulary-filter-example", "LanguageCode": "language-code" }`For more information, see [Filtering Unwanted Words](https://docs.aws.amazon.com/transcribe/latest/dg/filter-unwanted-words.html)in the*Amazon Transcribe Developer Guide*.- 
+                    For API details, see [CreateVocabularyFilter](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/transcribe/create-vocabulary-filter.html)in*AWS CLI Command Reference*.
+ 
+- 
+                    
+
+The following code example shows how to use `create-vocabulary`.
+
+- **AWS CLI**
+- 
+            
+                    **To create a custom vocabulary**The following `create-vocabulary`example creates a custom vocabulary. To create a custom vocabulary, you must have created a text file with all the terms that you want to transcribe more accurately. For vocabulary-file-uri, specify the Amazon Simple Storage Service (Amazon S3) URI of that text file. For language-code, specify a language code corresponding to the language of your custom vocabulary. For vocabulary-name, specify what you want to call your custom vocabulary.`aws transcribe create-vocabulary \ --``language-code`language-code \ --vocabulary-name`cli-vocab-example`\ --vocabulary-file-uri`s3://amzn-s3-demo-bucket/Amazon-S3-prefix/the-text-file-for-the-custom-vocabulary.txt`Output: `{ "VocabularyName": "cli-vocab-example", "LanguageCode": "language-code", "VocabularyState": "PENDING" }`For more information, see [Custom Vocabularies](https://docs.aws.amazon.com/transcribe/latest/dg/how-vocabulary.html)in the*Amazon Transcribe Developer Guide*.- 
+                    For API details, see [CreateVocabulary](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/transcribe/create-vocabulary.html)in*AWS CLI Command Reference*.
+ 
+- 
+                    
+
+The following code example shows how to use `delete-language-model`.
+
+- **AWS CLI**
+- 
+            
+                    **To delete a custom language model**The following `delete-language-model`example deletes a custom language model.`aws transcribe delete-language-model \ --``model-name`model-nameThis command produces no output. For more information, see [Improving Domain-Specific Transcription Accuracy with Custom Language Models](https://docs.aws.amazon.com/transcribe/latest/dg/custom-language-models.html)in the*Amazon Transcribe Developer Guide*.- 
+                    For API details, see [DeleteLanguageModel](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/transcribe/delete-language-model.html)in*AWS CLI Command Reference*.
+ 
+- 
+                    
+
+The following code example shows how to use `delete-medical-transcription-job`.
+
+- **AWS CLI**
+- 
+            
+                    **To delete a medical transcription job**The following `delete-medical-transcription-job`example deletes a medical transcription job.`aws transcribe delete-medical-transcription-job \ --``medical-transcription-job-name`medical-transcription-job-nameThis command produces no output. For more information, see [DeleteMedicalTranscriptionJob](https://docs.aws.amazon.com/transcribe/latest/dg/API_DeleteMedicalTranscriptionJob.html)in the*Amazon Transcribe Developer Guide*.- 
+                    For API details, see [DeleteMedicalTranscriptionJob](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/transcribe/delete-medical-transcription-job.html)in*AWS CLI Command Reference*.
+ 
+- 
+                    
+
+The following code example shows how to use `delete-medical-vocabulary`.
+
+- **AWS CLI**
+- 
+            
+                    **To delete a medical custom vocabulary**The following `delete-medical-vocabulary`example deletes a medical custom vocabulary. For vocabulary-name, specify the name of the medical custom vocabulary.`aws transcribe delete-vocabulary \ --vocabulary-name``medical-custom-vocabulary-name`This command produces no output. For more information, see [Medical Custom Vocabularies](https://docs.aws.amazon.com/transcribe/latest/dg/how-vocabulary-med.html)in the*Amazon Transcribe Developer Guide*.- 
+                    For API details, see [DeleteMedicalVocabulary](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/transcribe/delete-medical-vocabulary.html)in*AWS CLI Command Reference*.
+ 
+- 
+                    
+
+The following code example shows how to use `delete-transcription-job`.
+
+- **AWS CLI**
+- 
+            
+                    **To delete one of your transcription jobs**The following `delete-transcription-job`example deletes one of your transcription jobs.`aws transcribe delete-transcription-job \ --transcription-job-name``your-transcription-job`This command produces no output. For more information, see [DeleteTranscriptionJob](https://docs.aws.amazon.com/transcribe/latest/dg/API_DeleteTranscriptionJob.html)in the*Amazon Transcribe Developer Guide*.- 
+                    For API details, see [DeleteTranscriptionJob](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/transcribe/delete-transcription-job.html)in*AWS CLI Command Reference*.
+ 
+- 
+                    
+
+The following code example shows how to use `delete-vocabulary-filter`.
+
+- **AWS CLI**
+- 
+            
+                    **To delete a vocabulary filter**The following `delete-vocabulary-filter`example deletes a vocabulary filter.`aws transcribe delete-vocabulary-filter \ --``vocabulary-filter-name`vocabulary-filter-nameThis command produces no output. For more information, see [Filtering Unwanted Words](https://docs.aws.amazon.com/transcribe/latest/dg/filter-unwanted-words.html)in the*Amazon Transcribe Developer Guide*.- 
+                    For API details, see [DeleteVocabularyFilter](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/transcribe/delete-vocabulary-filter.html)in*AWS CLI Command Reference*.
+ 
+- 
+                    
+
+The following code example shows how to use `delete-vocabulary`.
+
+- **AWS CLI**
+- 
+            
+                    **To delete a custom vocabulary**The following `delete-vocabulary`example deletes a custom vocabulary.`aws transcribe delete-vocabulary \ --``vocabulary-name`vocabulary-nameThis command produces no output. For more information, see [Custom Vocabularies](https://docs.aws.amazon.com/transcribe/latest/dg/how-vocabulary.html)in the*Amazon Transcribe Developer Guide*.- 
+                    For API details, see [DeleteVocabulary](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/transcribe/delete-vocabulary.html)in*AWS CLI Command Reference*.
+ 
+- 
+                    
+
+The following code example shows how to use `describe-language-model`.
+
+- **AWS CLI**
+- 
+            
+                    **To get information about a specific custom language model**The following `describe-language-model`example gets information about a specific custom language model. For example, under BaseModelName you can see whether your model is trained using a NarrowBand or WideBand model. Custom language models with a NarrowBand base model can transcribe audio with a sample rate less than 16 kHz. Language models using a WideBand base model can transcribe audio with a sample rate greater than 16 kHz. The S3Uri parameter indicates the Amazon S3 prefix you've used to access the training data to create the custom language model.`aws transcribe describe-language-model \ --model-name``cli-clm-example`Output: `{ "LanguageModel": { "ModelName": "cli-clm-example", "CreateTime": "2020-09-25T17:57:38.504000+00:00", "LastModifiedTime": "2020-09-25T17:57:48.585000+00:00", "LanguageCode": "language-code", "BaseModelName": "base-model-name", "ModelStatus": "IN_PROGRESS", "UpgradeAvailability": false, "InputDataConfig": { "S3Uri": "s3://amzn-s3-demo-bucket/Amazon-S3-Prefix/", "TuningDataS3Uri": "s3://amzn-s3-demo-bucket/Amazon-S3-Prefix/", "DataAccessRoleArn": "arn:aws:iam::AWS-account-number:role/IAM-role-with-permissions-to-create-a-custom-language-model" } } }`For more information, see [Improving Domain-Specific Transcription Accuracy with Custom Language Models](https://docs.aws.amazon.com/transcribe/latest/dg/custom-language-models.html)in the*Amazon Transcribe Developer Guide*.- 
+                    For API details, see [DescribeLanguageModel](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/transcribe/describe-language-model.html)in*AWS CLI Command Reference*.
+ 
+- 
+                    
+
+The following code example shows how to use `get-medical-transcription-job`.
+
+- **AWS CLI**
+- 
+            
+                    **To get information about a specific medical transcription job**The following `get-medical-transcription-job`example gets information about a specific medical transcription job. To access the transcription results, use the TranscriptFileUri parameter. If you've enabled additional features for the transcription job, you can see them in the Settings object. The Specialty parameter shows the medical specialty of the provider. The Type parameter indicates whether the speech in the transcription job is of a medical conversation, or a medical dictation.`aws transcribe get-medical-transcription-job \ --medical-transcription-job-name``vocabulary-dictation-medical-transcription-job`Output: `{ "MedicalTranscriptionJob": { "MedicalTranscriptionJobName": "vocabulary-dictation-medical-transcription-job", "TranscriptionJobStatus": "COMPLETED", "LanguageCode": "en-US", "MediaSampleRateHertz": 48000, "MediaFormat": "mp4", "Media": { "MediaFileUri": "s3://Amazon-S3-Prefix/your-audio-file.file-extension" }, "Transcript": { "TranscriptFileUri": "https://s3.Region.amazonaws.com/Amazon-S3-Prefix/vocabulary-dictation-medical-transcription-job.json" }, "StartTime": "2020-09-21T21:17:27.045000+00:00", "CreationTime": "2020-09-21T21:17:27.016000+00:00", "CompletionTime": "2020-09-21T21:17:59.561000+00:00", "Settings": { "ChannelIdentification": false, "ShowAlternatives": false, "VocabularyName": "cli-medical-vocab-example" }, "Specialty": "PRIMARYCARE", "Type": "DICTATION" } }`For more information, see [Batch Transcription](https://docs.aws.amazon.com/transcribe/latest/dg/batch-med-transcription.html)in the*Amazon Transcribe Developer Guide*.- 
+                    For API details, see [GetMedicalTranscriptionJob](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/transcribe/get-medical-transcription-job.html)in*AWS CLI Command Reference*.
+ 
+- 
+                    
+
+The following code example shows how to use `get-medical-vocabulary`.
+
+- **AWS CLI**
+- 
+            
+                    **To get information about a medical custom vocabulary**The following `get-medical-vocabulary`example gets information on a medical custom vocabulary. You can use the VocabularyState parameter to see the processing state of the vocabulary. If it's READY, you can use it in the StartMedicalTranscriptionJob operation.:`aws transcribe get-medical-vocabulary \ --vocabulary-name``medical-vocab-example`Output: `{ "VocabularyName": "medical-vocab-example", "LanguageCode": "en-US", "VocabularyState": "READY", "LastModifiedTime": "2020-09-19T23:59:04.349000+00:00", "DownloadUri": "https://link-to-download-the-text-file-used-to-create-your-medical-custom-vocabulary" }`For more information, see [Medical Custom Vocabularies](https://docs.aws.amazon.com/transcribe/latest/dg/how-vocabulary.html)in the*Amazon Transcribe Developer Guide*.- 
+                    For API details, see [GetMedicalVocabulary](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/transcribe/get-medical-vocabulary.html)in*AWS CLI Command Reference*.
+ 
+- 
+                    
+
+The following code example shows how to use `get-transcription-job`.
+
+- **AWS CLI**
+- 
+            
+                    **To get information about a specific transcription job**The following `get-transcription-job`example gets information about a specific transcription job. To access the transcription results, use the TranscriptFileUri parameter. Use the MediaFileUri parameter to see which audio file you transcribed with this job. You can use the Settings object to see the optional features you've enabled in the transcription job.`aws transcribe get-transcription-job \ --transcription-job-name``your-transcription-job`Output: `{ "TranscriptionJob": { "TranscriptionJobName": "your-transcription-job", "TranscriptionJobStatus": "COMPLETED", "LanguageCode": "language-code", "MediaSampleRateHertz": 48000, "MediaFormat": "mp4", "Media": { "MediaFileUri": "s3://amzn-s3-demo-bucket/your-audio-file.file-extension" }, "Transcript": { "TranscriptFileUri": "https://Amazon-S3-file-location-of-transcription-output" }, "StartTime": "2020-09-18T22:27:23.970000+00:00", "CreationTime": "2020-09-18T22:27:23.948000+00:00", "CompletionTime": "2020-09-18T22:28:21.197000+00:00", "Settings": { "ChannelIdentification": false, "ShowAlternatives": false }, "IdentifyLanguage": true, "IdentifiedLanguageScore": 0.8672199249267578 } }`For more information, see [Getting Started (AWS Command Line Interface)](https://docs.aws.amazon.com/transcribe/latest/dg/getting-started-cli.html)in the*Amazon Transcribe Developer Guide*.- 
+                    For API details, see [GetTranscriptionJob](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/transcribe/get-transcription-job.html)in*AWS CLI Command Reference*.
+ 
+- 
+                    
+
+The following code example shows how to use `get-vocabulary-filter`.
+
+- **AWS CLI**
+- 
+            
+                    **To get information about a vocabulary filter**The following `get-vocabulary-filter`example gets information about a vocabulary filter. You can use the DownloadUri parameter to get the list of words you used to create the vocabulary filter.`aws transcribe get-vocabulary-filter \ --vocabulary-filter-name``testFilter`Output: `{ "VocabularyFilterName": "testFilter", "LanguageCode": "language-code", "LastModifiedTime": "2020-05-07T22:39:32.147000+00:00", "DownloadUri": "https://Amazon-S3-location-to-download-your-vocabulary-filter" }`For more information, see [Filter Unwanted Words](https://docs.aws.amazon.com/transcribe/latest/dg/how-vocabulary.html)in the*Amazon Transcribe Developer Guide*.- 
+                    For API details, see [GetVocabularyFilter](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/transcribe/get-vocabulary-filter.html)in*AWS CLI Command Reference*.
+ 
+- 
+                    
+
+The following code example shows how to use `get-vocabulary`.
+
+- **AWS CLI**
+- 
+            
+                    **To get information about a custom vocabulary**The following `get-vocabulary`example gets information on a previously created custom vocabulary.`aws transcribe get-vocabulary \ --vocabulary-name``cli-vocab-1`Output: `{ "VocabularyName": "cli-vocab-1", "LanguageCode": "language-code", "VocabularyState": "READY", "LastModifiedTime": "2020-09-19T23:22:32.836000+00:00", "DownloadUri": "https://link-to-download-the-text-file-used-to-create-your-custom-vocabulary" }`For more information, see [Custom Vocabularies](https://docs.aws.amazon.com/transcribe/latest/dg/how-vocabulary.html)in the*Amazon Transcribe Developer Guide*.- 
+                    For API details, see [GetVocabulary](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/transcribe/get-vocabulary.html)in*AWS CLI Command Reference*.
+ 
+- 
+                    
+
+The following code example shows how to use `list-language-models`.
+
+- **AWS CLI**
+- 
+            
+                    **To list your custom language models**The following `list-language-models`example lists the custom language models associated with your AWS account and Region. You can use the`S3Uri`and`TuningDataS3Uri`parameters to find the Amazon S3 prefixes you've used as your training data, or your tuning data. The BaseModelName tells you whether you've used a NarrowBand, or WideBand model to create a custom language model. You can transcribe audio with a sample rate of less than 16 kHz with a custom language model using a NarrowBand base model. You can transcribe audio 16 kHz or greater with a custom language model using a WideBand base model. The`ModelStatus`parameter shows whether you can use the custom language model in a transcription job. If the value is COMPLETED, you can use it in a transcription job.`aws transcribe list-language-models`Output: `{ "Models": [ { "ModelName": "cli-clm-2", "CreateTime": "2020-09-25T17:57:38.504000+00:00", "LastModifiedTime": "2020-09-25T17:57:48.585000+00:00", "LanguageCode": "language-code", "BaseModelName": "WideBand", "ModelStatus": "IN_PROGRESS", "UpgradeAvailability": false, "InputDataConfig": { "S3Uri": "s3://amzn-s3-demo-bucket/clm-training-data/", "TuningDataS3Uri": "s3://amzn-s3-demo-bucket/clm-tuning-data/", "DataAccessRoleArn": "arn:aws:iam::AWS-account-number:role/IAM-role-used-to-create-the-custom-language-model" } }, { "ModelName": "cli-clm-1", "CreateTime": "2020-09-25T17:16:01.835000+00:00", "LastModifiedTime": "2020-09-25T17:16:15.555000+00:00", "LanguageCode": "language-code", "BaseModelName": "WideBand", "ModelStatus": "IN_PROGRESS", "UpgradeAvailability": false, "InputDataConfig": { "S3Uri": "s3://amzn-s3-demo-bucket/clm-training-data/", "DataAccessRoleArn": "arn:aws:iam::AWS-account-number:role/IAM-role-used-to-create-the-custom-language-model" } }, { "ModelName": "clm-console-1", "CreateTime": "2020-09-24T19:26:28.076000+00:00", "LastModifiedTime": "2020-09-25T04:25:22.271000+00:00", "LanguageCode": "language-code", "BaseModelName": "NarrowBand", "ModelStatus": "COMPLETED", "UpgradeAvailability": false, "InputDataConfig": { "S3Uri": "s3://amzn-s3-demo-bucket/clm-training-data/", "DataAccessRoleArn": "arn:aws:iam::AWS-account-number:role/IAM-role-used-to-create-the-custom-language-model" } } ] }`For more information, see [Improving Domain-Specific Transcription Accuracy with Custom Language Models](https://docs.aws.amazon.com/transcribe/latest/dg/custom-language-models.html)in the*Amazon Transcribe Developer Guide*.- 
+                    For API details, see [ListLanguageModels](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/transcribe/list-language-models.html)in*AWS CLI Command Reference*.
+ 
+- 
+                    
+
+The following code example shows how to use `list-medical-transcription-jobs`.
+
+- **AWS CLI**
+- 
+            
+                    **To list your medical transcription jobs**The following `list-medical-transcription-jobs`example lists the medical transcription jobs associated with your AWS account and Region. To get more information about a particular transcription job, copy the value of a MedicalTranscriptionJobName parameter in the transcription output, and specify that value for the`MedicalTranscriptionJobName`option of the`get-medical-transcription-job`command. To see more of your transcription jobs, copy the value of the NextToken parameter, run the`list-medical-transcription-jobs`command again, and specify that value in the`--next-token`option.`aws transcribe list-medical-transcription-jobs`Output: `{ "NextToken": "3/PblzkiGhzjER3KHuQt2fmbPLF7cDYafjFMEoGn44ON/gsuUSTIkGyanvRE6WMXFd/ZTEc2EZj+P9eii/z1O2FDYli6RLI0WoRX4RwMisVrh9G0Kie0Y8ikBCdtqlZB10Wa9McC+ebOl+LaDtZPC4u6ttoHLRlEfzqstHXSgapXg3tEBtm9piIaPB6MOM5BB6t86+qtmocTR/qrteHZBBudhTfbCwhsxaqujHiiUvFdm3BQbKKWIW06yV9b+4f38oD2lVIan+vfUs3gBYAl5VTDmXXzQPBQOHPjtwmFI+IWX15nSUjWuN3TUylHgPWzDaYT8qBtu0Z+3UG4V6b+K2CC0XszXg5rBq9hYgNzy4XoFh/6s5DoSnzq49Q9xHgHdT2yBADFmvFK7myZBsj75+2vQZOSVpWUPy3WT/32zFAcoELHR4unuWhXPwjbKU+mFYfUjtTZ8n/jq7aQEjQ42A+X/7K6JgOcdVPtEg8PlDr5kgYYG3q3OmYXX37U3FZuJmnTI63VtIXsNnOU5eGoYObtpk00Nq9UkzgSJxqj84ZD5n+S0EGy9ZUYBJRRcGeYUM3Q4DbSJfUwSAqcFdLIWZdp8qIREMQIBWy7BLwSdyqsQo2vRrd53hm5aWM7SVf6pPq6X/IXR5+1eUOOD8/coaTT4ES2DerbV6RkV4o0VT1d0SdVX/MmtkNG8nYj8PqU07w7988quh1ZP6D80veJS1q73tUUR9MjnGernW2tAnvnLNhdefBcD+sZVfYq3iBMFY7wTy1P1G6NqW9GrYDYoX3tTPWlD7phpbVSyKrh/PdYrps5UxnsGoA1b7L/FfAXDfUoGrGUB4N3JsPYXX9D++g+6gV1qBBs/WfF934aKqfD6UTggm/zV3GAOWiBpfvAZRvEb924i6yGHyMC7y54O1ZAwSBupmI+FFd13CaPO4kN1vJlth6aM5vUPXg4BpyUhtbRhwD/KxCvf9K0tLJGyL1A==", "MedicalTranscriptionJobSummaries": [ { "MedicalTranscriptionJobName": "vocabulary-dictation-medical-transcription-job", "CreationTime": "2020-09-21T21:17:27.016000+00:00", "StartTime": "2020-09-21T21:17:27.045000+00:00", "CompletionTime": "2020-09-21T21:17:59.561000+00:00", "LanguageCode": "en-US", "TranscriptionJobStatus": "COMPLETED", "OutputLocationType": "CUSTOMER_BUCKET", "Specialty": "PRIMARYCARE", "Type": "DICTATION" }, { "MedicalTranscriptionJobName": "alternatives-dictation-medical-transcription-job", "CreationTime": "2020-09-21T21:01:14.569000+00:00", "StartTime": "2020-09-21T21:01:14.592000+00:00", "CompletionTime": "2020-09-21T21:01:43.606000+00:00", "LanguageCode": "en-US", "TranscriptionJobStatus": "COMPLETED", "OutputLocationType": "CUSTOMER_BUCKET", "Specialty": "PRIMARYCARE", "Type": "DICTATION" }, { "MedicalTranscriptionJobName": "alternatives-conversation-medical-transcription-job", "CreationTime": "2020-09-21T19:09:18.171000+00:00", "StartTime": "2020-09-21T19:09:18.199000+00:00", "CompletionTime": "2020-09-21T19:10:22.516000+00:00", "LanguageCode": "en-US", "TranscriptionJobStatus": "COMPLETED", "OutputLocationType": "CUSTOMER_BUCKET", "Specialty": "PRIMARYCARE", "Type": "CONVERSATION" }, { "MedicalTranscriptionJobName": "speaker-id-conversation-medical-transcription-job", "CreationTime": "2020-09-21T18:43:37.157000+00:00", "StartTime": "2020-09-21T18:43:37.265000+00:00", "CompletionTime": "2020-09-21T18:44:21.192000+00:00", "LanguageCode": "en-US", "TranscriptionJobStatus": "COMPLETED", "OutputLocationType": "CUSTOMER_BUCKET", "Specialty": "PRIMARYCARE", "Type": "CONVERSATION" }, { "MedicalTranscriptionJobName": "multichannel-conversation-medical-transcription-job", "CreationTime": "2020-09-20T23:46:44.053000+00:00", "StartTime": "2020-09-20T23:46:44.081000+00:00", "CompletionTime": "2020-09-20T23:47:35.851000+00:00", "LanguageCode": "en-US", "TranscriptionJobStatus": "COMPLETED", "OutputLocationType": "CUSTOMER_BUCKET", "Specialty": "PRIMARYCARE", "Type": "CONVERSATION" } ] }`For more information, see https://docs.aws.amazon.com/transcribe/latest/dg/batch-med-transcription.html> in the *Amazon Transcribe Developer Guide*.- 
+                    For API details, see [ListMedicalTranscriptionJobs](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/transcribe/list-medical-transcription-jobs.html)in*AWS CLI Command Reference*.
+ 
+- 
+                    
+
+The following code example shows how to use `list-medical-vocabularies`.
+
+- **AWS CLI**
+- 
+            
+                    **To list your medical custom vocabularies**The following `list-medical-vocabularies`example lists the medical custom vocabularies associated with your AWS account and Region. To get more information about a particular transcription job, copy the value of a`MedicalTranscriptionJobName`parameter in the transcription output, and specify that value for the`MedicalTranscriptionJobName`option of the`get-medical-transcription-job`command. To see more of your transcription jobs, copy the value of the`NextToken`parameter, run the`list-medical-transcription-jobs`command again, and specify that value in the`--next-token`option.`aws transcribe list-medical-vocabularies`Output: `{ "Vocabularies": [ { "VocabularyName": "cli-medical-vocab-2", "LanguageCode": "en-US", "LastModifiedTime": "2020-09-21T21:44:59.521000+00:00", "VocabularyState": "READY" }, { "VocabularyName": "cli-medical-vocab-1", "LanguageCode": "en-US", "LastModifiedTime": "2020-09-19T23:59:04.349000+00:00", "VocabularyState": "READY" } ] }`For more information, see [Medical Custom Vocabularies](https://docs.aws.amazon.com/transcribe/latest/dg/how-vocabulary-med.html)in the*Amazon Transcribe Developer Guide*.- 
+                    For API details, see [ListMedicalVocabularies](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/transcribe/list-medical-vocabularies.html)in*AWS CLI Command Reference*.
+ 
+- 
+                    
+
+The following code example shows how to use `list-transcription-jobs`.
+
+- **AWS CLI**
+- 
+            
+                    **To list your transcription jobs**The following `list-transcription-jobs`example lists the transcription jobs associated with your AWS account and Region.`aws transcribe list-transcription-jobs`Output: `{ "NextToken": "NextToken", "TranscriptionJobSummaries": [ { "TranscriptionJobName": "speak-id-job-1", "CreationTime": "2020-08-17T21:06:15.391000+00:00", "StartTime": "2020-08-17T21:06:15.416000+00:00", "CompletionTime": "2020-08-17T21:07:05.098000+00:00", "LanguageCode": "language-code", "TranscriptionJobStatus": "COMPLETED", "OutputLocationType": "SERVICE_BUCKET" }, { "TranscriptionJobName": "job-1", "CreationTime": "2020-08-17T20:50:24.207000+00:00", "StartTime": "2020-08-17T20:50:24.230000+00:00", "CompletionTime": "2020-08-17T20:52:18.737000+00:00", "LanguageCode": "language-code", "TranscriptionJobStatus": "COMPLETED", "OutputLocationType": "SERVICE_BUCKET" }, { "TranscriptionJobName": "sdk-test-job-4", "CreationTime": "2020-08-17T20:32:27.917000+00:00", "StartTime": "2020-08-17T20:32:27.956000+00:00", "CompletionTime": "2020-08-17T20:33:15.126000+00:00", "LanguageCode": "language-code", "TranscriptionJobStatus": "COMPLETED", "OutputLocationType": "SERVICE_BUCKET" }, { "TranscriptionJobName": "Diarization-speak-id", "CreationTime": "2020-08-10T22:10:09.066000+00:00", "StartTime": "2020-08-10T22:10:09.116000+00:00", "CompletionTime": "2020-08-10T22:26:48.172000+00:00", "LanguageCode": "language-code", "TranscriptionJobStatus": "COMPLETED", "OutputLocationType": "SERVICE_BUCKET" }, { "TranscriptionJobName": "your-transcription-job-name", "CreationTime": "2020-07-29T17:45:09.791000+00:00", "StartTime": "2020-07-29T17:45:09.826000+00:00", "CompletionTime": "2020-07-29T17:46:20.831000+00:00", "LanguageCode": "language-code", "TranscriptionJobStatus": "COMPLETED", "OutputLocationType": "SERVICE_BUCKET" } ] }`For more information, see [Getting Started (AWS Command Line Interface)](https://docs.aws.amazon.com/transcribe/latest/dg/getting-started-cli.html)in the*Amazon Transcribe Developer Guide*.- 
+                    For API details, see [ListTranscriptionJobs](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/transcribe/list-transcription-jobs.html)in*AWS CLI Command Reference*.
+ 
+- 
+                    
+
+The following code example shows how to use `list-vocabularies`.
+
+- **AWS CLI**
+- 
+            
+                    **To list your custom vocabularies**The following `list-vocabularies`example lists the custom vocabularies associated with your AWS account and Region.`aws transcribe list-vocabularies`Output: `{ "NextToken": "NextToken", "Vocabularies": [ { "VocabularyName": "ards-test-1", "LanguageCode": "language-code", "LastModifiedTime": "2020-04-27T22:00:27.330000+00:00", "VocabularyState": "READY" }, { "VocabularyName": "sample-test", "LanguageCode": "language-code", "LastModifiedTime": "2020-04-24T23:04:11.044000+00:00", "VocabularyState": "READY" }, { "VocabularyName": "CRLF-to-LF-test-3-1", "LanguageCode": "language-code", "LastModifiedTime": "2020-04-24T22:12:22.277000+00:00", "VocabularyState": "READY" }, { "VocabularyName": "CRLF-to-LF-test-2", "LanguageCode": "language-code", "LastModifiedTime": "2020-04-24T21:53:50.455000+00:00", "VocabularyState": "READY" }, { "VocabularyName": "CRLF-to-LF-1-1", "LanguageCode": "language-code", "LastModifiedTime": "2020-04-24T21:39:33.356000+00:00", "VocabularyState": "READY" } ] }`For more information, see [Custom Vocabularies](https://docs.aws.amazon.com/transcribe/latest/dg/how-vocabulary.html)in the*Amazon Transcribe Developer Guide*.- 
+                    For API details, see [ListVocabularies](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/transcribe/list-vocabularies.html)in*AWS CLI Command Reference*.
+ 
+- 
+                    
+
+The following code example shows how to use `list-vocabulary-filters`.
+
+- **AWS CLI**
+- 
+            
+                    **To list your vocabulary filters**The following `list-vocabulary-filters`example lists the vocabulary filters associated with your AWS account and Region.`aws transcribe list-vocabulary-filters`Output: `{ "NextToken": "NextToken": [ { "VocabularyFilterName": "testFilter", "LanguageCode": "language-code", "LastModifiedTime": "2020-05-07T22:39:32.147000+00:00" }, { "VocabularyFilterName": "testFilter2", "LanguageCode": "language-code", "LastModifiedTime": "2020-05-21T23:29:35.174000+00:00" }, { "VocabularyFilterName": "filter2", "LanguageCode": "language-code", "LastModifiedTime": "2020-05-08T20:18:26.426000+00:00" }, { "VocabularyFilterName": "filter-review", "LanguageCode": "language-code", "LastModifiedTime": "2020-06-03T18:52:30.448000+00:00" }, { "VocabularyFilterName": "crlf-filt", "LanguageCode": "language-code", "LastModifiedTime": "2020-05-22T19:42:42.737000+00:00" } ] }`For more information, see [Filtering Unwanted Words](https://docs.aws.amazon.com/transcribe/latest/dg/filter-unwanted-words.html)in the*Amazon Transcribe Developer Guide*.- 
+                    For API details, see [ListVocabularyFilters](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/transcribe/list-vocabulary-filters.html)in*AWS CLI Command Reference*.
+ 
+- 
+                    
+
+The following code example shows how to use `start-medical-transcription-job`.
+
+- **AWS CLI**
+- 
+            
+                    **Example 1: To transcribe a medical dictation stored as an audio file**The following `start-medical-transcription-job`example transcribes an audio file. You specify the location of the transcription output in the`OutputBucketName`parameter.`aws transcribe start-medical-transcription-job \ --cli-input-json``file://myfile.json`Contents of `myfile.json`:`{ "MedicalTranscriptionJobName": "simple-dictation-medical-transcription-job", "LanguageCode": "language-code", "Specialty": "PRIMARYCARE", "Type": "DICTATION", "OutputBucketName":"amzn-s3-demo-bucket", "Media": { "MediaFileUri": "s3://amzn-s3-demo-bucket/your-audio-file.extension" } }`Output: `{ "MedicalTranscriptionJob": { "MedicalTranscriptionJobName": "simple-dictation-medical-transcription-job", "TranscriptionJobStatus": "IN_PROGRESS", "LanguageCode": "language-code", "Media": { "MediaFileUri": "s3://amzn-s3-demo-bucket/your-audio-file.extension" }, "StartTime": "2020-09-20T00:35:22.256000+00:00", "CreationTime": "2020-09-20T00:35:22.218000+00:00", "Specialty": "PRIMARYCARE", "Type": "DICTATION" } }`For more information, see [Batch Transcription Overview](https://docs.aws.amazon.com/transcribe/latest/dg/batch-med-transcription.html)in the*Amazon Transcribe Developer Guide*.**Example 2: To transcribe a clinician-patient dialogue stored as an audio file**The following `start-medical-transcription-job`example transcribes an audio file containing a clinician-patient dialogue. You specify the location of the transcription output in the OutputBucketName parameter.`aws transcribe start-medical-transcription-job \ --cli-input-json``file://mysecondfile.json`Contents of `mysecondfile.json`:`{ "MedicalTranscriptionJobName": "simple-dictation-medical-transcription-job", "LanguageCode": "language-code", "Specialty": "PRIMARYCARE", "Type": "CONVERSATION", "OutputBucketName":"amzn-s3-demo-bucket", "Media": { "MediaFileUri": "s3://amzn-s3-demo-bucket/your-audio-file.extension" } }`Output: `{ "MedicalTranscriptionJob": { "MedicalTranscriptionJobName": "simple-conversation-medical-transcription-job", "TranscriptionJobStatus": "IN_PROGRESS", "LanguageCode": "language-code", "Media": { "MediaFileUri": "s3://amzn-s3-demo-bucket/your-audio-file.extension" }, "StartTime": "2020-09-20T23:19:49.965000+00:00", "CreationTime": "2020-09-20T23:19:49.941000+00:00", "Specialty": "PRIMARYCARE", "Type": "CONVERSATION" } }`For more information, see [Batch Transcription Overview](https://docs.aws.amazon.com/transcribe/latest/dg/batch-med-transcription.html)in the*Amazon Transcribe Developer Guide*.**Example 3: To transcribe a multichannel audio file of a clinician-patient dialogue**The following `start-medical-transcription-job`example transcribes the audio from each channel in the audio file and merges the separate transcriptions from each channel into a single transcription output. You specify the location of the transcription output in the`OutputBucketName`parameter.`aws transcribe start-medical-transcription-job \ --cli-input-json``file://mythirdfile.json`Contents of `mythirdfile.json`:`{ "MedicalTranscriptionJobName": "multichannel-conversation-medical-transcription-job", "LanguageCode": "language-code", "Specialty": "PRIMARYCARE", "Type": "CONVERSATION", "OutputBucketName":"amzn-s3-demo-bucket", "Media": { "MediaFileUri": "s3://amzn-s3-demo-bucket/your-audio-file.extension" }, "Settings":{ "ChannelIdentification": true } }`Output: `{ "MedicalTranscriptionJob": { "MedicalTranscriptionJobName": "multichannel-conversation-medical-transcription-job", "TranscriptionJobStatus": "IN_PROGRESS", "LanguageCode": "language-code", "Media": { "MediaFileUri": "s3://amzn-s3-demo-bucket/your-audio-file.extension" }, "StartTime": "2020-09-20T23:46:44.081000+00:00", "CreationTime": "2020-09-20T23:46:44.053000+00:00", "Settings": { "ChannelIdentification": true }, "Specialty": "PRIMARYCARE", "Type": "CONVERSATION" } }`For more information, see [Channel Identification](https://docs.aws.amazon.com/transcribe/latest/dg/how-channel-id-med.html)in the*Amazon Transcribe Developer Guide*.**Example 4: To transcribe an audio file of a clinician-patient dialogue and identify the speakers in the transcription output**The following `start-medical-transcription-job`example transcribes an audio file and labels the speech of each speaker in the transcription output. You specify the location of the transcription output in the`OutputBucketName`parameter.`aws transcribe start-medical-transcription-job \ --cli-input-json``file://myfourthfile.json`Contents of `myfourthfile.json`:`{ "MedicalTranscriptionJobName": "speaker-id-conversation-medical-transcription-job", "LanguageCode": "language-code", "Specialty": "PRIMARYCARE", "Type": "CONVERSATION", "OutputBucketName":"amzn-s3-demo-bucket", "Media": { "MediaFileUri": "s3://amzn-s3-demo-bucket/your-audio-file.extension" }, "Settings":{ "ShowSpeakerLabels": true, "MaxSpeakerLabels": 2 } }`Output: `{ "MedicalTranscriptionJob": { "MedicalTranscriptionJobName": "speaker-id-conversation-medical-transcription-job", "TranscriptionJobStatus": "IN_PROGRESS", "LanguageCode": "language-code", "Media": { "MediaFileUri": "s3://amzn-s3-demo-bucket/your-audio-file.extension" }, "StartTime": "2020-09-21T18:43:37.265000+00:00", "CreationTime": "2020-09-21T18:43:37.157000+00:00", "Settings": { "ShowSpeakerLabels": true, "MaxSpeakerLabels": 2 }, "Specialty": "PRIMARYCARE", "Type": "CONVERSATION" } }`For more information, see [Identifying Speakers](https://docs.aws.amazon.com/transcribe/latest/dg/diarization-med.html)in the*Amazon Transcribe Developer Guide*.**Example 5: To transcribe a medical conversation stored as an audio file with up to two transcription alternatives**The following `start-medical-transcription-job`example creates up to two alternative transcriptions from a single audio file. Every transcriptions has a level of confidence associated with it. By default, Amazon Transcribe returns the transcription with the highest confidence level. You can specify that Amazon Transcribe return additional transcriptions with lower confidence levels. You specify the location of the transcription output in the`OutputBucketName`parameter.`aws transcribe start-medical-transcription-job \ --cli-input-json``file://myfifthfile.json`Contents of `myfifthfile.json`:`{ "MedicalTranscriptionJobName": "alternatives-conversation-medical-transcription-job", "LanguageCode": "language-code", "Specialty": "PRIMARYCARE", "Type": "CONVERSATION", "OutputBucketName":"amzn-s3-demo-bucket", "Media": { "MediaFileUri": "s3://amzn-s3-demo-bucket/your-audio-file.extension" }, "Settings":{ "ShowAlternatives": true, "MaxAlternatives": 2 } }`Output: `{ "MedicalTranscriptionJob": { "MedicalTranscriptionJobName": "alternatives-conversation-medical-transcription-job", "TranscriptionJobStatus": "IN_PROGRESS", "LanguageCode": "language-code", "Media": { "MediaFileUri": "s3://amzn-s3-demo-bucket/your-audio-file.extension" }, "StartTime": "2020-09-21T19:09:18.199000+00:00", "CreationTime": "2020-09-21T19:09:18.171000+00:00", "Settings": { "ShowAlternatives": true, "MaxAlternatives": 2 }, "Specialty": "PRIMARYCARE", "Type": "CONVERSATION" } }`For more information, see [Alternative Transcriptions](https://docs.aws.amazon.com/transcribe/latest/dg/how-alternatives-med.html)in the*Amazon Transcribe Developer Guide*.**Example 6: To transcribe an audio file of a medical dictation with up to two alternative transcriptions**The following `start-medical-transcription-job`example transcribes an audio file and uses a vocabulary filter to mask any unwanted words. You specify the location of the transcription output in the OutputBucketName parameter.`aws transcribe start-medical-transcription-job \ --cli-input-json``file://mysixthfile.json`Contents of `mysixthfile.json`:`{ "MedicalTranscriptionJobName": "alternatives-conversation-medical-transcription-job", "LanguageCode": "language-code", "Specialty": "PRIMARYCARE", "Type": "DICTATION", "OutputBucketName":"amzn-s3-demo-bucket", "Media": { "MediaFileUri": "s3://amzn-s3-demo-bucket/your-audio-file.extension" }, "Settings":{ "ShowAlternatives": true, "MaxAlternatives": 2 } }`Output: `{ "MedicalTranscriptionJob": { "MedicalTranscriptionJobName": "alternatives-dictation-medical-transcription-job", "TranscriptionJobStatus": "IN_PROGRESS", "LanguageCode": "language-code", "Media": { "MediaFileUri": "s3://amzn-s3-demo-bucket/your-audio-file.extension" }, "StartTime": "2020-09-21T21:01:14.592000+00:00", "CreationTime": "2020-09-21T21:01:14.569000+00:00", "Settings": { "ShowAlternatives": true, "MaxAlternatives": 2 }, "Specialty": "PRIMARYCARE", "Type": "DICTATION" } }`For more information, see [Alternative Transcriptions](https://docs.aws.amazon.com/transcribe/latest/dg/how-alternatives-med.html)in the*Amazon Transcribe Developer Guide*.**Example 7: To transcribe an audio file of a medical dictation with increased accuracy by using a custom vocabulary**The following `start-medical-transcription-job`example transcribes an audio file and uses a medical custom vocabulary you've previously created to increase the transcription accuracy. You specify the location of the transcription output in the`OutputBucketName`parameter.`aws transcribe start-transcription-job \ --cli-input-json``file://myseventhfile.json`Contents of `mysixthfile.json`:`{ "MedicalTranscriptionJobName": "vocabulary-dictation-medical-transcription-job", "LanguageCode": "language-code", "Specialty": "PRIMARYCARE", "Type": "DICTATION", "OutputBucketName":"amzn-s3-demo-bucket", "Media": { "MediaFileUri": "s3://amzn-s3-demo-bucket/your-audio-file.extension" }, "Settings":{ "VocabularyName": "cli-medical-vocab-1" } }`Output: `{ "MedicalTranscriptionJob": { "MedicalTranscriptionJobName": "vocabulary-dictation-medical-transcription-job", "TranscriptionJobStatus": "IN_PROGRESS", "LanguageCode": "language-code", "Media": { "MediaFileUri": "s3://amzn-s3-demo-bucket/your-audio-file.extension" }, "StartTime": "2020-09-21T21:17:27.045000+00:00", "CreationTime": "2020-09-21T21:17:27.016000+00:00", "Settings": { "VocabularyName": "cli-medical-vocab-1" }, "Specialty": "PRIMARYCARE", "Type": "DICTATION" } }`For more information, see [Medical Custom Vocabularies](https://docs.aws.amazon.com/transcribe/latest/dg/how-vocabulary-med.html)in the*Amazon Transcribe Developer Guide*.- 
+                    For API details, see [StartMedicalTranscriptionJob](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/transcribe/start-medical-transcription-job.html)in*AWS CLI Command Reference*.
+ 
+- 
+                    
+
+The following code example shows how to use `start-transcription-job`.
+
+- **AWS CLI**
+- 
+            
+                    **Example 1: To transcribe an audio file**The following `start-transcription-job`example transcribes your audio file.`aws transcribe start-transcription-job \ --cli-input-json``file://myfile.json`Contents of `myfile.json`:`{ "TranscriptionJobName": "cli-simple-transcription-job", "LanguageCode": "the-language-of-your-transcription-job", "Media": { "MediaFileUri": "s3://amzn-s3-demo-bucket/Amazon-S3-prefix/your-media-file-name.file-extension" } }`For more information, see [Getting Started (AWS Command Line Interface)](https://docs.aws.amazon.com/transcribe/latest/dg/getting-started-cli.html)in the*Amazon Transcribe Developer Guide*.**Example 2: To transcribe a multi-channel audio file**The following `start-transcription-job`example transcribes your multi-channel audio file.`aws transcribe start-transcription-job \ --cli-input-json``file://mysecondfile.json`Contents of `mysecondfile.json`:`{ "TranscriptionJobName": "cli-channelid-job", "LanguageCode": "the-language-of-your-transcription-job", "Media": { "MediaFileUri": "s3://amzn-s3-demo-bucket/Amazon-S3-prefix/your-media-file-name.file-extension" }, "Settings":{ "ChannelIdentification":true } }`Output: `{ "TranscriptionJob": { "TranscriptionJobName": "cli-channelid-job", "TranscriptionJobStatus": "IN_PROGRESS", "LanguageCode": "the-language-of-your-transcription-job", "Media": { "MediaFileUri": "s3://amzn-s3-demo-bucket/Amazon-S3-prefix/your-media-file-name.file-extension" }, "StartTime": "2020-09-17T16:07:56.817000+00:00", "CreationTime": "2020-09-17T16:07:56.784000+00:00", "Settings": { "ChannelIdentification": true } } }`For more information, see [Transcribing Multi-Channel Audio](https://docs.aws.amazon.com/transcribe/latest/dg/channel-id.html)in the*Amazon Transcribe Developer Guide*.**Example 3: To transcribe an audio file and identify the different speakers**The following `start-transcription-job`example transcribes your audio file and identifies the speakers in the transcription output.`aws transcribe start-transcription-job \ --cli-input-json``file://mythirdfile.json`Contents of `mythirdfile.json`:`{ "TranscriptionJobName": "cli-speakerid-job", "LanguageCode": "the-language-of-your-transcription-job", "Media": { "MediaFileUri": "s3://amzn-s3-demo-bucket/Amazon-S3-prefix/your-media-file-name.file-extension" }, "Settings":{ "ShowSpeakerLabels": true, "MaxSpeakerLabels": 2 } }`Output: `{ "TranscriptionJob": { "TranscriptionJobName": "cli-speakerid-job", "TranscriptionJobStatus": "IN_PROGRESS", "LanguageCode": "the-language-of-your-transcription-job", "Media": { "MediaFileUri": "s3://amzn-s3-demo-bucket/Amazon-S3-prefix/your-media-file-name.file-extension" }, "StartTime": "2020-09-17T16:22:59.696000+00:00", "CreationTime": "2020-09-17T16:22:59.676000+00:00", "Settings": { "ShowSpeakerLabels": true, "MaxSpeakerLabels": 2 } } }`For more information, see [Identifying Speakers](https://docs.aws.amazon.com/transcribe/latest/dg/diarization.html)in the*Amazon Transcribe Developer Guide*.**Example 4: To transcribe an audio file and mask any unwanted words in the transcription output**The following `start-transcription-job`example transcribes your audio file and uses a vocabulary filter you've previously created to mask any unwanted words.`aws transcribe start-transcription-job \ --cli-input-json``file://myfourthfile.json`Contents of `myfourthfile.json`:`{ "TranscriptionJobName": "cli-filter-mask-job", "LanguageCode": "the-language-of-your-transcription-job", "Media": { "MediaFileUri": "s3://amzn-s3-demo-bucket/Amazon-S3-prefix/your-media-file-name.file-extension" }, "Settings":{ "VocabularyFilterName": "your-vocabulary-filter", "VocabularyFilterMethod": "mask" } }`Output: `{ "TranscriptionJob": { "TranscriptionJobName": "cli-filter-mask-job", "TranscriptionJobStatus": "IN_PROGRESS", "LanguageCode": "the-language-of-your-transcription-job", "Media": { "MediaFileUri": "s3://Amazon-S3-Prefix/your-media-file.file-extension" }, "StartTime": "2020-09-18T16:36:18.568000+00:00", "CreationTime": "2020-09-18T16:36:18.547000+00:00", "Settings": { "VocabularyFilterName": "your-vocabulary-filter", "VocabularyFilterMethod": "mask" } } }`For more information, see [Filtering Transcriptions](https://docs.aws.amazon.com/transcribe/latest/dg/filter-transcriptions.html)in the*Amazon Transcribe Developer Guide*.**Example 5: To transcribe an audio file and remove any unwanted words in the transcription output**The following `start-transcription-job`example transcribes your audio file and uses a vocabulary filter you've previously created to mask any unwanted words.`aws transcribe start-transcription-job \ --cli-input-json``file://myfifthfile.json`Contents of `myfifthfile.json`:`{ "TranscriptionJobName": "cli-filter-remove-job", "LanguageCode": "the-language-of-your-transcription-job", "Media": { "MediaFileUri": "s3://amzn-s3-demo-bucket/Amazon-S3-prefix/your-media-file-name.file-extension" }, "Settings":{ "VocabularyFilterName": "your-vocabulary-filter", "VocabularyFilterMethod": "remove" } }`Output: `{ "TranscriptionJob": { "TranscriptionJobName": "cli-filter-remove-job", "TranscriptionJobStatus": "IN_PROGRESS", "LanguageCode": "the-language-of-your-transcription-job", "Media": { "MediaFileUri": "s3://amzn-s3-demo-bucket/Amazon-S3-prefix/your-media-file-name.file-extension" }, "StartTime": "2020-09-18T16:36:18.568000+00:00", "CreationTime": "2020-09-18T16:36:18.547000+00:00", "Settings": { "VocabularyFilterName": "your-vocabulary-filter", "VocabularyFilterMethod": "remove" } } }`For more information, see [Filtering Transcriptions](https://docs.aws.amazon.com/transcribe/latest/dg/filter-transcriptions.html)in the*Amazon Transcribe Developer Guide*.**Example 6: To transcribe an audio file with increased accuracy using a custom vocabulary**The following `start-transcription-job`example transcribes your audio file and uses a vocabulary filter you've previously created to mask any unwanted words.`aws transcribe start-transcription-job \ --cli-input-json``file://mysixthfile.json`Contents of `mysixthfile.json`:`{ "TranscriptionJobName": "cli-vocab-job", "LanguageCode": "the-language-of-your-transcription-job", "Media": { "MediaFileUri": "s3://amzn-s3-demo-bucket/Amazon-S3-prefix/your-media-file-name.file-extension" }, "Settings":{ "VocabularyName": "your-vocabulary" } }`Output: `{ "TranscriptionJob": { "TranscriptionJobName": "cli-vocab-job", "TranscriptionJobStatus": "IN_PROGRESS", "LanguageCode": "the-language-of-your-transcription-job", "Media": { "MediaFileUri": "s3://amzn-s3-demo-bucket/Amazon-S3-prefix/your-media-file-name.file-extension" }, "StartTime": "2020-09-18T16:36:18.568000+00:00", "CreationTime": "2020-09-18T16:36:18.547000+00:00", "Settings": { "VocabularyName": "your-vocabulary" } } }`For more information, see [Filtering Transcriptions](https://docs.aws.amazon.com/transcribe/latest/dg/filter-transcriptions.html)in the*Amazon Transcribe Developer Guide*.**Example 7: To identify the language of an audio file and transcribe it**The following `start-transcription-job`example transcribes your audio file and uses a vocabulary filter you've previously created to mask any unwanted words.`aws transcribe start-transcription-job \ --cli-input-json``file://myseventhfile.json`Contents of `myseventhfile.json`:`{ "TranscriptionJobName": "cli-identify-language-transcription-job", "IdentifyLanguage": true, "Media": { "MediaFileUri": "s3://amzn-s3-demo-bucket/Amazon-S3-prefix/your-media-file-name.file-extension" } }`Output: `{ "TranscriptionJob": { "TranscriptionJobName": "cli-identify-language-transcription-job", "TranscriptionJobStatus": "IN_PROGRESS", "Media": { "MediaFileUri": "s3://amzn-s3-demo-bucket/Amazon-S3-prefix/your-media-file-name.file-extension" }, "StartTime": "2020-09-18T22:27:23.970000+00:00", "CreationTime": "2020-09-18T22:27:23.948000+00:00", "IdentifyLanguage": true } }`For more information, see [Identifying the Language](https://docs.aws.amazon.com/transcribe/latest/dg/auto-lang-id.html)in the*Amazon Transcribe Developer Guide*.**Example 8: To transcribe an audio file with personally identifiable information redacted**The following `start-transcription-job`example transcribes your audio file and redacts any personally identifiable information in the transcription output.`aws transcribe start-transcription-job \ --cli-input-json``file://myeighthfile.json`Contents of `myeigthfile.json`:`{ "TranscriptionJobName": "cli-redaction-job", "LanguageCode": "language-code", "Media": { "MediaFileUri": "s3://Amazon-S3-Prefix/your-media-file.file-extension" }, "ContentRedaction": { "RedactionOutput":"redacted", "RedactionType":"PII" } }`Output: `{ "TranscriptionJob": { "TranscriptionJobName": "cli-redaction-job", "TranscriptionJobStatus": "IN_PROGRESS", "LanguageCode": "language-code", "Media": { "MediaFileUri": "s3://Amazon-S3-Prefix/your-media-file.file-extension" }, "StartTime": "2020-09-25T23:49:13.195000+00:00", "CreationTime": "2020-09-25T23:49:13.176000+00:00", "ContentRedaction": { "RedactionType": "PII", "RedactionOutput": "redacted" } } }`For more information, see [Automatic Content Redaction](https://docs.aws.amazon.com/transcribe/latest/dg/content-redaction.html)in the*Amazon Transcribe Developer Guide*.**Example 9: To generate a transcript with personally identifiable information (PII) redacted and an unredacted transcript**The following `start-transcription-job`example generates two transcrptions of your audio file, one with the personally identifiable information redacted, and the other without any redactions.`aws transcribe start-transcription-job \ --cli-input-json``file://myninthfile.json`Contents of `myninthfile.json`:`{ "TranscriptionJobName": "cli-redaction-job-with-unredacted-transcript", "LanguageCode": "language-code", "Media": { "MediaFileUri": "s3://Amazon-S3-Prefix/your-media-file.file-extension" }, "ContentRedaction": { "RedactionOutput":"redacted_and_unredacted", "RedactionType":"PII" } }`Output: `{ "TranscriptionJob": { "TranscriptionJobName": "cli-redaction-job-with-unredacted-transcript", "TranscriptionJobStatus": "IN_PROGRESS", "LanguageCode": "language-code", "Media": { "MediaFileUri": "s3://Amazon-S3-Prefix/your-media-file.file-extension" }, "StartTime": "2020-09-25T23:59:47.677000+00:00", "CreationTime": "2020-09-25T23:59:47.653000+00:00", "ContentRedaction": { "RedactionType": "PII", "RedactionOutput": "redacted_and_unredacted" } } }`For more information, see [Automatic Content Redaction](https://docs.aws.amazon.com/transcribe/latest/dg/content-redaction.html)in the*Amazon Transcribe Developer Guide*.**Example 10: To use a custom language model you've previously created to transcribe an audio file.**The following `start-transcription-job`example transcribes your audio file with a custom language model you've previously created.`aws transcribe start-transcription-job \ --cli-input-json``file://mytenthfile.json`Contents of `mytenthfile.json`:`{ "TranscriptionJobName": "cli-clm-2-job-1", "LanguageCode": "language-code", "Media": { "MediaFileUri": "s3://amzn-s3-demo-bucket/your-audio-file.file-extension" }, "ModelSettings": { "LanguageModelName":"cli-clm-2" } }`Output: `{ "TranscriptionJob": { "TranscriptionJobName": "cli-clm-2-job-1", "TranscriptionJobStatus": "IN_PROGRESS", "LanguageCode": "language-code", "Media": { "MediaFileUri": "s3://amzn-s3-demo-bucket/your-audio-file.file-extension" }, "StartTime": "2020-09-28T17:56:01.835000+00:00", "CreationTime": "2020-09-28T17:56:01.801000+00:00", "ModelSettings": { "LanguageModelName": "cli-clm-2" } } }`For more information, see [Improving Domain-Specific Transcription Accuracy with Custom Language Models](https://docs.aws.amazon.com/transcribe/latest/dg/custom-language-models.html)in the*Amazon Transcribe Developer Guide*.- 
+                    For API details, see [StartTranscriptionJob](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/transcribe/start-transcription-job.html)in*AWS CLI Command Reference*.
+ 
+- 
+                    
+
+The following code example shows how to use `update-medical-vocabulary`.
+
+- **AWS CLI**
+- 
+            
+                    **To update a medical custom vocabulary with new terms.**The following `update-medical-vocabulary`example replaces the terms used in a medical custom vocabulary with the new ones. Prerequisite: to replace the terms in a medical custom vocabulary, you need a file with new terms.`aws transcribe update-medical-vocabulary \ --vocabulary-file-uri``s3://amzn-s3-demo-bucket/Amazon-S3-Prefix/medical-custom-vocabulary.txt`\ --vocabulary-name`medical-custom-vocabulary`\ --`language`-code languageOutput: `{ "VocabularyName": "medical-custom-vocabulary", "LanguageCode": "en-US", "VocabularyState": "PENDING" }`For more information, see [Medical Custom Vocabularies](https://docs.aws.amazon.com/transcribe/latest/dg/how-vocabulary.html)in the*Amazon Transcribe Developer Guide*.- 
+                    For API details, see [UpdateMedicalVocabulary](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/transcribe/update-medical-vocabulary.html)in*AWS CLI Command Reference*.
+ 
+- 
+                    
+
+The following code example shows how to use `update-vocabulary-filter`.
+
+- **AWS CLI**
+- 
+            
+                    **To replace the words in a vocabulary filter**The following `update-vocabulary-filter`example replaces the words in a vocabulary filter with new ones. Prerequisite: To update a vocabulary filter with the new words, you must have those words saved as a text file.`aws transcribe update-vocabulary-filter \ --vocabulary-filter-file-uri``s3://amzn-s3-demo-bucket/Amazon-S3-Prefix/your-text-file-to-update-your-vocabulary-filter.txt`\ --`vocabulary-filter-name`vocabulary-filter-nameOutput: `{ "VocabularyFilterName": "vocabulary-filter-name", "LanguageCode": "language-code", "LastModifiedTime": "2020-09-23T18:40:35.139000+00:00" }`For more information, see [Filtering Unwanted Words](https://docs.aws.amazon.com/transcribe/latest/dg/filter-unwanted-words.html)in the*Amazon Transcribe Developer Guide*.- 
+                    For API details, see [UpdateVocabularyFilter](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/transcribe/update-vocabulary-filter.html)in*AWS CLI Command Reference*.
+ 
+- 
+                    
+
+The following code example shows how to use `update-vocabulary`.
+
+- **AWS CLI**
+- 
+            
+                    **To update a custom vocabulary with new terms.**The following `update-vocabulary`example overwrites the terms used to create a custom vocabulary with the new ones that you provide. Prerequisite: to replace the terms in a custom vocabulary, you need a file with new terms.`aws transcribe update-vocabulary \ --vocabulary-file-uri``s3://amzn-s3-demo-bucket/Amazon-S3-Prefix/custom-vocabulary.txt`\ --vocabulary-name`custom-vocabulary`\ --`language-code`language-codeOutput: `{ "VocabularyName": "custom-vocabulary", "LanguageCode": "language", "VocabularyState": "PENDING" }`For more information, see [Custom Vocabularies](https://docs.aws.amazon.com/transcribe/latest/dg/how-vocabulary.html)in the*Amazon Transcribe Developer Guide*.- 
+                    For API details, see [UpdateVocabulary](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/transcribe/update-vocabulary.html)in*AWS CLI Command Reference*.
+ 
+-

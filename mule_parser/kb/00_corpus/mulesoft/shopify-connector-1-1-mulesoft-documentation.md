@@ -1,0 +1,68 @@
+# Shopify Connector 1.1 | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/shopify-connector/latest](https://docs.mulesoft.com/shopify-connector/latest)
+
+---
+
+# Shopify Connector 1.1
+
+Anypoint Connector for Shopify (Shopify Connector) gives you access to the Shopify platform. This connector exposes operations provided by the Shopify REST Admin API.
+
+For information about compatibility and fixed issues, see the Shopify Connector Release Notes.
+
+## Before You Begin
+
+To use this connector, you must be familiar with:
+
+- 
+The Shopify Connector’s API 
+- 
+Anypoint Connectors 
+- 
+Mule runtime engine (Mule) 
+- 
+Elements and global elements in a Mule flow 
+- 
+Creating a Mule app using Anypoint Studio or Anypoint Code Builder 
+
+Before creating an app, you must have:
+
+- 
+Credentials to access the Shopify target resource 
+- 
+Anypoint Platform 
+- 
+Anypoint Studio version 7.5.0 or later 
+
+## Common Use Cases For the Connector
+
+Some common use cases for Shopify Connector include:
+
+- 
+Syncing a new customer’s information when they place an order 
+- 
+Storing information when a new order is placed through a client’s Shopify store 
+- 
+Managing items when new products are created in Shopify 
+
+## Connection Types
+
+Shopify Connector uses the following authentication methods:
+
+- 
+Basic Auth 
+ Uses a username and password for authentication.
+- 
+OAuth2 
+ Delegates user authentication to the service hosting the user account.
+
+## Next Step
+
+After you complete the prerequisites, you are ready to create an app and configure the connector using Anypoint Studio.
+
+## See Also
+
+- 
+[Use Exchange to Discover Connectors, Templates, and Examples](../../connectors/introduction/intro-use-exchange)
+- 
+[Salesforce Help](https://help.salesforce.com)

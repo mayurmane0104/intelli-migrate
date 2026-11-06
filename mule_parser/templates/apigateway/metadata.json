@@ -1,0 +1,7 @@
+{
+  "template_id": "apigateway",
+  "name": "API Gateway REST API",
+  "service": "API Gateway",
+  "target": "API Gateway",
+  "required_variables": ["resource_prefix", "function_name"]
+}

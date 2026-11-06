@@ -1,0 +1,178 @@
+# General Use of Commands and Flags | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/exchange/apicat-use-api-catalog-cli](https://docs.mulesoft.com/exchange/apicat-use-api-catalog-cli)
+
+---
+
+# General Use of Commands and Flags
+
+After you have installed API Catalog CLI and configured permissions, you can use API Catalog CLI commands to autocatalog your APIs. Several options are available to [authenticate](#authentication) to Anypoint Platform as you run the commands.
+
+## List of API Catalog Commands
+
+API Catalog CLI includes the following commands:
+
+| Command | Description | 
+|---|---|
+| Configures autocompletion for API Catalog commands | |
+| Creates or deletes a credentials configuration file | |
+| Creates a descriptor file | |
+| Updates a descriptor file | |
+| Publishes assets to Exchange | 
+
+## View Command Help
+
+Use the help option to list the commands or command flags and their descriptions. The following examples show how to use the help option:
+
+api-catalog help api-catalog create-descriptor --help
+
+## General and Authentication Flags
+
+Following are the general and authentication flags for commands that authenticate to Anypoint Platform:
+
+| Flag | Description | 
+|---|---|
+| --client_id=client_id or ANYPOINT_CLIENT_ID environment variable | Connected app client ID See  | 
+| --client_secret or ANYPOINT_CLIENT_SECRET environment variable | Prompt for the connected app secret for the client ID See  | 
+| --collectMetrics or COLLECT_METRICS environment variable | Not currently used | 
+| --environment=environment or ANYPOINT_ENV environment variable | The name of the Anypoint Platform environment where the APIs are cataloged | 
+| --host=host or ANYPOINT_HOST environment variable | Default: anypoint.mulesoft.com The Anypoint Platform base URL without the protocol For the US Anypoint Platform, use: anypoint.mulesoft.com For the European Anypoint Platform, use: eu1.anypoint.mulesoft.com | 
+| --organization=organization or ANYPOINT_ORG environment variable | The ID of the Anypoint Platform organization where the APIs are cataloged | 
+| -o, --output=output | Not currently used | 
+| -p, --password or ANYPOINT_PASSWORD environment variable | Anypoint user password See  | 
+| -u, --username=username or ANYPOINT_USERNAME environment variable | Anypoint username See  | 
+
+## Authentication
+
+To authenticate to Anypoint Platform while running the API Catalog CLI, you must use one of the following authentication combinations:
+
+- 
+Username and password 
+- 
+Client ID and client secret 
+- 
+Bearer token (command line only) 
+
+You must also specify host, environment, and organization unless you are logging in to the defaults.
+
+You can pass Anypoint Platform credentials using the following methods:
+
+Configuration settings are overridden as follows:
+
+- 
+Command line flags override all other methods. 
+- 
+Environment variables are used if command line flags are not specified and override any credentials configuration file settings. 
+- 
+Credentials configuration file options are used if no command line flags or environment variables are set. 
+
+### SSO
+
+If you have configured Anypoint Platform to use SSO with the system on which you are running API Catalog CLI, when you run an API Catalog CLI command with no authentication flags, the command logs in to Anypoint Platform through SSO. For information on configuring login through SSO, see [About Identity Management](../access-management/external-identity).
+
+### Credentials Configuration File
+
+If you are not using SSO, the most secure way to pass credentials to your Anypoint Platform CLI installation is through the credentials configuration file.
+
+You can authenticate to Anypoint Platform by running the `api-catalog conf` command to add your credentials to a configuration file. After you have created the configuration file with valid credentials, you can run the `api-catalog` commands without specifying any credentials flags and the authentication is done using the configuration file values.
+
+You can set authentication values in the configuration file using a combination of the following authentication keys:
+
+username password client_id client_secret host environment organization
+
+To create your configuration file:
+
+- 
+Run the `api-catalog conf`command with the key value pair you want to use. For example, the following command sets the username and password:$ api-catalog conf username myuser $ api-catalog conf password mypwd 
+
+The commands store the credential information in the `config.json` file in the following locations:
+
+- 
+MacOS: `~/Library/Preferences/@mulesoft/api-catalog-cli-nodejs/config.json`
+- 
+Windows: `%LOCALAPPDATA%\mycli`
+- 
+Unix: `~/.config/mycli`
+
+**Examples:**
+
+- 
+Set a value for a bearer token: $ api-catalog conf bearer b71cab22-e5cc-43c4-90ed-5a1124b6ae1f 
+- 
+Set values for username and password: $ api-catalog conf username myuser $ api-catalog conf password mypwd 
+- 
+Set values for a specific host, organization, and environment: $ api-catalog conf host myco.anypoint.mulesoft.com $ api-catalog conf environment ec7d16cb-43fd-4796-8b4f-5cff7294fcf9 $ api-catalog conf organization 8a840abc-e63a-4f8d-87ad-24052eda3018 
+- 
+Set values for client ID and client secret: $ api-catalog conf client_id myClientID $ api-catalog conf client_secret myCLientSecret 
+
+Example `config.json` contents after running the above commands:
+
+```
+ {
+     "bearer": "b71cab22-e5cc-43c4-90ed-5a1124b6ae1f",
+     "username": "myuser",
+     "password": "mypwd",
+     "host": "myco.anypoint.mulesoft.com",
+     "environment": "ec7d16cb-43fd-4796-8b4f-5cff7294fcf9",
+     "organization": "8a840abc-e63a-4f8d-87ad-24052eda3018",
+     "client_id": "1787c36ab544466698e380131040faad",
+     "client_secret": "2dA616efca1E4181A2A77BBF046868BE"
+ }
+```
+#### api-catalog conf
+
+Manage authentication credentials in a configuration file (config.json) by adding and removing key value pairs. Set one key value pair per command execution.
+
+> api-catalog conf <authkey> <authkeyvalue> [flags]
+
+`<authkey>`
+
+The authentication key name. Possible key names are:
+           username
+           password
+           client_id
+           client_secret
+           host
+           environment
+           organization
+
+`<authkeyvalue>`
+
+The value for the specified authentication key.
+
+This command accepts the following flags:
+
+| Flag | Description | 
+|---|---|
+| -d, --delete | Deletes the config file entry for the given key | 
+| -h, --help | Shows the help for this command | 
+| -k, --key=key | Shows the value that corresponds with the given key | 
+| -v, --value=value | Shows the key that corresponds with the given value | 
+
+### Command Line Flags
+
+You can authenticate to Anypoint Platform through the command line by running the `api-catalog` command with a combination of the following flags:
+
+--username --password --client_id --client_secret --bearer --organization --environment
+
+**Examples:**
+
+- 
+Authenticate on the command line using username and password $ api-catalog --username myUserName --password myPassword --organization=myOrgId publish-asset 
+- 
+Authenticate on the command line using client ID and client secret $ api-catalog --client_id myClientID myClientSecret --organization=myOrgId publish-asset 
+- 
+Authenticate on the command line using a bearer token You can generate a bearer token in Anypoint Platform and pass it to API Catalog CLI directly. When you provide a bearer token, API Catalog CLI ignores any provided user or client credentials. $ api-catalog --bearer myBearerToken --organization=myOrgId publish-asset Your Anypoint Platform session expires when the bearer token expires. For information about generating a bearer token, see [How to Generate Your Authorization Bearer Token for Anypoint Platform](https://help.salesforce.com/s/articleView?id=001115323&type=1).
+
+### Environment Variables
+
+You can authenticate to Anypoint Platform by setting a combination of the following environment variables before running an `api-catalog` command:
+
+ANYPOINT_USERNAME ANYPOINT_PASSWORD ANYPOINT_CLIENT_ID ANYPOINT_CLIENT_SECRET ANYPOINT_ORG ANYPOINT_ENV ANYPOINT_HOST
+
+**Examples:**
+
+- 
+Authenticate by setting the environment variables for username and password $ export ANYPOINT_USERNAME=myUserName $ export ANYPOINT_PASSWORD=myPassword $ export ANYPOINT_ORG=myOrgId 
+- 
+Authenticate by setting the environment variables for client ID and client secret $ export ANYPOINT_CLIENT_ID=myClientID $ export ANYPOINT_CLIENT_SECRET=myCLientSecret $ export ANYPOINT_ORG=myOrgId

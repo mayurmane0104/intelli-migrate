@@ -1,0 +1,14 @@
+{
+  "id": "auto_7d6fb81fc0",
+  "description": "Auto-catalogued from Api-test (needs input/expected)",
+  "function_name": "transform_auto",
+  "output_format": "",
+  "ir_relative": "../frontend/IR_Outputs/Api-test/Api-test_unknown_20260521_115320_46201a.json",
+  "ir_dataweave_index": 1,
+  "compare": {
+    "records": true,
+    "record_order": false,
+    "body": false
+  },
+  "status": "catalogue_only"
+}

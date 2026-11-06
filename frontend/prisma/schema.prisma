@@ -1,0 +1,240 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id            String         @id @default(cuid())
+  name          String?
+  email         String?        @unique
+  emailVerified DateTime?
+  image         String?
+  password      String? // For Credentials provider
+  role          String         @default("developer")
+  accounts      Account[]
+  sessions      Session[]
+  settings      UserSettings?
+  projects      Project[]
+  organizations Organization[]
+  workspaces    Workspace[]
+  sapReferences SapReference[]
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model UserSettings {
+  id             String   @id @default(cuid())
+  userId         String   @unique
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  activeProvider String   @default("mock")
+  llmSettings    Json // Stores provider configurations
+  editorSettings Json // Stores theme, fontSize, lastModel
+  updatedAt      DateTime @updatedAt
+}
+
+model Organization {
+  id          String      @id @default(cuid())
+  userId      String
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name        String      @unique
+  description String      @default("")
+  owner       String      @default("") // display name
+  logo        String      @default("")
+  createdAt   DateTime    @default(now())
+  workspaces  Workspace[]
+  projects    Project[]
+
+  @@index([userId])
+}
+
+model Workspace {
+  id           String       @id @default(cuid())
+  userId       String
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  orgId        String
+  organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  name         String
+  environment  String       @default("dev")
+  memberCount  Int          @default(1)
+  createdAt    DateTime     @default(now())
+  projects     Project[]
+
+  @@unique([orgId, name])
+  @@index([orgId])
+  @@index([userId])
+}
+
+model Project {
+  id                  String           @id @default(cuid())
+  userId              String
+  user                User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workspaceId         String
+  workspace           Workspace        @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  orgId               String
+  organization        Organization     @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  name                String
+  description         String?
+  targetPlatform      String           @default("aws")
+  sapReferenceMode    String           @default("standard")
+  sapValidation       Json?
+  sapValidationAt     DateTime?
+  sapConnection       Json?
+  sapConnectionAt     DateTime?
+  sapTestDeployment   Json?
+  sapTestDeploymentAt DateTime?
+  migrationType       String
+  targetRuntime       String
+  sourceType          String
+  status              String           @default("pending")
+  totalFiles          Int              @default(0)
+  migratedFiles       Int              @default(0)
+  failedFiles         Int              @default(0)
+  migrationRuns       Int              @default(0)
+  createdAt           DateTime         @default(now())
+  lastActivity        DateTime         @updatedAt
+  files               ProjectFile[]
+  logs                MigrationLog[]
+  batches             MigrationBatch[]
+  sapReferences       SapReference[]
+
+  @@index([userId])
+  @@index([workspaceId])
+  @@index([orgId])
+}
+
+model ProjectFile {
+  id                String            @id @default(cuid())
+  projectId         String
+  project           Project           @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  name              String
+  path              String
+  type              String // "file" | "folder"
+  language          String?
+  status            String            @default("pending")
+  content           String            @db.Text
+  migratedContent   String?           @db.Text
+  migratedCode      String?           @db.Text
+  activeMigrationId String?
+  size              Int               @default(0)
+  lastModified      DateTime          @default(now())
+  migrations        MigrationRecord[]
+  createdAt         DateTime          @default(now())
+
+  @@index([projectId])
+  @@index([status])
+  @@index([projectId, type])
+  @@index([projectId, path])
+  @@index([projectId, status])
+}
+
+model MigrationRecord {
+  id           String      @id @default(cuid())
+  fileId       String
+  file         ProjectFile @relation(fields: [fileId], references: [id], onDelete: Cascade)
+  provider     String
+  model        String
+  content      String      @db.Text
+  code         String?     @db.Text
+  systemPrompt String?     @db.Text
+  userPrompt   String?     @db.Text
+  rawResponse  String?     @db.Text
+  tokens       Int         @default(0)
+  createdAt    DateTime    @default(now())
+
+  @@index([fileId])
+  @@index([fileId, createdAt])
+}
+
+model MigrationLog {
+  id         String   @id @default(cuid())
+  projectId  String
+  project    Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  fileName   String
+  timestamp  DateTime @default(now())
+  status     String
+  message    String   @db.Text
+  stackTrace String?  @db.Text
+  duration   Int?
+
+  @@index([projectId])
+}
+
+model MigrationBatch {
+  id              String    @id @default(cuid())
+  projectId       String
+  project         Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  provider        String
+  model           String
+  status          String
+  startedAt       DateTime  @default(now())
+  completedAt     DateTime?
+  triggeredById   String
+  triggeredByName String
+  fileResults     Json      @default("[]")
+  totalFiles      Int
+  completedFiles  Int
+  failedFiles     Int
+  totalTokens     Int       @default(0)
+
+  @@index([projectId])
+  @@index([projectId, startedAt])
+  @@index([triggeredById])
+}
+
+model SapReference {
+  id           String   @id
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  projectId    String?
+  project      Project? @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  filename     String
+  artifactType String
+  profile      Json
+  createdAt    DateTime @default(now())
+  expiresAt    DateTime
+
+  @@index([userId, createdAt])
+  @@index([projectId])
+  @@index([expiresAt])
+  @@map("SAPReference")
+}

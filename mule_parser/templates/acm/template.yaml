@@ -1,0 +1,6 @@
+Resources:
+  {{resource_prefix}}Certificate:
+    Type: AWS::CertificateManager::Certificate
+    Properties:
+      DomainName: {{domain_name}}
+      ValidationMethod: DNS

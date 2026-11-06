@@ -1,0 +1,46 @@
+# Enabling the Request Access Button | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/exchange/to-enable-the-request-access-button](https://docs.mulesoft.com/exchange/to-enable-the-request-access-button)
+
+---
+
+# Enabling the Request Access Button
+
+Users specify what applications can have access to an API by clicking the
+**Request access** button.
+
+Exchange Administrators see **Request access** in the **More options** menu ![The More Options icon](_images/ex2-more-options-icon.png) .
+
+.
+
+Enabling the **Request access** button requires the Exchange Administrator permission.
+
+To show the **Request access** button, create an API asset and then configure it:
+
+- 
+In API Manager, click **Manage API**>**Manage API from Exchange**to open the API.
+- 
+Use the URL of your API asset in Exchange as the Implementation URI in API Manager. 
+- 
+After opening your API in API Manager, you can view the API Instance ID value as well as other useful information. 
+- 
+In Exchange, the **Request access**button appears in the three dots menu.
+
+In API Manager, the API’s Status is marked as unregistered. To register the API, deploy the API to Anypoint Runtime Manager. Changing the API Status to registered is not required to make the API usable in Exchange.
+
+## Request Access Display Criteria
+
+To display the **Request access** button on an Exchange public portal:
+
+- 
+Publish a REST, SOAP, or HTTP API in Exchange. A REST API can be either an OAS or RAML API specification. 
+- 
+Create an instance of the API in API Manager. 
+- 
+Set the instance as public in **API instances**.
+- 
+If the instance’s URL is not present, set the instance’s URL in **API instances**.
+
+If the instance is private, then the portal displays the **Request access** button only to logged-in users.
+
+If the instance is public, then the portal displays the **Request access** button to all users. If a logged-out user requests access, then Exchange prompts them to log in.

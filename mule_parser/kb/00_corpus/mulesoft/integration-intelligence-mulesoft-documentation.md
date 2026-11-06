@@ -1,0 +1,42 @@
+# Integration Intelligence | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/monitoring/integration-intelligence](https://docs.mulesoft.com/monitoring/integration-intelligence)
+
+---
+
+# Integration Intelligence
+
+[Advanced and Titanium tiers](/monitoring/#billing)
+
+Use Integration Intelligence to extend the value of MuleSoft telemetry beyond real-time monitoring. Together with Anypoint Monitoring and the Diagnostics Agent, it adds long-term analytics and actionable insights so that you can maximize uptime and optimize performance over time.
+
+With Integration Intelligence, you can:
+
+- 
+Select a business group for targeted data ingestion so that only the telemetry you need is brought into the analytics tier. 
+- 
+Bring your MuleSoft telemetry data, including metrics, logs, and traces into Salesforce Data 360 for better data retention and centralized access for analysis. 
+- 
+Gain long-term performance visibility through deeper data retention in Salesforce Data 360. View historical context, trends, seasonality, and recurring issues that real-time monitoring alone can’t surface, so that you can identify systemic patterns. 
+- 
+Get actionable insight through dashboards with Tableau Next. Preconfigured pages in the Integration Intelligence Lightning App in Salesforce give you a starting point: - 
+App Insights, offering a unified view of application metrics, health, and usage. 
+- 
+API Insights, providing a unified view of all API metrics, including health and usage. 
+- 
+Logs and Traces, enabling you to view tabular pages of log events (including filtering capabilities for timeframe and log level). Build custom views that matter to your team for operational efficiency, partner performance, and reliability. 
+ 
+- 
+- 
+Troubleshoot with agent-assisted analysis to uncover root causes, detect emerging patterns, and fine-tune operations without manually combing through logs and dashboards. 
+- 
+Reach the experience from Anypoint Platform. Cross-platform access with single sign-on (SSO) lets Anypoint Platform users log in once to access Tableau Next dashboards in Salesforce, and single-click navigation from the Anypoint Monitoring **Insights**page takes you to deeper insights.
+
+## What’s Next
+
+- 
+Set up Integration Intelligence in a Salesforce organization, and enable Integration Intelligence in Anypoint Platform ( [Setup](integration-intelligence-setup)).
+- 
+Monitor Mule apps and APIs, and get business insights ( [Dashboards](integration-intelligence-dashboards)).
+- 
+Troubleshoot issues reported in your logs ( [Logs](integration-intelligence-dashboards)).

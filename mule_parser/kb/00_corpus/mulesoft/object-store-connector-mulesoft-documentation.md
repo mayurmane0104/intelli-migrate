@@ -1,0 +1,62 @@
+# Object Store Connector | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/object-store-connector/latest](https://docs.mulesoft.com/object-store-connector/latest)
+
+---
+
+# Object Store Connector
+
+**Reference:** [Object Store Connector Reference](object-store-connector-reference)
+
+Object Store Connector is a Mule component that allows for simple key-value storage. Although it can serve a wide variety of use cases, it is mainly design for:
+
+- 
+Storing synchronization information, such as watermarks. 
+- 
+Storing temporal information such as access tokens. 
+- 
+Storing user information. 
+
+Additionally, Mule Runtime uses Object Stores to support some of its own components, for example:
+
+- 
+The Cache module uses an Object Store to maintain all of the cached data. 
+- 
+The OAuth module (and every OAuth enabled connector) uses Object Stores to store the access and refresh tokens. 
+
+## Object Store Limitations
+
+Object Stores are not a universal solution for data storage. They do not replace a database, and they are not suitable for every use case. Most importantly, they do not support transactional access or modification. For use cases in which [ACID](https://en.wikipedia.org/wiki/ACID) semantics are needed, or for cases where you expect the same key to be updated in parallel, consider another solution.
+
+## Use the Default Object Store
+
+By default, each Mule app has an Object Store that is persistent and always available to the app *without any configuration*. Flows can use it to persist and share data.
+
+If you want to use the default Object Store, you can specify a `key` for the Object Store without selecting or creating an Object Store reference for the Object Store operation, and without specifying an `objectStore` attribute in the XML element for the Object Store component.
+
+You use Anypoint Platform Runtime Manager to deploy Mule apps to CloudHub workers. The key-value pairs (contents) are visible in Runtime Manager if you use persistent Object Store and key-value pairs are stored.
+
+## Use a Custom Object Store
+
+Custom Object Stores must specify an `objectStore` attribute. These Object Stores can be configured to behave differently than the default Object Store. For example, you can indicate whether the Object Store is persistent (so that the Object Store data survives a Mule Runtime crash) or transient (where data does not survive a Mule Runtime crash). Here are some common reasons for defining custom Object Stores:
+
+- 
+You want to partition your information by storing it in different Object Stores. 
+- 
+You want to use advanced Object Store features such as these: - 
+Transient/Persistent storage. 
+- 
+Specification of a time to live (TTL). 
+- 
+Specification of a max capacity. 
+ 
+- 
+- 
+You want to keep different components from sharing state by feeding them with different Object Stores. 
+- 
+You want different components to share information by feeding them with the same Object Stores. 
+
+## See Also
+
+- 
+[Object Store Connector in Anypoint Exchange](https://www.mulesoft.com/exchange/org.mule.connectors/mule-objectstore-connector/)

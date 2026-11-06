@@ -1,0 +1,20 @@
+# Preview the Output of a Transformation (Anypoint Studio) | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/mule-runtime/latest/transform-preview-transformation-output-studio-task](https://docs.mulesoft.com/mule-runtime/latest/transform-preview-transformation-output-studio-task)
+
+---
+
+![Edit sample data in a Transform Message tab in Anypoint Studio](_images/dataweave-edit-sample-data.png) 
+
+# Preview the Output of a Transformation (Anypoint Studio)
+
+You can provide sample input data to your Transform Message component to see how the transformation affects it. You don’t need to deploy your project to use this feature. A sample output is updated in real time as you make changes both to the sample input and the transformation.
+
+- 
+Click on the root of the input pane and select **Edit Sample Data**.![Edit sample data in a Transform Message tab in Anypoint Studio](_images/dataweave-edit-sample-data.png)  A new tab opens with an empty scaffolding of your input structure. Values are populated with the string `????`as a placeholder.When the input is of type POJO, samples must be written in DataWeave format. This is not a transformation in itself, just a way to express how data is structured. 
+- 
+Replace placeholder values with sample values to see how they are mapped out to the preview pane. ![A JSON scaffolding in a payload tab](_images/dw-populate-sample-data.png)  To reset the sample to the original scaffolding with placeholders, click the **rescaffold button**![Rescaffold icon](_images/dw-rescaffold-button.png) . Note that any sample data you provided is lost. . Note that any sample data you provided is lost.
+- 
+Enable the preview pane by clicking on the **Preview**button on the top-right of the editor.As you make changes in the DataWeave code or your sample data, notice how the output data structure changes. If your transformer has multiple outputs (for example, to both the payload and a variable), the **Preview**pane displays the one corresponding to the currently selected transformation.
+- 
+Test your transformation for any special characters or structures that might arrive, verify that the output is what you expected. Note that samples defined in this pane work only within the **Transform Message**component, they don’t alter the metadata that’s propagated to other components in the flow, and their values aren’t propagated onwards. They aren’t used in your running application as default values nor in any other way.

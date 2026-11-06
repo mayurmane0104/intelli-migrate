@@ -1,0 +1,101 @@
+# Render Blueprint — Migration Studio (Docker, single container)
+# Uses Neon (managed Postgres) + Upstash (managed Redis TLS).
+# All DATABASE_URL / REDIS_URL values must be set manually in the Render dashboard
+# after first deploy (sync: false means Render won't auto-populate them).
+#
+# Deploy: Render Dashboard → New → Blueprint → connect repo → set file path:
+#   deploy/render/render.yaml
+#
+# Docs: deploy/render/README.md
+
+services:
+  - type: web
+    name: migration-studio
+    runtime: docker
+    plan: free
+    region: oregon
+    dockerfilePath: deploy/docker/Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    envVars:
+      # ── Required: set these in the Render dashboard ──────────────────────────
+      - key: DATABASE_URL
+        sync: false   # Neon connection string: postgresql://user:pass@ep-xxx.neon.tech/db?sslmode=require
+
+      - key: REDIS_URL
+        sync: false   # Upstash URL: rediss://default:password@host:port
+
+      - key: CELERY_BROKER_URL
+        sync: false   # Same as REDIS_URL with /0 suffix: rediss://default:password@host:port/0
+
+      - key: NEXTAUTH_SECRET
+        generateValue: true
+
+      # ── App configuration ────────────────────────────────────────────────────
+      - key: EMBED_INFRA
+        value: "false"
+
+      - key: PORT
+        value: "10000"
+
+      - key: PUBLIC_URL
+        fromService:
+          type: web
+          name: migration-studio
+          envVarKey: RENDER_EXTERNAL_URL
+
+      - key: NEXTAUTH_URL
+        fromService:
+          type: web
+          name: migration-studio
+          envVarKey: RENDER_EXTERNAL_URL
+
+      - key: FRONTEND_URL
+        fromService:
+          type: web
+          name: migration-studio
+          envVarKey: RENDER_EXTERNAL_URL
+
+      - key: FASTAPI_URL
+        value: "http://127.0.0.1:8000"
+
+      - key: FASTIFY_URL
+        value: "http://127.0.0.1:3001"
+
+      - key: NEXT_PUBLIC_APP_URL
+        fromService:
+          type: web
+          name: migration-studio
+          envVarKey: RENDER_EXTERNAL_URL
+
+      - key: NEXT_PUBLIC_API_URL
+        fromService:
+          type: web
+          name: migration-studio
+          envVarKey: RENDER_EXTERNAL_URL
+
+      - key: LLM_ENABLED
+        value: "false"
+
+      - key: CODEGEN_LLM_ENABLED
+        value: "false"
+
+      - key: NODE_ENV
+        value: "production"
+
+      # ── Optional: ChromaDB (leave blank to disable) ──────────────────────────
+      - key: CHROMA_HOST
+        value: ""
+
+      - key: CHROMA_AUTO_INGEST
+        value: "false"
+
+      # ── Optional: AWS Bedrock / LLM (set in Render dashboard to enable) ──────
+      # - key: AWS_ACCESS_KEY_ID
+      #   sync: false
+      # - key: AWS_SECRET_ACCESS_KEY
+      #   sync: false
+      # - key: AWS_DEFAULT_REGION
+      #   value: "us-east-2"
+      # - key: BEDROCK_MODEL_ID
+      #   value: "us.amazon.nova-lite-v1:0"

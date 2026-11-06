@@ -1,0 +1,170 @@
+# Changing the Version of an API Asset | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/exchange/to-change-raml-version](https://docs.mulesoft.com/exchange/to-change-raml-version)
+
+---
+
+Service contract
+
+# Changing the Version of an API Asset
+
+Anypoint Exchange lets you create API assets for:
+
+- 
+REST API (RAML or OAS) 
+- 
+HTTP API 
+- 
+SOAP API 
+
+This document describes how to change the version for any of these assets.
+
+Each API asset contains a **Version** field for the asset version, and an **API version** field for the version of the API specification. For RAML, OAS, and SOAP assets, the API specification version is coded inside the specification itself.
+
+Exchange asset versions follow the [Semantic Versioning](https://semver.org/) model of major, minor, and patch releases, but `build metadata` is not supported. For example, if an asset is version 2.4.6, then its major version is 2.x.x, its minor version is 2.4.x, and its patch version is 2.4.6.
+
+An HTTP API asset is an endpoint, to which you can provide only policies or proxies. HTTP APIs have only major version increases and do not have minor or patch version changes.
+
+When creating a new version of an asset, the name, icon, and description of the previous version are used. To change these properties use the instructions in [Describe an Asset](to-describe-an-asset). Any changes to the name, icon, or description apply to all versions of the asset.
+
+| New asset versions count toward your organization’s [asset limit](to-create-an-asset#asset-limits). | 
+
+## Deploy a New API Asset
+
+You can deploy an API asset directly into Exchange using the **Publish new asset** button. In the **Publish a new asset** window, the Advanced section enables you to specify the version of the asset in the **Version** field, and the version of the API specification in the **API version** field.
+
+Only change the API version when an updated API specification has changes that are not backward compatible from the new version to the old version.
+
+## Change RAML or OAS Version
+
+For RAML and OAS API specifications within Exchange, change the version number from within Exchange using the **Add version** button.
+
+- 
+From the asset details pane, click **Add version**.
+- 
+(Required) Select a **Method**for the API specification.
+- 
+(Required) From **File upload**click**Choose file**. For OAS, choose an OAS file with the .yaml or .json file types. For RAML, choose a RAML file with the .raml file type. Zip files are also accepted with the file to upload residing in the zip file’s root directory.
+- 
+Specify the **Main file**if the uploaded file is a zip. Otherwise, Exchange uses the same file name as the file you upload.
+- 
+(Required) In **Version**, enter a new version for the asset.
+- 
+(Required) In **the *API version**, enter the version of the API specification. The Version and API version values must agree. You can only choose minor version updates for a given API version. To set a major Version number, also increase the API version. If you choose minor or patch version updates, the API versions should not changed.
+- 
+(Optional) Select a **Lifecycle state**. Default is**Stable**.
+- 
+Click **Publish**
+
+You can also change the version using the **Manage versions** button. See [Manage Versions](manage-versions) for more information.
+
+Change the version number for RAMLs as described in the next sections.
+
+### Change a RAML Version from Its Specification
+
+Change the `version:` element in your RAML specification.
+You can use a text editor or API Designer in the Design Center feature of Anypoint Platform.
+When you update the version element in the RAML specification and publish to Exchange, the publish menu automatically picks up the change from the `version:` element.
+
+### Change a RAML Version When you Publish to Exchange
+
+- 
+From Design Center, open your API. No changes are necessary. 
+- 
+Click **Publish to Exchange**.
+- 
+Change the **API Version**value. You can also change the Asset Version (the version of the Exchange asset).
+
+When a REST API based on a RAML file is created from Design Center and published to Exchange, the API version is retrieved from the version property in the RAML file.
+
+When publishing a new API version of an existing REST API, Exchange enforces an update of the major section of an asset’s version.
+
+## Multiple API and Asset Versions
+
+Each Exchange asset can have multiple asset versions. The REST, SOAP, and HTTP API also contain an API version.
+
+For each API version, multiple asset versions can be published. These asset versions need to have the same major version.
+
+For example, after publishing multiple versions of the same API, the versions could appear as follows:
+
+| API Version | Asset Version | 
+|---|---|
+| v1 | 1.0.0 | 
+| v1 | 1.0.1 | 
+| v1 | 1.1.1 | 
+| v2 | 2.0.0 | 
+| v2 | 2.0.2 | 
+| v3 | 3.1.0 | 
+
+However, these example values are not allowed in Exchange:
+
+| API Version | Asset Version | 
+|---|---|
+| v1 | 1.0.0 | 
+| v2 | 1.0.1 | 
+
+## Best Practices for API Versioning
+
+An API should be designed for long term use, but because change is inevitable, the API can never be completely stable.
+
+It is important is to manage the changes through a comprehensive versioning strategy. This includes a multiple month deprecation schedule and documentation that is up to date and describes the change in sufficient level of detail.
+
+Not all changes require a new version. APIs designed for backward compatibility normally do not require major changes and should use minor or patch changes.
+
+It is not always possible to design APIs in that way. The table below outlines when to introduce a new version and when a new version is not required. Typically when one clicks **Add new API operation** a minor version increase occurs.
+
+| Type of Change | Changes Requiring a New Major Version | Changes Not Requiring a New Major Version | 
+|---|---|---|
+| 
+ | Add new API operation | |
+| Data contract | 
+ | 
+ | 
+| Representation format | Remove existing representation | Add new representation | 
+| Accessibility | Restrict permissions | Relax permissions | 
+
+### When to Introduce a New Major Version
+
+You should introduce a new major version for:
+
+- 
+Quality of service (QoS) When a change affects the quality of service, such as response time and availability, the change might not be backward compatible with the API’s applications, so you might need to change the API’s major version and API version. 
+- 
+Output message domain value changes Applications that use the API depend on the domain of values of fields in response messages. For instance, the API might return only certain products or specific payment methods. If the API starts returning values outside of a domain, it can adversely affect existing consumers. In this case, consider introducing a new major version and a new API version. 
+
+### When to Change Version Numbers
+
+- 
+Major versions When introducing a change in the structure of the API that requires the user of the API to adapt the interface on the consumer side, such as a new required operation argument 
+- 
+Minor versions When introducing a backward compatible change to the API that does not require an API user to change, such as a new optional element 
+- 
+Patch versions When introducing a backward compatible bug fix or documentation update 
+
+See [Semantic Versioning](https://semver.org/) for more information.
+
+### API Version in Application URL
+
+Include the API version in the application URL so that consumers can choose which version they want to call.
+
+- 
+For on-premises deployment, the version is in the base URI and appears in the URL: `http://www.example.org/v1/api/customer/1234`
+
+### Naming Conventions
+
+Use these rules to define an API version:
+
+- 
+Specify the version with a v prefix. 
+- 
+Use a simple ordinal number, for example, v1, v2, and so on. 
+- 
+Avoid using dot notation, for example, v1.2. 
+- 
+Only specify the major version as part of the URL. 
+
+## Document an API Version
+
+Exchange provides documentation pages with information about an asset for API consumers. You can create different documentation pages for each minor asset version.
+
+Select a minor asset version to edit with the menu next to the version.

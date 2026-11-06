@@ -1,0 +1,12 @@
+{
+  "id": "string_concat_payload",
+  "description": "Top-level payload field string concat",
+  "function_name": "transform_summary",
+  "output_format": "application/json",
+  "script": "%dw 2.0\noutput application/json\n---\npayload.loadedRecords ++ ' Loaded Records ' ++ payload.failedRecords ++ ' Failed Records'",
+  "compare": {
+    "records": true,
+    "record_order": true,
+    "body": true
+  }
+}

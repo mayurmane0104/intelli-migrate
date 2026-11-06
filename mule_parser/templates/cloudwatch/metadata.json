@@ -1,0 +1,7 @@
+{
+  "template_id": "cloudwatch",
+  "name": "CloudWatch Alarm",
+  "service": "CloudWatch",
+  "target": "CloudWatch",
+  "required_variables": ["resource_prefix", "function_name"]
+}

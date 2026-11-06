@@ -1,0 +1,423 @@
+version: '1.0'
+registry:
+  flow: flow
+  sub-flow: sub_flow
+  async: async_scope
+  try: error_handler
+  choice: conditional_router
+  when: condition_branch
+  otherwise: default_branch
+  scatter-gather: parallel_scatter_gather
+  first-successful: first_successful
+  round-robin: round_robin_router
+  foreach: foreach_iterator
+  parallel-foreach: parallel_foreach_iterator
+  until-successful: retry_until_successful
+  scheduler: scheduler_trigger
+  batch:job: batch_job
+  batch:step: batch_step
+  batch:aggregator: batch_aggregator
+  batch:on-complete: batch_on_complete
+  http:listener: http_inbound
+  http:request: http_outbound
+  http:load-static-resource: http_static_resource
+  jms:listener: jms_consumer
+  jms:publish: jms_producer
+  jms:publish-consume: jms_request_reply
+  amqp:listener: amqp_consumer
+  amqp:publish: amqp_producer
+  vm:listener: vm_consumer
+  vm:publish: vm_producer
+  vm:publish-consume: vm_request_reply
+  db:select: db_read
+  db:insert: db_write
+  db:update: db_write
+  db:delete: db_write
+  db:stored-procedure: db_stored_proc
+  db:bulk-insert: db_bulk_write
+  db:bulk-update: db_bulk_write
+  salesforce:query: sfdc_read
+  salesforce:create: sfdc_write
+  salesforce:update: sfdc_write
+  salesforce:upsert: sfdc_upsert
+  salesforce:delete: sfdc_delete
+  salesforce:subscribe: sfdc_streaming
+  salesforce:publish-streaming-channel: sfdc_streaming_publish
+  s3:get-object: s3_read
+  s3:put-object: s3_write
+  s3:delete-object: s3_delete
+  s3:list-objects: s3_list
+  s3:copy-object: s3_copy
+  s3:create-bucket: s3_admin
+  sqs:send-message: sqs_send
+  sqs:receive-messages: sqs_receive
+  sqs:delete-message: sqs_delete
+  sns:publish: sns_publish
+  email:send: email_send
+  email:list-messages: email_receive
+  file:read: file_read
+  file:write: file_write
+  file:list: file_list
+  file:delete: file_delete
+  file:move: file_move
+  file:copy: file_copy
+  ftp:read: ftp_read
+  ftp:write: ftp_write
+  ftp:list: ftp_list
+  sftp:read: sftp_read
+  sftp:write: sftp_write
+  sftp:list: sftp_list
+  workday:invoke: workday_api
+  sap:outbound-message: sap_idoc_send
+  sap:function: sap_bapi_call
+  kafka:publish: kafka_produce
+  kafka:message-listener: kafka_consume
+  ldap:search: ldap_search
+  ldap:bind: ldap_auth
+  crypto:encrypt: crypto_encrypt
+  crypto:decrypt: crypto_decrypt
+  crypto:sign: crypto_sign
+  crypto:validate-signature: crypto_verify
+  ee:transform: dataweave_transform
+  set-payload: set_payload
+  set-variable: set_variable
+  set-attribute: set_attribute
+  remove-variable: remove_variable
+  copy-properties: copy_properties
+  logger: logger
+  notifications:send-notification: notification_send
+  raise-error: raise_error
+  error-handler: error_handler_scope
+  on-error-propagate: on_error_propagate
+  on-error-continue: on_error_continue
+  scripting:execute: script_execute
+  groovy:execute: groovy_execute
+  validation:is-not-null: validate_not_null
+  validation:is-number: validate_number
+  validation:is-email: validate_email
+  validation:matches-regex: validate_regex
+  validation:all: validate_all
+  validation:any: validate_any
+  os:store: object_store_put
+  os:retrieve: object_store_get
+  os:remove: object_store_delete
+  os:contains: object_store_exists
+  aggregators:size-based-aggregator: aggregator_size
+  aggregators:time-based-aggregator: aggregator_time
+  aggregators:group-based-aggregator: aggregator_group
+  oauth:retrieve-access-token: oauth_get_token
+  http:basic-security-filter: auth_basic
+  spring:security-manager: auth_spring
+capability_metadata:
+  flow:
+    aws_primary: lambda
+    complexity_weight: 1
+  sub_flow:
+    aws_primary: lambda
+    complexity_weight: 1
+  async_scope:
+    aws_primary: sqs+lambda
+    complexity_weight: 2
+  error_handler:
+    aws_primary: lambda+dlq
+    complexity_weight: 2
+  parallel_scatter_gather:
+    aws_primary: step_functions
+    complexity_weight: 4
+  batch_job:
+    aws_primary: step_functions+lambda
+    complexity_weight: 5
+  http_inbound:
+    aws_primary: api_gateway
+    complexity_weight: 2
+  http_outbound:
+    aws_primary: lambda+requests
+    complexity_weight: 1
+  jms_consumer:
+    aws_primary: sqs+lambda
+    complexity_weight: 3
+  jms_producer:
+    aws_primary: sqs
+    complexity_weight: 2
+  db_read:
+    aws_primary: rds+lambda
+    complexity_weight: 2
+  db_write:
+    aws_primary: rds+lambda
+    complexity_weight: 2
+  sfdc_read:
+    aws_primary: lambda+simple_salesforce
+    complexity_weight: 3
+  sfdc_write:
+    aws_primary: lambda+simple_salesforce
+    complexity_weight: 3
+  sfdc_streaming:
+    aws_primary: eventbridge+lambda
+    complexity_weight: 4
+  s3_read:
+    aws_primary: s3+lambda
+    complexity_weight: 1
+  s3_write:
+    aws_primary: s3+lambda
+    complexity_weight: 1
+  kafka_produce:
+    aws_primary: msk+lambda
+    complexity_weight: 3
+  kafka_consume:
+    aws_primary: msk+lambda
+    complexity_weight: 4
+  object_store_put:
+    aws_primary: dynamodb
+    complexity_weight: 2
+  scheduler_trigger:
+    aws_primary: eventbridge_scheduler
+    complexity_weight: 2
+  dataweave_transform:
+    aws_primary: lambda+python
+    complexity_weight: 2
+  foreach_iterator:
+    aws_primary: lambda+loop
+    complexity_weight: 2
+  parallel_foreach_iterator:
+    aws_primary: step_functions_map
+    complexity_weight: 4
+  email_send:
+    aws_primary: ses
+    complexity_weight: 1
+  crypto_encrypt:
+    aws_primary: kms+lambda
+    complexity_weight: 3
+  oauth_get_token:
+    aws_primary: secrets_manager+lambda
+    complexity_weight: 3
+  conditional_router:
+    aws_primary: lambda+branching
+    complexity_weight: 2
+  condition_branch:
+    aws_primary: lambda+if_branch
+    complexity_weight: 1
+  default_branch:
+    aws_primary: lambda+else_branch
+    complexity_weight: 1
+  first_successful:
+    aws_primary: lambda+fallback
+    complexity_weight: 3
+  round_robin_router:
+    aws_primary: lambda+round_robin
+    complexity_weight: 3
+  retry_until_successful:
+    aws_primary: lambda+sqs_retry
+    complexity_weight: 3
+  set_payload:
+    aws_primary: lambda+assignment
+    complexity_weight: 1
+  set_variable:
+    aws_primary: lambda+variable
+    complexity_weight: 1
+  set_attribute:
+    aws_primary: lambda+attribute
+    complexity_weight: 1
+  remove_variable:
+    aws_primary: lambda+del_variable
+    complexity_weight: 1
+  copy_properties:
+    aws_primary: lambda+dict_copy
+    complexity_weight: 1
+  logger:
+    aws_primary: cloudwatch+logging
+    complexity_weight: 1
+  notification_send:
+    aws_primary: sns+ses
+    complexity_weight: 2
+  raise_error:
+    aws_primary: lambda+raise_exception
+    complexity_weight: 1
+  error_handler_scope:
+    aws_primary: lambda+try_except
+    complexity_weight: 2
+  on_error_propagate:
+    aws_primary: lambda+re_raise
+    complexity_weight: 1
+  on_error_continue:
+    aws_primary: lambda+catch_continue
+    complexity_weight: 1
+  db_stored_proc:
+    aws_primary: rds+stored_proc
+    complexity_weight: 3
+  db_bulk_write:
+    aws_primary: rds+executemany
+    complexity_weight: 3
+  sqs_send:
+    aws_primary: sqs
+    complexity_weight: 1
+  sqs_receive:
+    aws_primary: sqs+lambda
+    complexity_weight: 2
+  sqs_delete:
+    aws_primary: sqs
+    complexity_weight: 1
+  sns_publish:
+    aws_primary: sns
+    complexity_weight: 1
+  amqp_consumer:
+    aws_primary: amazon_mq+lambda
+    complexity_weight: 3
+  amqp_producer:
+    aws_primary: amazon_mq
+    complexity_weight: 2
+  vm_consumer:
+    aws_primary: sqs+lambda
+    complexity_weight: 2
+  vm_producer:
+    aws_primary: sqs
+    complexity_weight: 1
+  vm_request_reply:
+    aws_primary: sqs+correlation_lambda
+    complexity_weight: 3
+  jms_request_reply:
+    aws_primary: sqs+correlation_lambda
+    complexity_weight: 3
+  s3_delete:
+    aws_primary: s3
+    complexity_weight: 1
+  s3_list:
+    aws_primary: s3+lambda
+    complexity_weight: 1
+  s3_copy:
+    aws_primary: s3
+    complexity_weight: 1
+  s3_admin:
+    aws_primary: s3+iam
+    complexity_weight: 2
+  file_read:
+    aws_primary: s3+boto3
+    complexity_weight: 1
+  file_write:
+    aws_primary: s3+boto3
+    complexity_weight: 1
+  file_list:
+    aws_primary: s3+boto3
+    complexity_weight: 1
+  file_delete:
+    aws_primary: s3+boto3
+    complexity_weight: 1
+  file_move:
+    aws_primary: s3+boto3
+    complexity_weight: 1
+  file_copy:
+    aws_primary: s3+boto3
+    complexity_weight: 1
+  ftp_read:
+    aws_primary: s3_transfer+lambda
+    complexity_weight: 2
+  ftp_write:
+    aws_primary: s3_transfer+lambda
+    complexity_weight: 2
+  ftp_list:
+    aws_primary: s3_transfer+lambda
+    complexity_weight: 2
+  sftp_read:
+    aws_primary: aws_transfer_family+s3
+    complexity_weight: 2
+  sftp_write:
+    aws_primary: aws_transfer_family+s3
+    complexity_weight: 2
+  sftp_list:
+    aws_primary: aws_transfer_family+s3
+    complexity_weight: 2
+  validate_not_null:
+    aws_primary: lambda+validator
+    complexity_weight: 1
+  validate_number:
+    aws_primary: lambda+validator
+    complexity_weight: 1
+  validate_email:
+    aws_primary: lambda+validator
+    complexity_weight: 1
+  validate_regex:
+    aws_primary: lambda+validator
+    complexity_weight: 1
+  validate_all:
+    aws_primary: lambda+validator
+    complexity_weight: 1
+  validate_any:
+    aws_primary: lambda+validator
+    complexity_weight: 1
+  object_store_get:
+    aws_primary: dynamodb
+    complexity_weight: 1
+  object_store_delete:
+    aws_primary: dynamodb
+    complexity_weight: 1
+  object_store_exists:
+    aws_primary: dynamodb
+    complexity_weight: 1
+  batch_step:
+    aws_primary: step_functions+lambda
+    complexity_weight: 3
+  batch_aggregator:
+    aws_primary: step_functions+sqs
+    complexity_weight: 3
+  batch_on_complete:
+    aws_primary: lambda+sns
+    complexity_weight: 2
+  sfdc_upsert:
+    aws_primary: lambda+simple_salesforce
+    complexity_weight: 3
+  sfdc_delete:
+    aws_primary: lambda+simple_salesforce
+    complexity_weight: 2
+  sfdc_streaming_publish:
+    aws_primary: eventbridge+lambda
+    complexity_weight: 3
+  aggregator_size:
+    aws_primary: lambda+sqs_batch
+    complexity_weight: 2
+  aggregator_time:
+    aws_primary: eventbridge+step_functions
+    complexity_weight: 3
+  aggregator_group:
+    aws_primary: dynamodb+lambda
+    complexity_weight: 3
+  sap_idoc_send:
+    aws_primary: lambda+pyrfc
+    complexity_weight: 4
+  sap_bapi_call:
+    aws_primary: lambda+pyrfc
+    complexity_weight: 4
+  workday_api:
+    aws_primary: lambda+requests
+    complexity_weight: 3
+  ldap_search:
+    aws_primary: lambda+ldap3
+    complexity_weight: 3
+  ldap_auth:
+    aws_primary: cognito+lambda
+    complexity_weight: 3
+  crypto_decrypt:
+    aws_primary: kms+lambda
+    complexity_weight: 2
+  crypto_sign:
+    aws_primary: kms+lambda
+    complexity_weight: 2
+  crypto_verify:
+    aws_primary: kms+lambda
+    complexity_weight: 2
+  auth_basic:
+    aws_primary: api_gateway+authorizer
+    complexity_weight: 2
+  auth_spring:
+    aws_primary: cognito+authorizer
+    complexity_weight: 3
+  script_execute:
+    aws_primary: lambda+python
+    complexity_weight: 3
+  groovy_execute:
+    aws_primary: lambda+python
+    complexity_weight: 3
+  email_receive:
+    aws_primary: ses+s3+lambda
+    complexity_weight: 2
+  http_static_resource:
+    aws_primary: s3+cloudfront
+    complexity_weight: 1

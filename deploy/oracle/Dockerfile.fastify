@@ -1,0 +1,11 @@
+FROM node:20-bookworm-slim
+WORKDIR /studio
+
+COPY frontend/package.json frontend/package-lock.json* ./
+RUN npm ci
+
+COPY frontend/ ./
+RUN npx prisma generate
+
+EXPOSE 3001
+CMD ["npx", "tsx", "src/server/app.ts"]

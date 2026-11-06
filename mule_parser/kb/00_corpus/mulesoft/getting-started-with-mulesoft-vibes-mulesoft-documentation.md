@@ -1,0 +1,142 @@
+# Getting Started with MuleSoft Vibes | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/anypoint-code-builder/vibes-get-started](https://docs.mulesoft.com/anypoint-code-builder/vibes-get-started)
+
+---
+
+# Getting Started with MuleSoft Vibes
+
+MuleSoft Vibes helps you build APIs and integrations by sending natural language messages directly in your development environment.
+
+## Use MuleSoft Vibes
+
+Ensure you meet the [prerequisites](mulesoft-vibes#before-you-begin-vibes) before you begin. You can open MuleSoft Vibes from the:
+
+- 
+Toolbar icon 
+- 
+Top navigation bar 
+- 
+**Build with AI**card in the project canvas
+
+When you submit a prompt, MuleSoft Vibes processes it using one of the MuleSoft MCP Servers and performs actions such as generating API specifications or integration flows.
+
+Depending on your configuration, MuleSoft Vibes can:
+
+- 
+Request approval before writing to your files 
+- 
+Write automatically if **Auto-approve**is enabled in settings
+
+### Plan and Act Modes
+
+MuleSoft Vibes operates in two modes:
+
+- 
+**Plan Mode**MuleSoft Vibes analyzes your message and produces a step-by-step plan describing how it will accomplish the task. No actions are executed automatically in this mode.
+- 
+**Act Mode**MuleSoft Vibes attempts to perform the actions outlined in the plan by using the MuleSoft DX MCP Server tools to modify files, create resources, or execute changes to your project.
+
+You can switch between modes depending on whether you prefer to review the plan before execution or allow MuleSoft Vibes to act directly.
+
+### Modernize Flows with Descriptive UI
+
+Descriptive UI is a different canvas experience in MuleSoft Vibes starting with Anypoint Code Builder v1.19. It modernizes flow development with a vertical, recipe-style layout that makes integrations easier to read and update.
+
+The canvas uses AI to generate human-readable descriptions for each component in your flow. For example, instead of decoding a technical component first, you can understand what that step does in business terms.
+
+Visual indentation highlights branching and nested logic, such as choice routers and error handling paths, so you can scan complex flows faster. This structure helps you understand overall flow behavior before opening detailed configuration panels.
+
+You can build and refine flows through agent-led and direct UI interactions. Use natural language commands in MuleSoft Vibes to add, modify, delete, and reorder components, or hover over the canvas to reveal inline **+** controls for quick edits.
+
+Descriptions are generated on demand with your approval, which helps you document legacy and newly created flows without interrupting development.
+
+If you prefer the previous experience, you can switch back to the **Classic** canvas view at any time from canvas controls or Anypoint Code Builder settings.
+
+### Generate Code in MuleSoft Vibes
+
+MuleSoft Vibes uses MuleSoft-optimized AI pipelines to generate high-quality code for API specifications and integration flows.
+
+The pipelines are exposed to MuleSoft Vibes through these MCP tools:
+
+- 
+`generate_mule_flow`– Generates Mule integration flows.
+- 
+`generate_api_spec`– Generates API specifications from natural language.
+
+Because these tools run on pipelines optimized specifically for MuleSoft use cases, users typically receive higher-quality code outputs (on average, 60% better) compared to generic generation.
+
+To ensure the best results:
+
+- 
+Verify that the MuleSoft MCP Servers are loaded in MuleSoft Vibes prior to sending a prompt. 
+- 
+Make sure MuleSoft Vibes is invoking these specialized tools. 
+- 
+Verify that all required prerequisites for MuleSoft Vibes and MuleSoft MCP Servers are enabled in your environment. 
+
+For more information about how MuleSoft AI generation pipelines work, see the [MuleSoft research blog](https://blogs.mulesoft.com/automation/how-mulesoft-turns-generative-output-into-value/).
+
+## Provide MuleSoft Vibes with Context
+
+You can improve the accuracy of MuleSoft Vibes output by providing additional context files or inputs.
+Examples include requirement files (`requirements.txt`), configuration folders, logs, URLs, or terminal output.
+
+To add context:
+
+- 
+In the MuleSoft Vibes panel, click the **Add Context**icon in the lower-left corner.
+- 
+Select files or folders to attach, paste the input or output from terminal, or paste a URL. 
+- 
+Confirm to add the context to your current task. 
+
+You can also add context directly from the message input box by typing `@`, which opens the same context selector.
+
+These inputs are used as contextual references during generation.
+
+### Add Files to Messages with Multi-Modal Support
+
+MuleSoft Vibes supports multi-modal context in the message area. Drag images directly into a conversation to provide visual context alongside text inputs.
+
+Attach up to 10 files per conversation to help MuleSoft Vibes interpret requirements that are easier to explain through screenshots or supporting files.
+
+## Configure MuleSoft Vibes Settings
+
+You can customize how MuleSoft Vibes interacts with your project through the **Settings** panel.
+To access this panel, click the **Auto-approve** section at the bottom of the MuleSoft Vibes window.
+
+The available options include:
+
+- 
+**Auto-approve**: Automatically apply changes without prompting for confirmation.
+- 
+**Read project files**: Allow MuleSoft Vibes to read project files for context.
+- 
+**Edit project files**: Allow MuleSoft Vibes to write changes directly to your project.
+- 
+**Read all files**: Allow MuleSoft Vibes to read all files on your computer.
+- 
+**Edit all files**: Allow MuleSoft Vibes to edit any file on your computer.
+- 
+**Use MCP Servers**: Allow MuleSoft Vibes to use connected MCP servers.
+- 
+**Execute safe commands**: Allow MuleSoft Vibes to execute safe terminal commands.
+- 
+**Execute all commands**: Allow MuleSoft Vibes to execute any terminal command.
+- 
+**Use the browser**: Allow MuleSoft Vibes to launch and interact with websites in a browser.
+- 
+**Default skills**: Enable or disable preloaded skills individually.
+
+### Monitor Token Consumption in MuleSoft Vibes
+
+View token consumption for individual requests and tasks directly in MuleSoft Vibes.
+
+This visibility helps you understand the resource cost of generation activities and manage usage across sessions.
+
+## Skills in MuleSoft Vibes
+
+[Skills](vibes-skills) are reusable instruction sets that load when your message matches a skill’s description. For information about skills and MCP tools, see [Using Skills with MuleSoft Vibes](vibes-skills).
+
+If you use Claude Code, see [Install MuleSoft Skills in Claude Code](vibes-skills#install-mulesoft-skills-in-claude-code).

@@ -1,0 +1,100 @@
+# Round Robin Router | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/mule-runtime/latest/round-robin](https://docs.mulesoft.com/mule-runtime/latest/round-robin)
+
+---
+
+```
+<flow name="round-robin-ex" >
+  <scheduler doc:name="Scheduler" > <!-- 1 -->
+    <scheduling-strategy >
+      <fixed-frequency frequency="10" timeUnit="SECONDS"/>
+    </scheduling-strategy>
+  </scheduler>
+  <set-payload value="#[[1,2,3,4]]" doc:name="Set Payload" /> <!-- 2 -->
+  <logger level="INFO" doc:name="Logger"
+          category="PAYLOAD BEFORE ROUND ROBIN"
+  	message="#[payload]"/>
+  <round-robin doc:name="Round Robin" >
+    <route > <!-- 3 -->
+      <set-payload value="#[payload - 4]" doc:name="Set Payload" />
+      <logger level="INFO" doc:name="Logger"
+              message="#[%dw 2.0
+output application/json
+---
+{ 'r1' : payload}]"
+	      category="ROUTE 1 PAYLOAD"/>
+    </route>
+    <route > <!-- 4 -->
+      <set-payload value="#[payload + 5]" doc:name="Set Payload" />
+        <logger level="INFO" doc:name="Logger"
+                message="#[%dw 2.0
+output application/json
+---
+{'r2' : payload}]"
+                category="ROUTE 2 PAYLOAD"/>
+    </route>
+  </round-robin>
+  <logger level="INFO" doc:name="Logger"
+           message="#[payload]"
+	   category="PAYLOAD OUTSIDE ROUND ROBIN"/> <!-- 5 -->
+</flow>
+```
+xml# Round Robin Router
+
+Round Robin is a Mule component that contains two or more processing routes and executes only *one* of the routes each time the flow executes the component. Each route within Round Robin is a scope that can contain one or more processors. Starting with the first route, Round Robin initiates execution of processors within the route over a Mule event and sends the results to the next processor in the flow. Round Robin keeps track of the previously selected route and never selects the same route consecutively. For example, the first time Round Robin executes, the component selects the first route. The next time, it selects the second route. If the previously selected route is the last route, Round Robin executes the first route.
+
+The payload, variables, and attributes from the Mule event that reaches Round Robin are accessible for processing within the route. Any changes to the Mule event within a route propagate to the processor after Round Robin.
+
+The following examples illustrates the functionality of Round Robin:
+
+- 
+Scheduler ( `<scheduler/>`) executes the flow every 10 seconds.
+- 
+Set Payload ( `<set-payload/>`) provides the array`[1,2,3,4]`.
+- 
+The Logger component *before*Round Robin prints the initial payload,`[1,2,3,4]`.
+- 
+In the *first*route (`<route/>`) of Round Robin, a Set Payload component uses the DataWeave expression`payload - 4`to remove the last element of the initial payload, and the Logger in that route prints the resulting payload as the value of key`"r1"`,`{ "r1": [1,2,3] }`.
+- 
+In the *second*route (`<route/>`) of Round Robin, a Set Payload component uses the DataWeave expression`payload + 5`to append a new element to the initial payload, and the Logger in that route prints the resulting payload as the value of key`"r2"`,`{ "r2": [1,2,3,4,5] }`.
+- 
+The Logger component *after*Round Robin prints the payload of the route processed by an execution of Round Robin. The first execution prints`[1, 2, 3]`. The next execution prints`[1, 2, 3, 4, 5]`. The next prints`[1, 2, 3]`, and so on.
+
+In the following excerpt, the logs show three executions of the Round Robin router. In this example, the flow processes Mule events with IDs that begin `4df56260`, `53eb1c50`, and `59e12460`. (The example is edited for readability.)
+
+```
+...
+INFO  2022-12-19 10:02:30,233 ...event: 4df56260-7fc7-11ed-957f-147ddaaf4f97]
+      PAYLOAD BEFORE ROUND ROBIN: [1, 2, 3, 4]
+INFO  2022-12-19 10:02:30,290 ...event: 4df56260-7fc7-11ed-957f-147ddaaf4f97]
+      ROUTE 1 PAYLOAD: { "r1": [1,2,3] }
+INFO  2022-12-19 10:02:30,291 ...event: 4df56260-7fc7-11ed-957f-147ddaaf4f97]
+      PAYLOAD OUTSIDE ROUND ROBIN: [1, 2, 3]
+INFO  2022-12-19 10:02:40,154 ...event: 53eb1c50-7fc7-11ed-957f-147ddaaf4f97]
+      PAYLOAD BEFORE ROUND ROBIN: [1, 2, 3, 4]
+INFO  2022-12-19 10:02:40,167 ...event: 53eb1c50-7fc7-11ed-957f-147ddaaf4f97]
+      ROUTE 2 PAYLOAD: { "r2": [1, 2, 3, 4, 5] }
+INFO  2022-12-19 10:02:40,168 ...event: 53eb1c50-7fc7-11ed-957f-147ddaaf4f97]
+      PAYLOAD OUTSIDE ROUND ROBIN: [1, 2, 3, 4, 5]
+INFO  2022-12-19 10:02:50,151 ...event: 59e12460-7fc7-11ed-957f-147ddaaf4f97]
+      PAYLOAD BEFORE ROUND ROBIN: [1, 2, 3, 4]
+INFO  2022-12-19 10:02:50,154 ...event: 59e12460-7fc7-11ed-957f-147ddaaf4f97]
+      ROUTE 1 PAYLOAD: { "r1": [1, 2, 3] }
+INFO  2022-12-19 10:02:50,154 ...event: 59e12460-7fc7-11ed-957f-147ddaaf4f97]
+      PAYLOAD OUTSIDE ROUND ROBIN: [1, 2, 3]
+...
+```
+## Reference
+
+Round Robin provides a configurable attribute to the `<round-robin />` element.
+
+| Name | XML | Description | 
+|---|---|---|
+| Business Events | 
+ | Defaults to  | 
+
+## Throws
+
+- 
+`MULE:ROUTING`

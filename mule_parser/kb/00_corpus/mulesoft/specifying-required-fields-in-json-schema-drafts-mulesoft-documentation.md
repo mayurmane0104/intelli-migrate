@@ -1,0 +1,91 @@
+# Specifying Required Fields in JSON Schema Drafts | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/design-center/design-json-schema-required-error](https://docs.mulesoft.com/design-center/design-json-schema-required-error)
+
+---
+
+```
+{
+  "$schema": "http://json-schema.org/draft-03/schema#",
+  "type": "object",
+  "properties": {
+    "pageNum": {
+      "type": "integer",
+      "title": "Page number",
+      "description": "The number of the page to retrieve",
+      "default": 1,
+      "required": true
+    },
+    "pageSize": {
+      "type": "integer",
+      "title": "Page size",
+      "description": "The number of items per page",
+      "default": 50,
+      "enum": [10, 20, 30, 40, 50],
+      "required": true
+    }
+  }
+}
+```
+# Specifying Required Fields in JSON Schema Drafts
+
+Design Center supports JSON Schema Draft 3, Draft 4, and Draft 7. The way you specify `required` differs across drafts. You see an error if the draft you declare doesn’t match the syntax you’re using.
+
+## Draft 3
+
+In Draft 3, you specify that a field is `required` inside the definition of each field:
+
+## Draft 4
+
+In Draft 4, you specify that fields are `required` by creating an array at the same level as the `properties` definition:
+
+```
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "pageNum": {
+      "type": "integer",
+      "title": "Page number",
+      "description": "The number of the page to retrieve",
+      "default": 1
+    },
+    "pageSize": {
+      "type": "integer",
+      "title": "Page size",
+      "description": "The number of items per page",
+      "default": 50,
+      "enum": [10, 20, 30, 40, 50]
+    }
+  },
+  "required": ["pageNum", "pageSize"]
+}
+```
+If you have used the Draft 3 method after declaring that the schema uses Draft 4, or vice versa, in most cases you can simply change the schema declaration. For example, if you declared that your schema uses Draft 3, but the schema uses the method from Draft 4, you can change your schema declaration to point to Draft 4.
+
+## Draft 7
+
+In Draft 7, the `required` syntax is the same as in Draft 4. You create an array at the same level as the `properties` definition:
+
+```
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "pageNum": {
+      "type": "integer",
+      "title": "Page number",
+      "description": "The number of the page to retrieve",
+      "default": 1
+    },
+    "pageSize": {
+      "type": "integer",
+      "title": "Page size",
+      "description": "The number of items per page",
+      "default": 50,
+      "enum": [10, 20, 30, 40, 50]
+    }
+  },
+  "required": ["pageNum", "pageSize"]
+}
+```

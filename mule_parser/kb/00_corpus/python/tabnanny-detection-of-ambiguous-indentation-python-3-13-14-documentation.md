@@ -1,0 +1,42 @@
+# tabnanny — Detection of ambiguous indentation — Python 3.13.14 documentation
+
+**Source:** [https://docs.python.org/3.13/library/tabnanny.html](https://docs.python.org/3.13/library/tabnanny.html)
+
+---
+
+`tabnanny` — Detection of ambiguous indentation[¶](#module-tabnanny)
+
+**Source code:** [Lib/tabnanny.py](https://github.com/python/cpython/tree/3.13/Lib/tabnanny.py)
+
+For the time being this module is intended to be called as a script. However it
+is possible to import it into an IDE and use the function [ check()](#tabnanny.check)
+described below.
+
+Note
+
+The API provided by this module is likely to change in future releases; such changes may not be backward compatible.
+
+- 
+tabnanny.check(*file_or_dir*)[¶](#tabnanny.check)
+- If - *file_or_dir*is a directory and not a symbolic link, then recursively descend the directory tree named by- *file_or_dir*, checking all- `.py`files along the way. If- *file_or_dir*is an ordinary Python source file, it is checked for whitespace related problems. The diagnostic messages are written to standard output using the- `print()`
+
+- 
+tabnanny.verbose[¶](#tabnanny.verbose)
+- Flag indicating whether to print verbose messages. This is incremented by the - `-v`option if called as a script.
+
+- 
+tabnanny.filename_only[¶](#tabnanny.filename_only)
+- Flag indicating whether to print only the filenames of files containing whitespace related problems. This is set to true by the - `-q`option if called as a script.
+
+- 
+*exception*tabnanny.NannyNag[¶](#tabnanny.NannyNag)
+- Raised by - `process_tokens()`- `check()`
+
+- 
+tabnanny.process_tokens(*tokens*)[¶](#tabnanny.process_tokens)
+- This function is used by - `check()`- `tokenize`
+
+See also
+
+- Module `tokenize`
+- Lexical scanner for Python source code.

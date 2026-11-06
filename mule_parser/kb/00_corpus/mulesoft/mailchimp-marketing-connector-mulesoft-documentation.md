@@ -1,0 +1,62 @@
+# Mailchimp Marketing Connector | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/mailchimp-marketing-connector/latest](https://docs.mulesoft.com/mailchimp-marketing-connector/latest)
+
+---
+
+# Mailchimp Marketing Connector
+
+Anypoint Connector for Mailchimp Marketing (Mailchimp Marketing Connector) enables you to integrate your applications with the Mailchimp Marketing data and functionality. This connector exposes operations provided by the Mailchimp Marketing API.
+
+For information about compatibility and fixed issues, refer to the Mailchimp Marketing Connector Release Notes.
+
+## Before You Begin
+
+To use this connector, you must be familiar with:
+
+- 
+The Mailchimp Marketing API 
+- 
+Anypoint Connectors 
+- 
+Mule runtime engine (Mule) 
+- 
+Elements and global elements in a Mule flow 
+- 
+How to create a Mule app using Anypoint Studio 
+
+Before creating an app, you must have:
+
+- 
+Credentials to access the Mailchimp Marketing target resource 
+- 
+Anypoint Platform 
+- 
+Anypoint Studio or Anypoint Code Builder 
+
+## Common Use Cases for the Connector
+
+Some common use cases for Mailchimp Marketing Connector include:
+
+- 
+Creating and sending campaigns 
+- 
+Adding, updating, and removing subscribers to and from lists 
+- 
+Monitoring subscriber and unsubscriber counts and campaign email open rates 
+
+## Connection Types
+
+Mailchimp Marketing Connector uses the following authentication methods:
+
+- 
+API Key Connection Provider, which is used to access protected applications without specifying a password. 
+- 
+OAuth Authorization Code Connection Provider, which is used to access protected applications with an access token. 
+
+## See Also
+
+- 
+[Use Exchange to Discover Connectors, Templates, and Examples](../../connectors/introduction/intro-use-exchange)
+- 
+[Salesforce Help](https://help.salesforce.com)

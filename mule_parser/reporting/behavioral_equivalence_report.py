@@ -1,0 +1,2 @@
+# Handled inside migration_fidelity_engine to centralize reporting models
+from mule_parser.reporting.migration_fidelity_engine import BehavioralEquivalenceReport

@@ -1,0 +1,41 @@
+# Enabling and Disabling a Public Portal | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/exchange/enable-and-disable-a-public-portal](https://docs.mulesoft.com/exchange/enable-and-disable-a-public-portal)
+
+---
+
+curl "https://anypoint.mulesoft.com/exchange/api/v2/portals/YOUR_ORGANIZATION_DOMAIN/status"
+
+# Enabling and Disabling a Public Portal
+
+All public portals in Exchange are enabled by default. You can sign in to your portal, view assets, and share new assets. Enabled portals do not require authorization to view asset details or download a specification. If you do not want the portal to be publicly shared, you can manually disable it. You must be an Exchange administrator to enable or disable a public portal.
+
+| The code examples for enabling and disabling a public portal show you how to obtain an access token with Multi-Factor Authentication (MFA) disabled. | 
+
+To determine whether your public portal is enable or disable, use the following request:
+
+## Enable a Public Portal
+
+To start using your organization’s public portal and sharing assets publicly, you must enable the portal.
+
+- 
+Get an access token from an Anypoint Platform user account that has the Organization Administrator permission in the root organization: `ACCESS_TOKEN=$(curl https://anypoint.mulesoft.com/accounts/login -XPOST -d "username=YOUR_USERNAME&password=YOUR_PASSWORD" | jq -r ".access_token")`
+- 
+Use the access token to change the status of your organization’s public portal to enabled status: curl -X PUT https://anypoint.mulesoft.com/exchange/api/v2/portals/YOUR_ORGANIZATION_DOMAIN/status -d "enabled" -H "content-type: text/plain" -H "authorization: bearer $ACCESS_TOKEN" 
+
+## Disable a Public Portal
+
+If you do not want to publicly share any information about your assets, disable your public portal.
+
+**Note**: To disable your organization’s public portal, all the assets that are shared in the public portal must be set to private. See [Remove an Asset from a Public Portal](to-share-api-asset-to-portal#remove-an-asset-from-a-public-portal) for instructions.
+
+To view which assets are shared in the public portal, use the following request:
+
+`curl 'https://anypoint.mulesoft.com/exchange/api/v2/portals/YOUR_ORGANIZATION_DOMAIN/assets' | jq '.[] | [.groupId,.assetId]'`To disable a public portal:
+
+- 
+Ensure that all assets are private. 
+- 
+Get an access token from an Anypoint Platform user account that has the Organization Administrator permission in the root organization: `ACCESS_TOKEN=$(curl https://anypoint.mulesoft.com/accounts/login -XPOST -d "username=YOUR_USERNAME&password=YOUR_PASSWORD" | jq -r ".access_token")`
+- 
+Use the following access token to change the status of your organization’s public portal to enabled: `curl -X PUT https://anypoint.mulesoft.com/exchange/api/v2/portals/YOUR_ORGANIZATION_DOMAIN/status -d "disabled" -H "content-type: text/plain" -H "authorization: bearer $ACCESS_TOKEN"`

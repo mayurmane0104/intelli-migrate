@@ -1,0 +1,104 @@
+# Viewing Cost and Token Usage | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/general/exp-governance-view-cost-and-token-usage](https://docs.mulesoft.com/general/exp-governance-view-cost-and-token-usage)
+
+---
+
+- 
+API Manager: Manage Policies 
+- 
+API Manager: View APIs Configuration 
+- 
+API Manager: View Policies 
+- 
+Anypoint Code Builder: Mule Developer Generative AI User 
+- 
+Anypoint Monitoring: Monitoring Viewer 
+- 
+Exchange: Exchange Viewer 
+
+# Viewing Cost and Token Usage
+
+Use cost and token metrics to understand usage, control spend, and identify optimization opportunities.
+
+Available metrics depend on your tenant configuration and role.
+
+## Before You Begin
+
+Before getting started, make sure you have:
+
+- 
+An Anypoint Platform account. 
+- 
+These permissions: For more information, see [Enhanced Experience Permissions](exp-home-start#permissions).
+
+## Cost and Token Data Locations
+
+The system displays token usage and performance data in several places:
+
+- 
+**Governance**>**Cost Management**: Primary dashboard for organization-wide token usage and spend indicators
+- 
+Service detail pages: Usage and performance summaries for supported services 
+- 
+**Observability**: Aggregated token and latency trends, when configured
+
+Navigation labels can vary by catalog, enabled features, and release.
+
+## Open Cost Management
+
+- 
+Log in and go to **Governance**>**Cost Management**.
+- 
+Adjust the time range and filters for the services or period you want to analyze. 
+
+## Usage Metrics
+
+The experience organizes token and activity data into summary cards and detail views:
+
+- 
+**Total Tokens**: Number of tokens processed in the selected time range
+- 
+**Saved Tokens (Est.)**: Estimated tokens saved by optimization policies
+- 
+**Tool Calls**: Number of tool or function calls in the selected time range
+
+Each card also shows how many instances contributed to the metric.
+
+## Filter and Search
+
+Use controls at the top of the page to narrow the view:
+
+- 
+Search for service or instance names. 
+- 
+Use **Filters**to refine your search by service type, environment, or metadata.
+- 
+Select a time range to search, such as 1 hour (1H), 6 hours (6H), 24 hours (24H), 7 days (7D), or 30 days (30D). 
+
+The counter updates to show the number of matching services.
+
+## Saved Token Estimates
+
+When optimization policies are active, the system estimates saved tokens compared to unoptimized traffic.
+
+Treat this metric as directional, not exact.
+
+## Cost Data Use Cases
+
+Cost and performance data inform multiple workflows:
+
+- 
+Cost optimization: Identify services with high usage and apply optimization controls. 
+- 
+Performance triage: Correlate latency or error spikes with deployments or policy changes. 
+- 
+Planning and alignment: Share trends with finance and platform teams for forecasting. 
+
+This dashboard doesn’t automatically cap usage. To limit consumption, apply governance strategies or rate-limiting policies.
+
+## Cost Data and Governance
+
+Use **Cost Management** data to create or refine governance strategies.
+
+For runtime enforcement, attach cost-related controls or policies to a governance strategy and apply it to the relevant services.

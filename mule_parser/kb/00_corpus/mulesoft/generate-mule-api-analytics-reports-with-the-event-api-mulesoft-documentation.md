@@ -1,0 +1,214 @@
+# Generate Mule API Analytics Reports with the Event API | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/api-manager/latest/analytics-event-api](https://docs.mulesoft.com/api-manager/latest/analytics-event-api)
+
+---
+
+![anev_running_report2](_images/anev-running-report2.png) 
+
+# Generate Mule API Analytics Reports with the Event API
+
+API Manager exposes the Mule API Analytics Event API so you can generate CSV or JSON event reports from Manage Reports for selected APIs, versions, environments, and time windows.
+The service retains about one month of data, can lag up to ten minutes, and throttles callers to ten requests per minute with a twenty-thousand-event cap per request.
+It suits ad hoc analysis instead of bulk export or continuous synchronization.
+For reliable delivery of event data into another system, see [Forward Mule API Analytics Events to External Systems](analytics-event-forward) instead of repeatedly polling this API.
+
+## Analytics Event API Limits and Best Practices
+
+The Analytics Events API provides a one-month retention policy and a data availability delay of up to 10 minutes. It also enforces a usage limit of 10 requests per minute, with a maximum of 20,000 events per request. Request rates higher than 10 requests per minute are throttled.
+
+The API is designed to create ad-hoc reports. It is not intended as a data export tool.
+
+Before you start using the API to create reports, review each requirement and restriction:
+
+- 
+Do not allow calls to overlap time intervals. 
+- 
+Do not repeat the same request for every API that you have. 
+- 
+Although the Analytics Events API enforces a limit of 10 requests per minute, the best practice is 1 request per minute. 
+- 
+Do not use the Analytics Events API for data synchronization. If you need to synchronize data for events with an external system, see [Forward Mule API Analytics Events to External Systems](analytics-event-forward).
+
+## Create a Report
+
+You can create a report to find API events, such as policy violations due to rate limiting or IP blacklisting. If the analytics services or Anypoint Platform are temporarily unavailable, Anypoint Platform may submit multiple data points to avoid any telemetry data loss. This might cause the report that you generate to contain duplicate entries.
+
+To create a report:
+
+- 
+Navigate to **API Manager**>**Mule Analytics**>**Manage Reports**and click**New**.
+- 
+In **Create Report**, select a data source, range, and format.
+- 
+In **Fields**, select**Violated Policy Name**.
+- 
+Save the report. A URL for viewing the report is displayed. 
+- 
+Click the URL to view the generated report. 
+
+## Run a Report in the Browser
+
+The Analytics Event API displays a starting time from which requested data is available. If no data is available, a warning message appears.
+
+To run a report in a browser, navigate to the **Manage Reports** page and click **Run** for your desired report:
+
+![anev_running_report2](_images/anev-running-report2.png) 
+
+After the report runs, a CSV or JSON file is generated, containing the analytics data you requested.
+
+### View Report Output with Curl
+
+You get the value of `$TOKEN` by running the curl command in this procedure. The command gets the `access_token` JSON property of this response.
+
+The authorization header has the form `Authorization: Bearer {$TOKEN.access_token}`.
+
+The use of the `jq` command-line JSON processor is one possible solution for obtaining the access token value. Download and install this application or one with the same functionality for this procedure.
+
+To view report information programmatically:
+
+- 
+Open a new terminal window and run this command: TOKEN=$(curl -s https://anypoint.mulesoft.com/accounts/login -d "username=<YOUR-USERNAME>&password=<YOUR-PASSWORD>" | jq -r .access_token) This command sends a request to the authentication servers of the Anypoint Platform and, if the request is successful, returns an access token that’s stored in the `$TOKEN`variable. The value of this variable is displayed below:`{ "access_token": "54545454-5454-5454-5454-545454545454", "token_type": "Bearer", "redirectUrl": "/accounts/#/cs/profile/home" }`json
+- 
+Append the access token to the `Authorization`header in the request of the Analytics Reporting API endpoint for your report:- 
+Copy the endpoint from the **Manage Reports**page in the Mule API Analytics dashboard.
+- 
+Include the `$TOKEN`variable from the previous step in the next request, as shown in this example that retrieves analytics for organizations without environments:`curl -H "Authorization: Bearer $TOKEN" "https://anypoint.mulesoft.com/analytics/1.0/<ORGANIZATION_ID>/events?format=csv&startDate=2016-01-01&endDate=2016-12-31&fields=Application%20Name.Client%20IP.Resource%20Path" > output.csv`
+ 
+- 
+- 
+If the request is successful, an `output.csv`file is generated in the directory from which you initiated the`curl`request.This next example queries the Analytics Events API for organizations with environments: 
+
+`curl -H "Authorization: Bearer $TOKEN" "https://anypoint.mulesoft.com:443/analytics/1.0/<ORGANIZATION_ID>/environments/<ENVIRONMENT_ID>/events?format=csv&apiIds=<API_ID>&duration=30d" > output.csv`In this example, analytics data is retrieved for the past 30 days from the API with the API ID <API_ID>. The results are generated in a CSV format.
+
+This example combines two `curl` commands and displays values in the command prompt window:
+
+`TOKEN=$(curl -s https://anypoint.mulesoft.com/accounts/login -d "username=myusername&password=mypassword" | jq -r .access_token) curl -H "Authorization: Bearer $TOKEN" "https://anypoint.mulesoft.com/analytics/1.0/42424242-4242-4242-4242-424242424242/events?format=csv&startDate=2016-01-01&endDate=2016-11-10&fields=Application%20Name.Client%20IP.Resource%20Path" echo;echo`text
+
+The command produces output such as:
+
+`"Application Name","Client IP","Resource Path",Timestamp,"API ID","API Version ID","API Name","API Version Name" "Las Vegas T-Shirt serviceLas Vegas T-Shirt serviceLas Vegas",83.178.96.0,/,2016-10-03T04:27:02.072Z,61460,63811,"test api contracts",1 "Las Vegas T-Shirt serviceLas Vegas T-Shirt serviceLas Vegas",83.178.96.0,/,2016-10-03T05:03:38.774Z,61460,63811,"test api contracts",1 ...`text
+
+### Request Events for a Specific Environment
+
+For organizations that have enabled environments, API events queried using the approach described in the topic belongs exclusively to the "Unclassified" environment.
+
+To request events for APIs in a specific environment:
+
+- 
+Select the environment in the Environment selector and create the report that you want to run. Reports are stored based on the environment. Therefore, different reports exist in different environments. 
+- 
+Copy from the UI the report URL generated from creating the report. Note that in addition to the organization ID, the URL also includes `/environment/{Environment ID}`. Anypoint Platform assigns a unique ID to an organization and an environment when they are created. For example, an API ID in the QA environment differs from its ID in the Production environment.
+- 
+To access events for a specific environment, append the environment ID to the report URL. 
+
+### Curl Command Options Reference
+
+You can add optional query parameters to curl commands, including:
+
+| Option | Description | 
+|---|---|
+| 
+ | Comma-delimited list of API IDs to include in a query. Omit or specify  
+ | 
+| 
+ | Comma-delimited list of API version IDs to include in query.
+Omit or specify  
+ | 
+| 
+ | The duration over which the report should return data. Consists of an integer number denoting quantity and a single-letter suffix denoting units. Suffix is one of: 
+ To cover a duration of one week, specify  
+ | 
+| 
+ | Fields to include in the report. Required for CSV output and optional for JSON output.
+The list of fields can be comma- or period-delimited. Use  
+ | 
+| 
+ | Determines the serialization format of the returned data. Either  
+ | 
+| 
+ | Maximum number of events to return. Default value is  
+ | 
+| 
+ | Starting date and time, as described by  
+ | 
+| 
+ | Ending date and time, as described by  
+ | 
+
+## Report data fields reference
+
+Your report can query data for one or more of the available data fields:
+
+| Data Field Name | Description | 
+|---|---|
+| 
+ | Client ID associated with the incoming API request. | 
+| 
+ | Name of the application making the API request (only available when a client ID is passed with the request). | 
+| 
+ | Browser type associated with the incoming API request. | 
+| 
+ | The city from which the API request originated (inferred by the IP address of the client). | 
+| 
+ | IP address of the client making the API request. | 
+| 
+ | The continent from which the API request originated (inferred by the IP address of the client). | 
+| 
+ | The country from which the API request originated (inferred by the IP address of the client). | 
+| 
+ | The hardware type of the client making the request (such as Mobile, Tablet, Desktop, etc.). | 
+| 
+ | Message ID value. | 
+| 
+ | The client OS type: Mac OS X, iOS, Windows, Linux. | 
+| 
+ | Operating system major version. | 
+| 
+ | Operating system minor version. | 
+| 
+ | Operating system version. | 
+| 
+ | The postal code from which the API request originated (inferred by the IP address of the client). | 
+| 
+ | Indicates whether a request was successful or resulted in a policy violation. | 
+| 
+ | The size (in bytes) of the incoming client request. | 
+| 
+ | The path of the client request. | 
+| 
+ | The size in bytes of the API response. See note below. | 
+| 
+ | The processing time of the API request. | 
+| 
+ | The HTTP status code of the response. | 
+| 
+ | The time zone from which the API request originated (inferred by the IP address of the client). | 
+| 
+ | The complete user agent string for the incoming client request. | 
+| 
+ | The version of the user agent string for the incoming client request. | 
+| 
+ | The REST verb associated with the API client request (GET, POST, PATCH, etc.). | 
+| 
+ | The name of the policy violated by the API request (if any). | 
+
+In your query, if the `Content-Length` header is:
+
+- 
+Present: `Response Size`is set to that value.
+- 
+Not present and the payload is a String: Mule API Analytics calculates the length of the String and reports that value. 
+- 
+Not present and the payload is not a String: Mule API Analytics reports the response size as -1. For example, if the output returned is a DataWeave stream and the `Content-Length`header is not present, the Analytics Event API does not report a response size because the value is not a String. However if your application performs a String conversion, the response size is listed.
+
+## Restrict Client IP Data in Analytics
+
+If you don’t want to forward client IP data, set `anypoint.platform.analytics_include_client_ip=false` in the `wrapper.conf` file of your Mule runtime. To set properties, refer to [Configuring Properties](../../mule-runtime/latest/configuring-properties).
+
+If you choose not to forward client IP data, geolocalized data such as **City**, **Continent**, **Postal Code**, **Country**, and **Timezone** is also not available.
+
+## See Also
+
+- 
+[jq command-line JSON processor](https://stedolan.github.io/jq/)

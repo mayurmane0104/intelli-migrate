@@ -1,0 +1,18 @@
+# Optional HTTPS reverse proxy (enable with: docker compose --profile https up -d)
+# Requires DNS A records pointing APP_DOMAIN and API_DOMAIN to this VM.
+
+{
+	email admin@example.com
+}
+
+{$PUBLIC_SCHEME}://{$APP_DOMAIN} {
+	reverse_proxy nextjs:3000
+}
+
+{$PUBLIC_SCHEME}://{$API_DOMAIN} {
+	reverse_proxy fastify:3001
+}
+
+{$PUBLIC_SCHEME}://{$PARSER_DOMAIN} {
+	reverse_proxy parser:8000
+}

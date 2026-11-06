@@ -1,0 +1,62 @@
+# Adding a Scanner for Amazon API Gateway | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/exchange/adding-amazon-gateway-scanner](https://docs.mulesoft.com/exchange/adding-amazon-gateway-scanner)
+
+---
+
+```
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": ["apigateway:GET"],
+      "Resource": "*"
+    }
+  ]
+}
+```
+json# Adding a Scanner for Amazon API Gateway
+
+Add a scanner to discover, import, and sync APIs from Amazon API Gateway into Anypoint Exchange. Once imported, you can apply governance rulesets and publish them to your developer portal.
+
+## Before You Begin
+
+Before adding the scanner, verify that you have the permission, context, and these Amazon API Gateway credentials:
+
+- 
+Exchange Administrator permission 
+- 
+IAM policy with read-only permissions for Amazon API Gateway 
+- 
+Knowledge about the Amazon Web Services region where the services are deployed 
+- 
+AWS access key ID 
+- 
+AWS secret access key 
+
+Example custom IAM policy for read-only access:
+
+## Add a Scanner for Amazon API Gateway
+
+- 
+Verify that you are in the business group where you want to add the scanner. 
+- 
+From the sidebar in Exchange, click **Scanners**.
+- 
+Enter a name for the scanner. 
+- 
+From **Scanner Run Configuration**, complete these fields or options:**Field/Option****Value****Run Schedule**Select a frequency and local time. **Sync Review**Select an option: Auto-resolve or Ask to review. 
+- 
+From **Connection Configuration**, complete these fields:**Field****Value****Provider**Select **Amazon**.**Platform**Select **API Gateway**.**Service Type****REST APIs**selected by default.**Authentication Method****Access key**selected by default.**AWS Access Key ID**Enter the access key ID. **AWS Secret Access Key**Enter the secret access key. **AWS Region**Select a region. 
+- 
+Click **Test Connection**.If the connection fails, review the **Connection Configuration**settings. Update the settings, and then test the connection again.
+- 
+To send email notifications: - 
+Select **Advanced Settings**and turn on**Send Email Notifications**.
+- 
+Enter an email address. 
+ 
+- 
+- 
+Click **Add Scanner**.

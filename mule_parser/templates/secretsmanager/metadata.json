@@ -1,0 +1,7 @@
+{
+  "template_id": "secretsmanager",
+  "name": "Secrets Manager Secret",
+  "service": "Secrets Manager",
+  "target": "SecretsManager",
+  "required_variables": ["resource_prefix"]
+}

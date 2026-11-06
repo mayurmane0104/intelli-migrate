@@ -1,0 +1,166 @@
+# Migration Studio + Mule Parser — full stack for Oracle Cloud (Always Free VM)
+#
+# Services: PostgreSQL, Redis, FastAPI parser, Celery worker, Next.js UI, Fastify worker
+#
+# Quick start (on Ubuntu VM after cloning repo):
+#   cd deploy/oracle
+#   cp .env.example .env    # edit VM IP + passwords
+#   ./bootstrap.sh
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: migration_studio
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  parser:
+    build:
+      context: ../..
+      dockerfile: deploy/oracle/Dockerfile.parser
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/migration_studio
+      CELERY_BROKER_URL: redis://redis:6379/0
+      REDIS_URL: redis://redis:6379/0
+      LLM_ENABLED: ${LLM_ENABLED:-false}
+      CODEGEN_LLM_ENABLED: ${CODEGEN_LLM_ENABLED:-false}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-}
+      AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION:-us-east-2}
+      BEDROCK_MODEL_ID: ${BEDROCK_MODEL_ID:-}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+
+  celery:
+    build:
+      context: ../..
+      dockerfile: deploy/oracle/Dockerfile.celery
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/migration_studio
+      CELERY_BROKER_URL: redis://redis:6379/0
+      REDIS_URL: redis://redis:6379/0
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  fastify:
+    build:
+      context: ../..
+      dockerfile: deploy/oracle/Dockerfile.fastify
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/migration_studio
+      REDIS_URL: redis://redis:6379
+      FASTAPI_URL: http://parser:8000
+      FASTIFY_URL: http://fastify:3001
+      FRONTEND_URL: ${PUBLIC_SCHEME:-http}://${APP_DOMAIN:-localhost}:3000
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
+      LLM_ENABLED: ${LLM_ENABLED:-false}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-}
+      AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION:-us-east-2}
+      BEDROCK_MODEL_ID: ${BEDROCK_MODEL_ID:-}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      parser:
+        condition: service_started
+    ports:
+      - "3001:3001"
+
+  nextjs:
+    build:
+      context: ../..
+      dockerfile: deploy/oracle/Dockerfile.next
+      args:
+        NEXT_PUBLIC_APP_URL: ${PUBLIC_SCHEME:-http}://${APP_DOMAIN:-localhost}:3000
+        NEXT_PUBLIC_API_URL: ${PUBLIC_SCHEME:-http}://${API_DOMAIN:-localhost}:3001
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/migration_studio
+      REDIS_URL: redis://redis:6379
+      FASTAPI_URL: http://parser:8000
+      FASTIFY_URL: http://fastify:3001
+      FRONTEND_URL: ${PUBLIC_SCHEME:-http}://${APP_DOMAIN:-localhost}:3000
+      NEXTAUTH_URL: ${PUBLIC_SCHEME:-http}://${APP_DOMAIN:-localhost}:3000
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
+      NEXT_PUBLIC_APP_URL: ${PUBLIC_SCHEME:-http}://${APP_DOMAIN:-localhost}:3000
+      NEXT_PUBLIC_API_URL: ${PUBLIC_SCHEME:-http}://${API_DOMAIN:-localhost}:3001
+    depends_on:
+      postgres:
+        condition: service_healthy
+      fastify:
+        condition: service_started
+    ports:
+      - "3000:3000"
+
+  migrate:
+    build:
+      context: ../..
+      dockerfile: deploy/oracle/Dockerfile.fastify
+    profiles: ["setup"]
+    environment:
+      DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/migration_studio
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: ["npx", "prisma", "migrate", "deploy"]
+    restart: "no"
+
+  caddy:
+    image: caddy:2-alpine
+    profiles: ["https"]
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      APP_DOMAIN: ${APP_DOMAIN}
+      API_DOMAIN: ${API_DOMAIN}
+      PARSER_DOMAIN: ${PARSER_DOMAIN}
+      PUBLIC_SCHEME: https
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddydata:/data
+      - caddyconfig:/config
+    depends_on:
+      - nextjs
+      - fastify
+      - parser
+
+volumes:
+  pgdata:
+  redisdata:
+  caddydata:
+  caddyconfig:

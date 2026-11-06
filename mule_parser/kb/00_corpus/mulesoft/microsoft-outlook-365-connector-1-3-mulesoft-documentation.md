@@ -1,0 +1,53 @@
+# Microsoft Outlook 365 Connector 1.3 | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/microsoft-outlook-365-connector/latest](https://docs.mulesoft.com/microsoft-outlook-365-connector/latest)
+
+---
+
+# Microsoft Outlook 365 Connector 1.3
+
+Anypoint Connector for Microsoft Outlook 365 (Outlook 365 Connector) enables you to integrate with the Microsoft Outlook 365 service.
+
+For compatibility information and fixed issues, refer to the Microsoft Outlook 365 Connector Release Notes.
+
+## Before You Begin
+
+To use this connector, you must be familiar with:
+
+- 
+Microsoft Outlook 365 API 
+- 
+Anypoint Connectors 
+- 
+Mule runtime engine (Mule) 
+- 
+Elements and global elements in a Mule flow 
+- 
+Creating a Mule app using Anypoint Studio or Anypoint Code Builder 
+
+Before creating an app, you must have:
+
+- 
+Credentials to access the target resource 
+- 
+Anypoint Studio or Anypoint Code Builder 
+
+## Common Use Cases for the Connector
+
+Outlook 365 Connector currently provides email and calendar capabilities.
+
+## Authentication Types
+
+Outlook 365 Connector uses the following authentication methods:
+
+- 
+OAuth 2.0 authorization code grant, which is used in applications that are installed on a device to gain access to protected resources. 
+- 
+OAuth 2.0 client credentials grant, which uses the identity of the application to access web-hosted resources. 
+
+## See Also
+
+- 
+[Use Exchange to Discover Connectors, Templates, and Examples](../../connectors/introduction/intro-use-exchange)
+- 
+[Salesforce Help](https://help.salesforce.com)

@@ -1,0 +1,140 @@
+# Anypoint Connectors Overview | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/connectors/introduction/introduction-to-anypoint-connectors](https://docs.mulesoft.com/connectors/introduction/introduction-to-anypoint-connectors)
+
+---
+
+# Anypoint Connectors Overview
+
+Anypoint Connectors are reusable extensions to Mule runtime engine (Mule) that enable you to integrate your apps with third-party APIs, databases, and standard integration protocols without writing complex code. You can connect to target systems, authenticate securely, and transform data while connectors handle the technical details. Use connectors to reduce development time and simplify maintenance as systems evolve.
+
+Using connectors in a Mule app provides the following advantages:
+
+- 
+Reduces code complexity, because you can connect a Mule app to a target system without knowing all of the details required to program to the target system 
+- 
+Simplifies authenticating against the target system 
+- 
+Proactively infers metadata for the target system, which makes it easier to identify and transform data with DataWeave 
+- 
+Makes code maintenance easier because: - 
+Not all changes in the target system require changes to the app. 
+- 
+The connector configuration can be updated without requiring updates to other parts of the app. 
+ 
+- 
+
+## Enable Connectivity with Connectors
+
+Use connectors to connect a Mule app to specific software applications, databases, and protocols. For a list of the MuleSoft-built connectors, see [Connectors](../).
+
+### Connect to Software Applications
+
+You can use connectors to connect a Mule app to specific software applications and to perform actions on the connected application.
+
+For example, you can use Anypoint Connector for SAP (SAP Connector) to automate sales order processing between SAP ERP and your customer relationship management (CRM) software.
+
+Likewise, you can use Anypoint Connector for Salesforce (Salesforce Connector) to integrate Salesforce with other business applications, such as ERP, analytics, and data warehouse systems.
+
+### Connect to Databases
+
+You can use connectors to connect a Mule app to one or more databases and to perform actions on the connected database.
+
+For example, you can use Anypoint Connector for Databases (Database Connector) to connect a Mule app to any relational database engine. Then you can perform SQL queries on that database.
+
+Likewise, you can use Anypoint Connector for Hadoop Distributed File System (HDFS Connector) to connect a Mule app to a Hadoop Distributed File System (HDFS). Then you can integrate databases such as MongoDB with Hadoop file systems to read, write, receive files, and send files on the HDFS server.
+
+### Connect to Protocols
+
+You can use connectors to send and receive data over protocols and, for some protocol connectors, to perform protocol operations.
+
+For example, you can use Anypoint Connector for LDAP (LDAP Connector) to connect to an LDAP server and access Active Directory. Then you can add user accounts, delete user accounts, or retrieve user attributes, such as the user’s email or phone number.
+
+Likewise, you can use Anypoint Connector for WebSockets (WebSockets Connector) to establish a WebSocket for bidirectional and full-duplex communication between a server and client, and to implement server push notifications.
+
+## How Connectors Work
+
+Connectors can perform one or more functions in an app, depending on where you place them and the capabilities of the specific connector. A connector can act as:
+
+- 
+An inbound endpoint that starts the app flow Connectors that have [sources](#input-sources)can perform this function.
+- 
+A message processor that performs [operations](#operations)in the middle of a flow
+- 
+An outbound endpoint that receives the final payload data from the flow 
+
+### Sources
+
+Some connectors have sources, or "triggers". These components enable a connector to start a Mule flow by receiving information from the connector’s resource. For example, when a Salesforce user updates a sales opportunity, a flow that starts with a Salesforce Connector component can receive the information and direct it to a database connector for processing.
+
+To see if a connector can act as a source, see the Reference Guide for the connector.
+
+App developers can also use an HTTP Listener or Scheduler as a source for a flow:
+
+- 
+HTTP Listener is a connector that listens to HTTP requests. You can configure an HTTP Listener to start a flow when it receives specified requests. 
+- 
+Scheduler is a core component that starts a flow when a time-based condition is met. You can configure a Scheduler to start a flow at regular intervals, or you can specify a more flexible cron expression to start the flow. 
+
+For more information about HTTP Listener and the Scheduler component, see the [HTTP Connector User Guide](../../http-connector/latest/) and [Scheduler Endpoint (Trigger)](../../mule-runtime/latest/scheduler-concept).
+
+### Operations
+
+Most connectors have operations that execute API calls or other actions on their associated system, database, or protocol. For example, you can use Anypoint Connector for Workday (Workday Connector) to create a position request in Workday or add a fund to the financial management service. Likewise, you can use Anypoint Connector for VMs (VM Connector) to consume messages from and publish messages to an asynchronous queue.
+
+To see a list of operations for a connector, see the Reference Guide for that connector.
+
+## Access Connectors and Related Assets
+
+Anypoint Exchange provides access to all publicly available connector assets including connectors, templates, and examples.
+
+### Connectors in Exchange
+
+You can use Exchange as a starting point for discovering all or a subset of MuleSoft-built connectors.
+
+For information about locating connectors in Exchange, see [Discover and Add Connectors to Studio](intro-use-exchange#discover-add-connectors).
+
+### Templates in Exchange
+
+Templates provide starting points for creating Anypoint Studio projects. Many templates include one or more connector configurations. For example, the S/4HANA Cloud to Salesforce Partner Migration template helps you migrate partners from an SAP S/4HANA Cloud to a Salesforce instance.
+
+After you configure a template in Studio, you can customize it to meet your needs.
+
+For information about locating and using templates, see [Discover and Add Templates to Studio](intro-use-exchange#discover-add-templates).
+
+### Examples in Exchange
+
+Examples are apps that demonstrate how to implement a use case or solution. Many examples use one or more connectors to accomplish required tasks.
+
+For example, the Authenticating Salesforce Using OAuth 2.0 example shows you how to connect to Salesforce using OAuth as the security protocol. It uses Salesforce Connector to enable OAuth authentication before performing the integration process.
+
+For information about locating and using examples, see [Discover and Add Examples to Studio](intro-use-exchange#discover-add-examples).
+
+## Connector Support Categories
+
+Anypoint Connectors have the following categories of support:
+
+- 
+Select connectors are available to anyone. However, you must have an Anypoint Platform subscription to access MuleSoft support for these connectors. 
+- 
+Premium connectors are available to licensed users only. Premium Anypoint Connectors must be licensed for each deployment environment (Production, Staging, Test, Sandbox, Dev, Disaster Recovery, and so on). For example, if you have multiple staging environments, you must have an active premium connector license for *each*staging environment.
+- 
+Mulesoft Certified connectors are developed by MuleSoft’s partners and developer community and subsequently reviewed and certified by MuleSoft. Access and support for these connectors is through MuleSoft partners. 
+
+For more information about connector support categories, see the [Product Versioning and Back Support Policy](https://www.salesforce.com/en-us/wp-content/uploads/sites/4/documents/legal/Agreements/versioning-back-support-policy.pdf).
+
+## Where to Get Additional Information
+
+Access the Release Notes, User Guide, and Reference Guide for a connector to view connector-specific information:
+
+- 
+Connector Release Notes provide compatibility information for a connector, information about new features, and a list of issues fixed in a release. 
+- 
+Connector User Guides provide instructions for configuring the associated connector and configuration examples. 
+- 
+Connector Reference Guides provide a list of supported sources (if any) and operations for the associated connector. They also provide field descriptions for connector configurations and connection types. 
+
+## See Also
+
+- 
+[Salesforce Help](https://help.salesforce.com)

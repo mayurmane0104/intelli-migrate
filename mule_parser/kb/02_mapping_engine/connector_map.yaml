@@ -1,0 +1,449 @@
+# RULE: Only map to clients/methods that exist in boto3. Never fabricate.
+mappings:
+  salesforce:
+    boto3_client: null              # no native AWS equivalent
+    pattern: "custom HTTP via requests + Secrets Manager for creds"
+    sdk: "simple-salesforce==1.12.4"
+
+  database:
+    mysql:
+      python_driver: "pymysql"
+      conn_pattern: "use env var DB_HOST/DB_PORT/DB_NAME/DB_USER/DB_PASS"
+    postgresql:
+      python_driver: "psycopg2-binary"
+    oracle:
+      python_driver: "cx_Oracle"
+    mssql:
+      python_driver: "pyodbc"
+    NEVER_USE: "boto3.client('rds')"   # RDS client is for mgmt API, not queries
+
+  http_request:
+    python_lib: "requests or urllib3"
+    pattern: "requests.get/post with retry via tenacity"
+
+  anypoint_mq:
+    boto3_client: "sqs"
+    boto3_methods: ["send_message","receive_message","delete_message"]
+
+  object_store:
+    boto3_client: "s3"
+    boto3_methods: ["put_object","get_object","delete_object"]
+
+  file:
+    boto3_client: "s3"
+    note: "EFS mount also valid for large file workloads"
+
+  email_smtp:
+    boto3_client: "ses"
+    boto3_method: "send_email"
+    NEVER_USE: "smtp direct from Lambda (port 25 blocked by AWS)"
+
+  jms:
+    boto3_client: "sqs"
+    note: "For pub/sub semantics use sns → sqs fan-out"
+
+  vm_connector:
+    pattern: "in-process → same Lambda; cross-process → SQS"
+
+  scheduler:
+    pattern: "EventBridge Scheduler → Lambda trigger"
+
+  s3_connector:
+    boto3_client: "s3"
+  
+  version: "1.0"
+description: >
+  Canonical mapping from MuleSoft connector capability → boto3 client,
+  method, required env vars, IAM actions, and Python import.
+
+connectors:
+
+  # ── HTTP ──────────────────────────────────────────────────────────────────
+  http_inbound:
+    aws_service: api_gateway
+    trigger: true
+    event_shape: api_gateway_proxy_v2
+    python_import: null
+    notes: Handled by API Gateway; Lambda receives event dict
+
+  http_outbound:
+    aws_service: lambda_runtime
+    boto3_client: null
+    python_import: "import urllib3"
+    method: "urllib3.PoolManager().request('GET', url)"
+    env_vars:
+      - TARGET_BASE_URL
+    iam_actions: []
+    retry_strategy: urllib3_retry
+    notes: >
+      Use urllib3 (stdlib-adjacent, no extra layer). Do NOT use requests
+      unless already in requirements. For internal AWS services use boto3.
+
+  # ── JMS / Messaging ───────────────────────────────────────────────────────
+  jms_consumer:
+    aws_service: sqs
+    boto3_client: sqs
+    python_import: "import boto3"
+    trigger: true
+    event_shape: sqs_event
+    method: "event['Records']"
+    env_vars:
+      - SQS_QUEUE_URL
+    iam_actions:
+      - sqs:ReceiveMessage
+      - sqs:DeleteMessage
+      - sqs:GetQueueAttributes
+    dlq_required: true
+
+  jms_producer:
+    aws_service: sqs
+    boto3_client: sqs
+    python_import: "import boto3"
+    method: "client.send_message(QueueUrl=..., MessageBody=...)"
+    env_vars:
+      - SQS_QUEUE_URL
+    iam_actions:
+      - sqs:SendMessage
+
+  jms_request_reply:
+    aws_service: sqs
+    notes: >
+      Use two SQS queues (request + reply). Lambda polls reply queue
+      with correlation ID. Consider Step Functions for cleaner impl.
+
+  # ── Database ──────────────────────────────────────────────────────────────
+  db_read:
+    aws_service: rds
+    boto3_client: null
+    python_import: "import psycopg2  # or pymysql depending on engine"
+    method: "cursor.execute(sql, params)"
+    env_vars:
+      - DB_HOST
+      - DB_PORT
+      - DB_NAME
+      - DB_USER
+      - DB_PASSWORD_SECRET_ARN
+    iam_actions:
+      - secretsmanager:GetSecretValue
+      - rds-db:connect
+    connection_pattern: >
+      Retrieve password from Secrets Manager on cold start, cache in module scope.
+      Use connection pooling via pg_bouncer or RDS Proxy for high-frequency lambdas.
+
+  db_write:
+    aws_service: rds
+    boto3_client: null
+    python_import: "import psycopg2"
+    method: "cursor.execute(sql, params); conn.commit()"
+    env_vars:
+      - DB_HOST
+      - DB_PORT
+      - DB_NAME
+      - DB_USER
+      - DB_PASSWORD_SECRET_ARN
+    iam_actions:
+      - secretsmanager:GetSecretValue
+      - rds-db:connect
+
+  db_stored_proc:
+    aws_service: rds
+    method: "cursor.callproc(proc_name, args)"
+    notes: Same env/IAM as db_read
+
+  db_bulk_write:
+    aws_service: rds
+    method: "cursor.executemany(sql, params_list)"
+    notes: Batch in chunks of 1000 rows
+
+  # ── Salesforce ────────────────────────────────────────────────────────────
+  sfdc_read:
+    aws_service: lambda
+    python_import: "from simple_salesforce import Salesforce"
+    method: "sf.query(soql)"
+    env_vars:
+      - SFDC_USERNAME
+      - SFDC_PASSWORD_SECRET_ARN
+      - SFDC_SECURITY_TOKEN_SECRET_ARN
+      - SFDC_DOMAIN          # login or test
+    iam_actions:
+      - secretsmanager:GetSecretValue
+    pip_package: simple-salesforce
+
+  sfdc_write:
+    aws_service: lambda
+    python_import: "from simple_salesforce import Salesforce"
+    method: "getattr(sf, sobject_name).create(data)"
+    env_vars:
+      - SFDC_USERNAME
+      - SFDC_PASSWORD_SECRET_ARN
+      - SFDC_SECURITY_TOKEN_SECRET_ARN
+      - SFDC_DOMAIN
+    iam_actions:
+      - secretsmanager:GetSecretValue
+    pip_package: simple-salesforce
+
+  sfdc_upsert:
+    aws_service: lambda
+    method: "getattr(sf, sobject_name).upsert(ext_id_field + '/' + ext_id, data)"
+    pip_package: simple-salesforce
+
+  sfdc_streaming:
+    aws_service: eventbridge
+    notes: >
+      Use Salesforce Change Data Capture or Platform Events via an
+      EventBridge partner event source (Salesforce connector in EventBridge).
+      Lambda subscribes to the custom event bus.
+    env_vars:
+      - EVENTBRIDGE_BUS_NAME
+
+  # ── S3 ────────────────────────────────────────────────────────────────────
+  s3_read:
+    aws_service: s3
+    boto3_client: s3
+    python_import: "import boto3"
+    method: "client.get_object(Bucket=..., Key=...)"
+    env_vars:
+      - S3_BUCKET_NAME
+    iam_actions:
+      - s3:GetObject
+
+  s3_write:
+    aws_service: s3
+    boto3_client: s3
+    method: "client.put_object(Bucket=..., Key=..., Body=...)"
+    env_vars:
+      - S3_BUCKET_NAME
+    iam_actions:
+      - s3:PutObject
+
+  s3_delete:
+    aws_service: s3
+    boto3_client: s3
+    method: "client.delete_object(Bucket=..., Key=...)"
+    iam_actions:
+      - s3:DeleteObject
+
+  s3_list:
+    aws_service: s3
+    boto3_client: s3
+    method: "paginator = client.get_paginator('list_objects_v2'); ..."
+    iam_actions:
+      - s3:ListBucket
+
+  # ── SNS ───────────────────────────────────────────────────────────────────
+  sns_publish:
+    aws_service: sns
+    boto3_client: sns
+    python_import: "import boto3"
+    method: "client.publish(TopicArn=..., Message=...)"
+    env_vars:
+      - SNS_TOPIC_ARN
+    iam_actions:
+      - sns:Publish
+
+  # ── Email (SES) ───────────────────────────────────────────────────────────
+  email_send:
+    aws_service: ses
+    boto3_client: sesv2
+    python_import: "import boto3"
+    method: "client.send_email(...)"
+    env_vars:
+      - SES_FROM_ADDRESS
+      - SES_REGION
+    iam_actions:
+      - ses:SendEmail
+      - ses:SendRawEmail
+
+  # ── File / SFTP ───────────────────────────────────────────────────────────
+  file_read:
+    aws_service: s3
+    notes: Map local file paths to S3 object keys. Use /tmp for temp storage in Lambda.
+    tmp_size_limit_mb: 512
+
+  file_write:
+    aws_service: s3
+    notes: Write to /tmp then upload to S3. /tmp is ephemeral.
+
+  ftp_read:
+    aws_service: lambda
+    python_import: "import ftplib"
+    method: "ftp.retrbinary('RETR ' + filename, callback)"
+    env_vars:
+      - FTP_HOST
+      - FTP_USER
+      - FTP_PASSWORD_SECRET_ARN
+    notes: Run inside VPC if FTP server is private
+
+  sftp_read:
+    aws_service: lambda
+    python_import: "import paramiko"
+    pip_package: paramiko
+    env_vars:
+      - SFTP_HOST
+      - SFTP_USER
+      - SFTP_KEY_SECRET_ARN
+    notes: Store SSH key in Secrets Manager as plaintext PEM
+
+  # ── Kafka / MSK ───────────────────────────────────────────────────────────
+  kafka_produce:
+    aws_service: msk
+    python_import: "from kafka import KafkaProducer"
+    pip_package: kafka-python
+    env_vars:
+      - MSK_BOOTSTRAP_SERVERS
+      - KAFKA_TOPIC
+    iam_actions:
+      - kafka:WriteDataIdempotently
+
+  kafka_consume:
+    aws_service: msk
+    trigger: true
+    event_shape: msk_event
+    env_vars:
+      - MSK_CLUSTER_ARN
+      - KAFKA_TOPIC
+    iam_actions:
+      - kafka:GetBootstrapBrokers
+      - kafka:DescribeCluster
+
+  # ── Object Store → DynamoDB ───────────────────────────────────────────────
+  object_store_put:
+    aws_service: dynamodb
+    boto3_client: dynamodb
+    python_import: "import boto3"
+    method: "table.put_item(Item=...)"
+    env_vars:
+      - DYNAMODB_TABLE_NAME
+    iam_actions:
+      - dynamodb:PutItem
+
+  object_store_get:
+    aws_service: dynamodb
+    method: "table.get_item(Key=...)"
+    iam_actions:
+      - dynamodb:GetItem
+
+  object_store_delete:
+    aws_service: dynamodb
+    method: "table.delete_item(Key=...)"
+    iam_actions:
+      - dynamodb:DeleteItem
+
+  object_store_exists:
+    aws_service: dynamodb
+    method: "table.get_item(Key=...) is not None"
+    iam_actions:
+      - dynamodb:GetItem
+
+  # ── Scheduler ─────────────────────────────────────────────────────────────
+  scheduler_trigger:
+    aws_service: eventbridge_scheduler
+    trigger: true
+    event_shape: scheduled_event
+    notes: >
+      Create EventBridge Scheduler rule with cron/rate expression matching
+      the MuleSoft scheduler config. Lambda target requires resource-based policy.
+
+  # ── Step Functions (Scatter-Gather, Parallel-ForEach) ─────────────────────
+  parallel_scatter_gather:
+    aws_service: step_functions
+    state_type: Parallel
+    notes: >
+      Each scatter branch becomes a Step Functions Parallel branch.
+      Results aggregated in the Parallel state output.
+
+  parallel_foreach_iterator:
+    aws_service: step_functions
+    state_type: Map
+    notes: >
+      Use Step Functions Map state with MaxConcurrency.
+      ItemsPath points to the array in the state input.
+
+  # ── Crypto → KMS ──────────────────────────────────────────────────────────
+  crypto_encrypt:
+    aws_service: kms
+    boto3_client: kms
+    method: "client.encrypt(KeyId=..., Plaintext=...)"
+    env_vars:
+      - KMS_KEY_ID
+    iam_actions:
+      - kms:Encrypt
+
+  crypto_decrypt:
+    aws_service: kms
+    boto3_client: kms
+    method: "client.decrypt(CiphertextBlob=...)"
+    iam_actions:
+      - kms:Decrypt
+
+  # ── Auth / Secrets ────────────────────────────────────────────────────────
+  oauth_get_token:
+    aws_service: secrets_manager
+    boto3_client: secretsmanager
+    method: "client.get_secret_value(SecretId=...)"
+    env_vars:
+      - OAUTH_SECRET_ARN
+    iam_actions:
+      - secretsmanager:GetSecretValue
+    notes: Cache token in module scope; refresh on 401
+
+  # ── SAP ───────────────────────────────────────────────────────────────────
+  sap_idoc_send:
+    aws_service: lambda
+    notes: >
+      Use pyrfc (SAP RFC SDK) or REST via SAP Integration Suite.
+      Store SAP credentials in Secrets Manager.
+    pip_package: pyrfc
+    env_vars:
+      - SAP_HOST
+      - SAP_SYSNR
+      - SAP_CLIENT
+      - SAP_CREDENTIALS_SECRET_ARN
+
+  sap_bapi_call:
+    aws_service: lambda
+    pip_package: pyrfc
+    env_vars:
+      - SAP_HOST
+      - SAP_CREDENTIALS_SECRET_ARN
+
+  # ── LDAP ─────────────────────────────────────────────────────────────────
+  ldap_search:
+    aws_service: lambda
+    python_import: "import ldap3"
+    pip_package: ldap3
+    notes: Consider replacing with Amazon Cognito or AWS Directory Service
+    env_vars:
+      - LDAP_SERVER
+      - LDAP_BIND_DN
+      - LDAP_PASSWORD_SECRET_ARN
+
+  # ── Workday ───────────────────────────────────────────────────────────────
+  workday_api:
+    aws_service: lambda
+    python_import: "import requests"
+    notes: Use Workday REST/SOAP API with OAuth2 stored in Secrets Manager
+    env_vars:
+      - WORKDAY_BASE_URL
+      - WORKDAY_TOKEN_SECRET_ARN
+
+# ── Naming Convention for env vars ────────────────────────────────────────────
+env_var_convention:
+  pattern: "SCREAMING_SNAKE_CASE"
+  prefix_rules:
+    database: "DB_"
+    s3: "S3_"
+    sqs: "SQS_"
+    sns: "SNS_"
+    sfdc: "SFDC_"
+    ses: "SES_"
+    ftp: "FTP_"
+    sftp: "SFTP_"
+    msk: "MSK_"
+    dynamodb: "DYNAMODB_"
+    kms: "KMS_"
+    secrets: suffix "_SECRET_ARN"
+  forbidden:
+    - Plaintext passwords in env vars
+    - API keys in env vars
+    - All secrets must use _SECRET_ARN pointing to Secrets Manager

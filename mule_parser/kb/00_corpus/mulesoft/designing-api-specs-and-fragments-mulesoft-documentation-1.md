@@ -1,0 +1,31 @@
+# Designing API Specs and Fragments | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/design-center/design-designing-api-specs-fragments](https://docs.mulesoft.com/design-center/design-designing-api-specs-fragments)
+
+---
+
+# Designing API Specs and Fragments
+
+Use API Designer to create, design, test, and publish new API Specifications.
+
+## Design Using the Text or Visual Editor
+
+You can use either [the text editor](design-create-publish-api-raml-editor) or [the Visual Editor](design-create-publish-api-visual-editor) to create API specifications.
+
+With the text editor, you can:
+
+- 
+Design according to best practices with a context-aware shelf that auto-populates with the appropriate methods, resources, parameters, and security components. 
+- 
+Include RAML API fragments, such as security schemas and data types, from Exchange or write your own. 
+- 
+Apply rulesets from Exchange to validate the governance conformance of your projects. 
+- 
+Import existing API specifications. 
+
+With the visual editor, you can:
+
+- 
+Create a specification for use cases in which you do not need to include RAML fragments. 
+- 
+Scaffold a specification that you can complete and customize in the text editor.

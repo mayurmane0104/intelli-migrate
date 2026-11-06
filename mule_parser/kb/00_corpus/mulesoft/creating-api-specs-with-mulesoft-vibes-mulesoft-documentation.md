@@ -1,0 +1,231 @@
+# Creating API Specs with MuleSoft Vibes | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/anypoint-code-builder/vibes-api-ai-create-spec](https://docs.mulesoft.com/anypoint-code-builder/vibes-api-ai-create-spec)
+
+---
+
+Optionally provide the API name, version, and description.
+
+# Creating API Specs with MuleSoft Vibes
+
+MuleSoft  Vibes is a purpose-built assistant for the development lifecycle, available directly in Anypoint Code Builder. It provides a unified panel that lets you interact with AI features using natural language prompts. Mulesoft Vibes works with the embedded MuleSoft MCP Servers (see [Mulesoft MCP Servers](../mulesoft-mcp-server/)) to support capabilities such as deploying applications, managing instances, and creating new projects.
+
+One of these capabilities is AI-powered API specification generation. With Mulesoft Vibes, you can generate and mock API specifications from natural language. This feature reduces the time spent on API design by simplifying the creation of syntax-heavy specifications.
+
+## Before You Begin
+
+Before you start creating your API spec, make sure you meet the following prerequisites:
+
+- 
+Make sure you have the [required Anypoint Code Builder permissions](start-configure-permissions#permissions).
+- 
+Ensure you have the following permissions to use Mulesoft Vibes: - 
+**Anypoint Code Builder Developer**(to use Mulesoft Vibes in the Cloud IDE)
+- 
+**Mule Developer Generative AI User**
+ 
+- 
+- 
+Make sure Einstein is enabled in Access Management. For more information, see [Enabling Einstein for Anypoint Platform](../access-management/enabling-agentforce).
+
+| Authentication happens through the user logged into Anypoint Code Builder. Mulesoft Vibes inherits the same permissions as that user and can only execute actions that the user is authorized to perform in Anypoint Platform. | 
+
+## Design an API Spec with AI
+
+To design an API spec with Mulesoft Vibes:
+
+- 
+Open Mulesoft Vibes from the toolbar or from the **Build Your Ecosystem with AI**card in the canvas.
+- 
+Enter a message that describes your API specification. Include these required details and consider including optional details to generate a more precise spec: ## Base Details## Security DetailsInclude a required security scheme of type Oauth 1.0, Oauth 2.0, Basic Authentication, Digest Authentication, or Pass Through. - 
+For Basic Authentication, Digest Authentication, or Pass Through, specify responses, query parameters, and headers. 
+- 
+For Oauth 1.0 or 2.0, specify responses, query parameters, headers, and settings. - 
+Settings for Oauth 1.0 can be of type `authorizationUri`,`requestTokenUri`,`tokenCredentialsUri`, or signatures.
+- 
+Settings for Oauth 2.0 can be of type `authorizationUri`,`requestTokenUri`, or`authorizationGrants`.
+ 
+- 
+ The following additional details apply: **Header Requirements**Headers must include the name, whether it’s required, and one of the following types: - 
+Array 
+- 
+Boolean 
+- 
+Date only 
+- 
+DateTime 
+- 
+DateTime only 
+- 
+File 
+- 
+nil 
+- 
+Number 
+- 
+Object 
+- 
+String 
+- 
+Time only 
+ Optionally, provide a description, format, minimum and maximum length, default value, and example for the header. **Query Parameter Requirements**Query parameters must include the name, whether it’s required, and one of the following types: - 
+Array 
+- 
+Boolean 
+- 
+Date only 
+- 
+DateTime 
+- 
+DateTime only 
+- 
+File 
+- 
+nil 
+- 
+Number 
+- 
+Object 
+- 
+String 
+- 
+Time only 
+ Optionally, provide a description, format, minimum and maximum length, default value, and example for the query parameter. **Response Requirements**Responses must include the status code and description. ## Resources and MethodsInclude a required security scheme of type Oauth 1.0, Oauth 2.0, Basic Authentication, Digest Authentication, or Pass Through. The following additional details apply: **Resource Requirements**Each resource can include one or more of the following methods: - 
+GET 
+- 
+POST 
+- 
+PUT 
+- 
+PATCH 
+- 
+DELETE 
+- 
+HEAD 
+- 
+OPTIONS 
+ For GET and HEAD methods, you can include a summary, responses, requests, and query or header parameters. For POST, PUT, PATCH, and OPTIONS methods, you can include a summary, responses, requests, body, and query or header parameters. **Response Requirements**Responses must include the status code and description. Response bodies are optional and can include a description, type, media type, and example. **Request Requirements**Requests must include a description and body. **Header Requirements**Headers must include the name, whether it’s required, and one of the following types: - 
+Array 
+- 
+Boolean 
+- 
+Date only 
+- 
+DateTime 
+- 
+DateTime only 
+- 
+File 
+- 
+nil 
+- 
+Number 
+- 
+Object 
+- 
+String 
+- 
+Time only 
+ Optionally, provide a description, format, minimum and maximum length, default value, and example for the header. **Query Parameter Requirements**Query parameters must include the name, whether it’s required, and one of the following types: - 
+Array 
+- 
+Boolean 
+- 
+Date only 
+- 
+DateTime 
+- 
+DateTime only 
+- 
+File 
+- 
+nil 
+- 
+Number 
+- 
+Object 
+- 
+String 
+- 
+Time only 
+ Optionally, provide a description, format, minimum and maximum length, default value, and example for the query parameter. 
+- 
+- 
+Send your message. The agent creates a validated API spec. 
+
+| Governance isn’t included in the validation. | 
+
+- 
+Enter your message in Mulesoft Vibes and submit it. 
+- 
+Review the generated specification. 
+- 
+If **Auto-approve**is enabled, Mulesoft Vibes writes the generated API spec directly into your project files.
+- 
+If **Auto-approve**is disabled, Mulesoft Vibes prompts you to approve or reject each file change before applying it.
+- 
+After the API project is generated, you can also: - 
+Ask Mulesoft Vibes to publish the API asset to Exchange. 
+- 
+Add governance rulesets to validate your specification. 
+- 
+Mock requests to the API directly from the IDE. 
+ 
+- 
+
+## Define Rules and Workflows
+
+To define reusable rules and workflows for Mulesoft Vibes:
+
+- 
+In the Mulesoft Vibes panel, click the **Rules/Workflows**icon in the lower-left corner (next to the**Context**icon).
+- 
+Choose one of the following tabs: - 
+Rules: Define constraints or guidelines for how the API spec should be generated. 
+ For example, enforce naming conventions or require consistent error handling.
+ Rules can be defined at the**Global Rules**or**Workspace Rules**level.
+- 
+Workflows: Create a series of steps that Mulesoft Vibes executes as a predefined action. 
+ Workflows are invoked using slash commands (for example,`/workflow-name`) in the Mulesoft Vibes panel.
+ 
+- 
+
+## Provide Additional Context
+
+You can provide additional inputs, such as requirement files (for example, `requirements.txt`), terminal outputs, or project folders, to help Mulesoft Vibes generate more accurate API specifications. These files are used as contextual references during API generation.
+
+To add context:
+
+- 
+In the Mulesoft Vibes panel, click the **Add Context**icon in the lower-left corner.
+- 
+Select the file or folder you want to attach, or paste terminal input/output. 
+- 
+Confirm to add the context to your current task. 
+
+## MuleSoft Vibes Settings
+
+You can control how Mulesoft Vibes interacts with your project through the **Settings** panel.
+To access this panel, click the **Auto-approve** section at the bottom of the Mulesoft Vibes window.
+
+Available settings are:
+
+- 
+**Auto-approve**: Enable to apply changes automatically without prompting for confirmation.
+ If Auto-approve is disabled, Mulesoft Vibes requests your approval before making any file changes.
+- 
+**Read project files**: Allow MuleSoft Vibes to read project files for context.
+- 
+**Edit project files**: Allow Mulesoft Vibes to write changes directly to your project.
+- 
+**Read all files**: Allow Mulesoft Vibes to read all files on your computer.
+- 
+**Edit all files**: Allow Mulesoft Vibes to edit any file on your computer.
+- 
+**Use MCP Servers**: Allow Mulesoft Vibes to use connected MCP servers.
+- 
+**Execute safe commands**: Allow Mulesoft Vibes Agent to execute safe terminal commands.
+- 
+**Execute all commands**: Allow Mulesoft Vibes to execute any terminal command.
+- 
+**Use the browser**: Allow Mulesoft Vibes to launch and interact with websites in a browser.

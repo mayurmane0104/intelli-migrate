@@ -1,0 +1,4 @@
+{
+  "required_terms": ["AWS::CloudWatch::Alarm", "cloudwatch.Alarm"],
+  "forbidden_terms": ["ECS", "AppFlow", "Amazon MQ", "MSK", "Glue", "DynamoDB", "EMR", "Batch"]
+}

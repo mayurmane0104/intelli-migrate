@@ -1,0 +1,214 @@
+# FIPS 140-2 Compliance Support | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/mule-runtime/latest/fips-140-2-compliance-support](https://docs.mulesoft.com/mule-runtime/latest/fips-140-2-compliance-support)
+
+---
+
+Provider:bc-fips-1.0.2.4 TLS: bctls-fips-1.0.19.jar PKIX: bcpkix-fips-1.0.7.jar
+
+# FIPS 140-2 Compliance Support
+
+The Mule 4 Runtime can be configured to run in a Federal Information Processing Standard (FIPS) 140-2 certified environment. This includes all Runtime connectors, such as HTTP connector. Note that Mule doesn’t run in FIPS security mode by default. There are two requirements:
+
+- 
+Have a certified cryptography module installed in your Java environment 
+- 
+Adjust Mule Runtime settings to run in FIPS security mode 
+
+| By default, Government Cloud is configured for FIPS 140-2, so you don’t need to perform the following steps if you’re using Government Cloud. If you’re using Runtime Fabric, see  | 
+
+## Assumptions
+
+This document assumes that you’re familiar with [FIPS 140-2](https://csrc.nist.gov/files/pubs/fips/140-2/upd2/final/docs/fips1402.pdf), the US government security standard that requires that compliant parties use only cryptographic algorithms and techniques that have been certified by NIST. This document also assumes that you have selected and obtained a [certified security provider](https://csrc.nist.gov/projects/cryptographic-module-validation-program/validated-modules).
+
+## Setting Up a FIPS 140-2 Java Environment
+
+Mule relies on the Java runtime to provide a FIPS-compliant security module, which is why the first requirement is to have a FIPS 140-2 Java environment properly set up. If you’re setting up your system for FIPS compliance for the first time and you haven’t already configured a certified security provider, you must first [select and obtain one](https://csrc.nist.gov/projects/cryptographic-module-validation-program/validated-modules), then set up your Java environment following the instructions specific to your selected provider.
+
+Details for this process vary according to your selected security provider. Refer to the documentation for your security provider for complete instructions.
+
+| Starting with Mule 4.9.8, you configure FIPS 140-2 by installing the FIPS license that MuleSoft provides in the license `.zip`file. To enable FIPS 140-2 compliance, you must install the FIPS license from the`.zip`package. The non-FIPS license in the same package isn’t valid for FIPS mode. | 
+
+### Setup Instructions Using Bouncy Castle Security Provider
+
+These instructions demonstrate how to set up a FIPS 140-2 Java environment.
+
+#### Setup Instructions in Java 8
+
+These instructions show how to install and configure Bouncy Castle security provider in Java 8.
+
+- 
+Verify that you’re using Java 8 and `JAVA_HOME`is set.
+- 
+Download the provider files from [the BouncyCastle web page](https://www.bouncycastle.org/download/bouncy-castle-java-fips/).
+- 
+Install the required JAR file into the `$JAVA_HOME/lib/ext`folder.
+- 
+Register the security provider in the security properties file in the `$JAVA_HOME/lib/security/java.security`folder so that only the Bouncy Castle providers are set:![A list of security providers where to modify the provider](_images/fips-register-jar.png)  
+- 
+Save your changes. 
+
+#### Setup Instructions in Java 11 and Later
+
+These instructions show how to install and configure Bouncy Castle security provider in Java 11 and later.
+
+- 
+Verify that you’re using Java 11 or later and `JAVA_HOME`is set.
+- 
+Download the provider files from [the BouncyCastle web page](https://www.bouncycastle.org/download/bouncy-castle-java-fips/).Provider:bc-fips-1.0.2.4 TLS: bctls-fips-1.0.19.jar PKIX: bcpkix-fips-1.0.7.jar 
+- 
+Register the security provider in the security properties file in the `$JAVA_HOME/conf/security/java.security`folder so that only the Bouncy Castle providers are set.
+- 
+Copy the 3 files downloaded to `/lib/boot`(needed for Mule runtime) and`/mule-agent-plugin/lib`(needed for Runtime Manager agent) folders in Mule runtime.
+- 
+Run `amc_setup`and register Mule runtime. For example, in**Add Server**, you find the registration token`/amc_setup -H d32c4bde-7184-444a-bd87-7a274623e14f---704247 node10 --fips`, where`d32c4bde-7184-444a-bd87-7a274623e14f---704247`is the key from Anypoint Runtime Manager.When configuring Runtime Manager agent, include the `--fips`flag to enable FIPS compliance. If you’re using Government Cloud, also include the`--region us_gov`flag:./amc_setup -H <YOUR_TOKEN> <server-name> --fips --region us_gov You must pass the `--fips`argument each time you register a Mule runtime in a FIPS-compliant environment.
+- 
+To enable FIPS, update `$MULE_HOME/conf/wrapper.conf`. Add the properties`wrapper.java.additional.<n>=-Dmule.security.model=fips140-2`and`wrapper.java.additional.<n>=-Dmule.cluster.network.encryption.key={someKey}`, where`someKey`is the key from your cluster that needs to be defined if you are using a clustered environment.
+- 
+Get the latest Mule runtime distribution `4.5.x`, which enables providers`BouncyCastleFipsProvider`and`BouncyCastleJsseProvider`and set the algorithms to PKIX.
+- 
+Start Mule runtime. 
+
+## Running Mule in FIPS Security Mode
+
+After following the steps in [Setting Up a FIPS 140-2 Java Environment](#set_up_environment), set up your Mule instances to work in a FIPS 140-2-compliant environment by updating the configuration of the wrapper that launches the Mule app server.
+
+- 
+Open your `wrapper.conf`file (located in`$MULE_HOME/conf`folder).
+- 
+Uncomment the line that configures Mule to work in FIPS security mode (as shown). Be sure to replace the `<n>`with the next sequential number in your`wrapper.conf`file.![A file with configuration settings for enabling FIPS 140-2 mode](_images/fips-wrapper-conf-edit.png)  
+- 
+For Java 11 and later, also uncomment this line: ![A code string suggests uncommenting for fips mode](_images/fips-wrapper-conf-edit-modules.png)  
+- 
+Set the approved-only Bouncy Castle property to enforce FIPS compliance. Be sure to replace the `<n>`.![A string of code showing Bouncy Castle approved only as true](_images/fips-approved-only.png)  
+- 
+Save your changes. 
+
+When Mule launches again, the startup readout will indicate that FIPS security mode is enabled.
+
+![A console output showing startup logs for a Mule server with FIPS 140-2 security model enabled](_images/fips-startup.png) 
+
+With FIPS security mode enabled, Mule automatically restricts protocol negotiations to use only the subset of approved cryptographic cipher suites. Any HTTPS connectors and any other connectors that use a TLS security layer will be affected automatically by this restriction.
+
+### Cluster Environment in FIPS mode
+
+If you’re running in FIPS mode with a Mule runtime in a clustered environment, define an encryption key for the cluster. See [Cluster reference](mule-high-availability-ha-clusters#cluster_fips) for more insight.
+
+## FIPS 140-2 Compliant Cipher Suites
+
+This list contains supported FIPS 140-2 compliant cipher suites.
+To configure the cipher suite used by on-prem Mule installations, see [Fine-Tuning SSL Connectors](#fine-tuning-ssl-connectors).
+
+- 
+TLS_DHE_DSS_WITH_AES_128_CBC_SHA 
+- 
+TLS_DHE_DSS_WITH_AES_256_CBC_SHA 
+- 
+TLS_DHE_RSA_WITH_AES_128_CBC_SHA 
+- 
+TLS_DHE_RSA_WITH_AES_256_CBC_SHA 
+- 
+TLS_DHE_RSA_WITH_AES_256_GCM_SHA384 
+- 
+TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA 
+- 
+TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA 
+- 
+TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA 
+- 
+TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256 
+- 
+TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA 
+- 
+TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384 
+- 
+TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384 
+- 
+TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA 
+- 
+TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 
+- 
+TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA 
+- 
+TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384 
+- 
+TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384 
+- 
+TLS_ECDH_RSA_WITH_AES_128_CBC_SHA 
+- 
+TLS_ECDH_RSA_WITH_AES_256_CBC_SHA 
+- 
+TLS_AES_128_GCM_SHA256 
+- 
+TLS_AES_256_GCM_SHA384 
+- 
+TLS_AES_128_CCM_SHA256 
+- 
+TLS_AES_128_CCM_8_SHA256 
+
+## FIPS 140-2 Compliant Keystore Formats
+
+Keystores or truststores in Mule apps are typically formatted as `PKCS12` or `JKS`.
+These formats aren’t FIPS compliant. For compliance, convert them to `BCFKS` format.
+
+To convert a `JKS` keystore to `BCFKS` format, make sure that you:
+
+- 
+Use Java 8 or later and make sure that `JAVA_HOME`is set.
+- 
+Download the `bc-fips.jar`file from the[Bouncy Castle website](https://www.bouncycastle.org/download/bouncy-castle-java-fips/).
+- 
+Use this example command to convert a keystore to `BCFKS`format:
+
+```
+BC_FIPS_JAR=${BC_PATH}/bc-fips-*.jar  # Replace with a correct path
+OLD_KEYSTORE="keystore.jks"           # Replace with the keystore to convert
+OLD_PASSWD="changeit"                 # Replace with the keystore password
+NEW_KEYSTORE="keystore.bcfks"         # Replace with the new keystore
+NEW_PASSWD="changeit"                 # Replace with the new keystore password
+keytool -importkeystore \
+ -providerclass org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider \
+ -providerpath ${BC_FIPS_JAR} \
+ -srckeystore  ${OLD_KEYSTORE}   -srcstoretype JKS       -srcstorepass ${OLD_PASSWD} \
+ -destkeystore ${NEW_KEYSTORE}   -deststoretype BCFKS    -deststorepass ${NEW_PASSWD}
+```
+| If you’re using Java 17 or later, add the `-J--add-exports=java.base/sun.security.provider=ALL-UNNAMED`parameter to the keytool command before the`-importkeystore`parameter. | 
+
+- 
+To use the new keystore or truststore, update the [TLS configuration](tls-configuration)in the Mule configuration file:
+
+<tls:context> <tls:key-store type="bcfks" path="server.bcfks" password="changeit" keyPassword="changeit" alias="default" /> <tls:trust-store type="bcfks" path="client.bcfks" password="changeit" /> </tls:context>
+
+| If the source keystore is `PKCS12`, set the parameter`-srcstoretype`to`PKCS12`in the`keytool`command. | 
+
+## Fine-Tuning SSL Connectors
+
+The Mule conf folder includes two files that allow you to fine-tune the configuration of SSL connectors by manually setting which cipher suites Mule can use and which SSL protocols are allowed:
+
+- 
+`tls-default.conf`(Allows fine-tuning when Mule isn’t configured to run in FIPS security mode)
+- 
+`tls-fips140-2.conf`(Allows fine-tuning when Mule is running in FIPS security mode)
+
+Open the relevant file and comment or uncomment items in the lists to manually configure the allowed cipher suites and SSL protocols. If you make no changes to these files, Mule allows the configured security manager to select cipher suites and protocols.
+
+## Tips and Limitations
+
+- 
+The Bouncy Castle security provider bundled with the Mule runtime distribution isn’t FIPS certified. When Mule starts in FIPS security mode, the Bouncy Castle provider isn’t registered or used. 
+- 
+Not all encryption schemes and signatures included in [Mule Cryptography Module](securing#cryptography-module)and[Mule Secure Properties](secure-configuration-properties)configuration options are FIPS compliant. If your application is using an algorithm that isn’t approved for FIPS use, you will get an error at runtime that reads:
+
+Could not find encryption algorithm '<algorithm-name>'. You are running in FIPS mode, so please verify that the algorithm is compliant with FIPS.
+
+- 
+Keep in mind that your different environments might have different security configurations, including different encryption schemes and algorithm selections. So you might see this error in certain environments (but not others), depending on how they are set up. 
+- 
+Similarly, enabling FIPS at the OS level, such as on Red Hat, isn’t supported as it causes cipher suite errors during license validation. 
+
+## See Also
+
+- 
+[Validated FIPS-2 Cryptographic Modules](https://csrc.nist.gov/projects/cryptographic-module-validation-program/validated-modules)
+- 
+[Approved Cryptographic Algorithms](https://csrc.nist.gov/files/pubs/fips/140-2/upd2/final/docs/fips1402annexa.pdf)

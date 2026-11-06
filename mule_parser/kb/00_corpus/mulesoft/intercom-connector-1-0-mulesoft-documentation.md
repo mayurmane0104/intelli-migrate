@@ -1,0 +1,62 @@
+# Intercom Connector 1.0 | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/intercom-connector/latest](https://docs.mulesoft.com/intercom-connector/latest)
+
+---
+
+# Intercom Connector 1.0
+
+Anypoint Connector for Intercom (Intercom Connector) synchronizes data and automates business processes between Google Sheets and third-party applications, either on-premises or in the cloud.
+
+Intercom is an enterprise-grade messaging platform to help customers easily learn about the company’s products and contact the service and support teams, via a conversational chatlike interface.
+
+For compatibility information and fixed issues, see the Intercom Connector Release Notes.
+
+## Before You Begin
+
+To use this connector, you must be familiar with:
+
+- 
+The Intercom APIs 
+- 
+Anypoint Connectors 
+- 
+Mule runtime engine (Mule) 
+- 
+Elements and global elements in a Mule flow 
+- 
+Creating a Mule app using Anypoint Studio or Anypoint Code Builder 
+
+Before creating an app, you must have:
+
+- 
+Credentials to access the target resource 
+- 
+Anypoint Studio or Anypoint Code Builder 
+
+## Common Use Cases for the Connector
+
+Automate powerful business processes by integrating Intercom with other IT tools and systems in your enterprise such as messaging, CRM, ITSM and other enterprise systems. Possibilities include:
+
+- 
+Qualify customer leads efficiently by automating a flow where any time a new customer reaches out via Intercom’s chat functionality, a new lead or opportunity is created in Salesforce for a sales representative follow-up. 
+- 
+Enhance customer experience by notifying the relevant teams (such as customer support, product) via Slack or MS Teams instantly any time a customer reaches out with an issue via Intercom’s chat. 
+- 
+Keep all your teams in sync with the most recent and relevant information around a customer synced across Intercom and your other IT systems via bi-directional sync automation. This can be your case data within your customer support system, your new leads data in your CRM system, or issue data in your ITSM system. 
+
+## Authentication Types
+
+Intercom Connector connections use the following authentication methods:
+
+- 
+OAuth 2.0 
+- 
+Unsecure connection provider 
+
+## See Also
+
+- 
+[Use Exchange to Discover Connectors, Templates, and Examples](../../connectors/introduction/intro-use-exchange)
+- 
+[Salesforce Help](https://help.salesforce.com)

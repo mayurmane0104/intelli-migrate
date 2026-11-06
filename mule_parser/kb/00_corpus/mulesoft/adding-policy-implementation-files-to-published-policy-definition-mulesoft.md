@@ -1,0 +1,30 @@
+# Adding Policy Implementation Files to Published Policy Definition | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/exchange/add-policy-implementation-files-to-published-policy-definition](https://docs.mulesoft.com/exchange/add-policy-implementation-files-to-published-policy-definition)
+
+---
+
+# Adding Policy Implementation Files to Published Policy Definition
+
+When a policy definition asset is published in Exchange, the asset details page displays a **Pending** flag next to **Implementations** in the left navigation bar. The flag indicates that the policy implementation has not been added. Add the policy implementation files to the policy definition to enable the policy to be available in runtime. The required implementation files are a binary file such as a WebAssembly (WASM) file for Omni Gateway or JAR for Mule 4 runtime and a YAML metadata file.
+
+Before adding the policy implementation files, ensure that the policy definition asset is in the Stable state.
+
+To add the policy implementation files:
+
+- 
+In Exchange, select the policy asset to open the asset details page. 
+- 
+Click **Implementations**in the left navigation bar.
+- 
+Click **Add implementation**.
+- 
+Enter the name for the implementation. 
+- 
+Click **Choose file**to select the JAR or WebAssembly file.
+- 
+Click **Choose file**to select the YAML file.
+- 
+To edit the GroupId, AssetId, Version, and API version, click **Advanced**.Exchange generates the group ID, asset ID, and version. You can change these values. You can also change an API asset’s version and API version separately. The advanced settings are most often used to change the asset version. 
+- 
+Click **Add implementation**.The implementation displays in the **Manage implementations**table. From this table, manage the implementation versions of a policy asset. See[Manage Versions](manage-versions)for more information.

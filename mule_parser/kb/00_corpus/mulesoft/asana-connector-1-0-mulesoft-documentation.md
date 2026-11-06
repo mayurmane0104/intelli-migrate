@@ -1,0 +1,62 @@
+# Asana Connector 1.0 | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/asana-connector/latest](https://docs.mulesoft.com/asana-connector/latest)
+
+---
+
+# Asana Connector 1.0
+
+Anypoint Connector for Asana (Asana Connector) synchronizes data and automates business processes between Asana and third-party applications, either on-premises or in the cloud.
+
+Asana is a SaaS project management tool that enhances team collaboration. Employees can easily manage projects and tasks through one integrated collaborative project management interface when using Asana.
+
+For compatibility information and fixed issues, see the Asana Connector Release Notes.
+
+## Before You Begin
+
+To use this connector, you must be familiar with:
+
+- 
+The Asana APIs 
+- 
+Anypoint Connectors 
+- 
+Mule runtime engine (Mule) 
+- 
+Elements and global elements in a Mule flow 
+- 
+Creating a Mule app using Anypoint Studio or Anypoint Code Builder 
+
+Before creating an app, you must have:
+
+- 
+Credentials to access the target resource 
+- 
+Anypoint Studio or Anypoint Code Builder 
+
+## Common Use Cases for the Connector
+
+Automate powerful business processes by integrating Asana with other IT tools and systems in your enterprise such as messaging, calendar, and issue triaging systems. Possible uses include:
+
+- 
+Improve cross-team communication by automating a workflow where users get notified (via a messaging system such as Slack) anytime a task or comment is created in Asana. 
+- 
+Enhance sales collaboration by automating the lead tracking and nurturing process where any time a new lead or opportunity is created in your CRM system (such as Salesforce), a task is created and assigned to a user via your Asana dashboard for triaging and tracking. 
+- 
+Help teams stay organized by integrating the team’s calendar with an Asana workspace so that anytime a new team event is created, it gets posted to the Asana workspace. 
+
+## Authentication Types
+
+Asana Connector connections use the following authentication methods:
+
+- 
+OAuth 2.0 
+- 
+Unsecure connection provider 
+
+## See Also
+
+- 
+[Use Exchange to Discover Connectors, Templates, and Examples](../../connectors/introduction/intro-use-exchange)
+- 
+[Salesforce Help](https://help.salesforce.com)

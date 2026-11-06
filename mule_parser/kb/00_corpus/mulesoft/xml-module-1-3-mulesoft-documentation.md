@@ -1,0 +1,46 @@
+# XML Module 1.3 | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/xml-module/latest](https://docs.mulesoft.com/xml-module/latest)
+
+---
+
+# XML Module 1.3
+
+The XML Module process and extracts data from an XML document. Although DataWeave is recommended for most XML-related cases, use the XML Module for cases that involve the usage of XML standards such as XSLT, XPath, and XQuery, or XSD.
+
+For compatibility information and fixed issues, see the XML Module Release Notes.
+
+## Before You Begin
+
+To use this connector, you must be familiar with:
+
+- 
+Anypoint Connectors 
+- 
+Mule runtime engine (Mule) 
+- 
+Elements and global elements in a Mule flow 
+- 
+Creating a Mule app using Anypoint Studio or Anypoint Code Builder 
+
+Before creating an app, you must have access to Anypoint Platform and Anypoint Studio.
+
+## Common Use Cases for the Connector
+
+Common use cases for XML Module include the following:
+
+- 
+Validate documents against an XSD schema 
+- 
+Take XML input and transform it using an XSL style sheet 
+- 
+Evaluate Xpath expressions in XML input content and extract the result 
+- 
+Take XML input content and transform it based on XQuery expressions 
+
+## See Also
+
+- 
+[Use Exchange to Discover Connectors, Templates, and Examples](../../connectors/introduction/intro-use-exchange)
+- 
+[Salesforce Help](https://help.salesforce.com)

@@ -1,0 +1,11 @@
+# Welcome - Amazon CloudWatch Application Insights
+
+**Source:** [https://docs.aws.amazon.com/cloudwatch/latest/APIReference/index.html](https://docs.aws.amazon.com/cloudwatch/latest/APIReference/index.html)
+
+---
+
+Amazon CloudWatch Application Insights is a service that helps you detect common problems with your applications. It enables you to pinpoint the source of issues in your applications (built with technologies such as Microsoft IIS, .NET, and Microsoft SQL Server), by providing key insights into detected problems.
+
+After you onboard your application, CloudWatch Application Insights identifies, recommends, and sets up metrics and logs. It continuously analyzes and correlates your metrics and logs for unusual behavior to surface actionable problems with your application. For example, if your application is slow and unresponsive and leading to HTTP 500 errors in your Application Load Balancer (ALB), Application Insights informs you that a memory pressure problem with your SQL Server database is occurring. It bases this analysis on impactful metrics and log errors.
+
+This document was last published on June 15, 2026.

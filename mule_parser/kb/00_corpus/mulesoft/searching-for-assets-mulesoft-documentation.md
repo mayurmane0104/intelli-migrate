@@ -1,0 +1,195 @@
+# Searching for Assets | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/exchange/to-find-info](https://docs.mulesoft.com/exchange/to-find-info)
+
+---
+
+Enum
+
+# Searching for Assets
+
+The Exchange catalog of assets can display hundreds of assets that help developers discover assets to create projects quickly and drive adoption of best practices and reuse. You can find assets from MuleSoft’s ecosystem or your own organization. Based on your permission group, you can search multiple business groups, documentation, tags, custom attributes, and details from API specifications.
+
+To help find assets, searches can be refined using search terms like a name of an API, by filters like organizations, categories, tags, and lifecycle states, or by ranking.
+
+Anypoint Exchange search looks for terms in:
+
+- 
+Each asset’s name 
+- 
+Description 
+- 
+Contact name and email 
+- 
+Tags 
+- 
+Categories 
+- 
+The content of the asset portal pages 
+- 
+Properties defined in RAML and OAS API specifications 
+
+## Search By Keyword
+
+Use the **Search assets** box to find assets by keyword.
+
+When you publish an agent network project to Exchange, it creates and updates the assets contained in the project and automatically tags brokers for easy identification.
+
+![The Search assets box](_images/exchange-search-assets-box.png)
+
+
+Keywords can be the following asset information:
+
+- 
+Each asset’s name 
+- 
+Description 
+- 
+Contact name and email 
+- 
+Tags 
+- 
+Categories 
+- 
+The content of the asset portal pages 
+- 
+Properties defined in RAML and OAS API specifications 
+
+To find assets using keywords:
+
+- 
+From the Exchange landing page, enter a keyword in the **Search assets**field, for example**MuleSoft**and press Enter or Return depending on your keyboard.A list of assets display that contain the keyword. 
+- 
+To clear the keyword from the **Search assets**field, click**X**.
+
+The following image is an example search results using the search keyword **MuleSoft**. The search keyword is highlighted in the results.
+
+![Search results with the keyword MuleSoft highlighted](_images/exchange-new-search.png)
+
+
+To find agents that are brokers, search the Exchange catalog using the keyword `broker`.
+
+## Filter Search Results
+
+You can use the following filters to refine your search results.
+
+![The search refinement filters](_images/ex-filters.png)
+
+
+- 
+Type Types can be agents, AsyncAPIs, connectors, LLM, MCP, REST APIS, rulesets, and more. See [Asset Types](asset-types)for more details. The list of asset types that display depends on which types are available in a business group.
+- 
+Organization Business groups that you have permission to view those assets. 
+- 
+Category Categories are specific groupings of assets set by the administrator of a business group or an organization owner. 
+- 
+Tag Keyword or term that describes a specific search. 
+- 
+Lifecycle state Lifecycle state can be stable, deprecated, or development. 
+- 
+Custom field Custom fields are specific metadata fields set by the administrator of a business group or organization owner. 
+
+Filter options appear when they are available within an organization.
+
+If a filter has more than 50 values, the search results display the top 50, sorted in descending order by frequency. If you need to see more values, select the filter and enter a keyword in the search box. The search will then show the top 50 values that match your keyword, using the same sorting criteria.
+
+### Filter By Type, Organization, Category, Tag, and Lifecycle State
+
+- 
+In the Exchange landing page, select a filter option. 
+- 
+To find an option from a long list, use the scroll bar or enter a search term. 
+- 
+Click one or more options from the menu and click **Apply**.
+- 
+To clear a filter option, click **Clear filter**.
+- 
+To clear all filter options, click **Clear all filters**.
+
+### Filter By Custom Fields
+
+Custom fields are created by Exchange administrators and organization owners using the Exchange API to extend the Exchange asset metadata model and add custom data to any type of asset. Assets can be filtered by custom fields to refine a search using preset information. The custom field filter is available only when assets in your organization have custom fields.
+
+For more information about creating custom fields for assets, see [Manage Custom Fields](to-manage-custom-fields).
+
+Custom fields use the following data types:
+
+| Data Type | Operator | 
+|---|---|
+| Contains and not contains | |
+| Number | Equals, not equals to, greater than, less than, greater than or equal to, and less than or equal to | 
+| Date | Equals, not equals to, greater than, less than, greater than or equal to, and less than or equal to | 
+| Text | Equals and not equals to | 
+| List of numbers | Contains and not contains | 
+| List of strings | Contains and not contains | 
+
+| The contains and not contains operators check whether a specific value exactly matches an item in an enum or list-based field assigned to an asset. These operators perform a full match, not a partial match. For example, the value `Prod1`is contained in the list of environments (Prod1, Prod", and Prod3); the value`Prod`is not contained in the list of environments (Prod1, Prod2, and Prod3). | 
+
+Use the preset operators to filter the search results. The values of the operators can be changed and customized. For example, you can select a date from the list of the values or add a date by entering a custom date in the defined format (YYYY-MM-DD). The customized value shows in the list of options as freeform. You can add as many custom fields as you need.
+
+The following example shows the search filter with two custom fields:
+
+![Search filter using two custom fields](_images/ex-custom-field-operator-value.png)
+
+
+To filter a search using custom fields:
+
+- 
+In the landing page, click **Any custom field**.
+- 
+Use the scroll bar or enter the name of the custom field to find an option in a long list. 
+- 
+Select a custom field option from the list. 
+- 
+If you want to change the operator, select a operator from the drop-down list. 
+- 
+Click **Select value(s)**and select a value for the operator from the list or enter a custom value. You can select more than one value.
+- 
+If you want to add more custom fields to further filter the search, click **Add Custom Field**and select an option from the list.
+- 
+If you want to delete a custom field from the search filter, click the trash can icon. 
+- 
+If you want to clear the selected filter options, click **Clear filter**.
+- 
+Click **Apply**to apply the custom field filter.The search results show assets with the custom fields criteria. 
+
+## Sort Search Results
+
+You can sort the ranking of search results. Assets can be sorted by the following options:
+
+- 
+Relevance Sorts the matching results by where a match is found in the asset metadata, such as name, title, pages, and API specification metadata. API specification metadata includes endpoints and types. A search term must be entered to see the **Relevance**option in the**Sort by**list. When you search by a term, assets are sorted by**Relevance**by default.
+- 
+Name Sorts by asset name in ascending alphabetical order. 
+- 
+Last modified Sorts the results by the most recently modified assets at the top, for example, the latest published assets or assets that have new versions recently added. This is the default for all business groups except assets that are provided by MuleSoft. 
+- 
+Featured Sorts by placing a featured selection of assets at the top of the results. This is the default order for the Provided by MuleSoft and Global Exchange. Other assets that are not featured assets are ordered by last modified. The sorting options appear when they are available within an organization. 
+
+To sort the ranking of search results, use the **Sort by** drop-down menu to select an option: Relevance, Name, Last modified, Rating, Relevance, or Featured.
+
+![The Sort by filter](_images/ex-sort-by-filter.png)
+
+
+## Save a Search
+
+Find assets quickly by saving frequently used search queries for yourself or for your business group. Saved searches display in the navigation pane.
+
+Exchange lists search terms specific to your business group. The example shows saved searches:
+
+![An example of two saved search groups](_images/ex2-saved-searches-groups.png) 
+
+To save a search:
+
+- 
+From the Exchange landing page, enter a search term or select options from a filter, then click **Save this Search**.
+- 
+When prompted, give the search a name and select to save the search as personal search or an organization search. Administrators can save searches visible to anyone in their current business group. Personal searches are visible only to the person who creates them. 
+- 
+Click **Save search**.
+- 
+Confirm that your search appears in the saved searches in the left navigation bar. 
+- 
+If you want to rename a saved search, click the three dots and select **Rename**.
+- 
+If you want to delete a saved search, click the three dots and select **Delete**.

@@ -1,0 +1,234 @@
+# Define DataWeave Functions | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/dataweave/latest/dataweave-functions](https://docs.mulesoft.com/dataweave/latest/dataweave-functions)
+
+---
+
+fun myFunction(param1, param2, ...) = <code to execute>
+
+# Define DataWeave Functions
+
+You can define your own DataWeave functions using the `fun` declaration in the header of a DataWeave script.
+
+## DataWeave Function Definition Syntax
+
+To define a function in DataWeave use the following syntax:
+
+- 
+The `fun`keyword starts the definition of a function.
+- 
+`myFunction`is the name you define for the function.Function names must be valid identifiers. For additional details about valid identifiers, see [Rules for Declaring Valid Identifiers](dataweave-language-introduction#valid-identifiers).
+- 
+`(param1, param2, … , paramn)`represents the parameters that your function accepts.You can specify from zero to any number of parameters, separated by commas ( `,`) and enclosed in parentheses.
+- 
+The `=`sign marks the beginning of the code block to execute when the function is called.
+- 
+`<code to execute>`represents the actual code that you define for your function.
+
+## Example Function Definitions
+
+The following example defines a DataWeave function that accepts a single string argument, calls the `upper` function using the received string argument, and then outputs the result:
+
+```
+%dw 2.0
+output application/json
+fun toUpper(aString) = upper(aString)
+---
+toUpper("hello")
+```
+dataweave"HELLO"
+
+The next example shows how the argument to a DataWeave function can be any DataWeave expression:
+
+```
+%dw 2.0
+output application/json
+fun toUpper(aString) = upper(aString)
+---
+toUpper("h" ++ "el" ++ lower("LO") )
+```
+dataweave"HELLO"
+
+The following example tests the type of the argument passed to the function by performing [pattern matching](dataweave-pattern-matching) with the built-in `match` operation:
+
+```
+%dw 2.0
+output application/json
+fun toUpper(aString)
+= aString match {
+  case is String -> upper(aString)
+  else -> null
+}
+---
+toUpper("h" ++ "el" ++ lower("LO") )
+```
+dataweave"HELLO"
+
+This example creates a function that reformats a numeric string into a common phone number format:
+
+```
+%dw 2.0
+output application/json
+fun toPhoneFormat(str: String) =
+    "(" ++ str[0 to 2] ++ ") " ++ str[3 to 5] ++ "-" ++ str[6 to 9]
+---
+toPhoneFormat("1234567890")
+```
+dataweave"(123) 456-7890"
+
+## Type Constraint Definition
+
+You can define type constraint expressions when you declare functions to ensure that the arguments for a function call respect the defined type constraint.
+
+To define type constraints for functions, use the following syntax:
+
+fun myFunction(param1: Type, param2: Type): ResultType = <code to execute>
+
+%dw 2.0 output application/json fun toUser(id: Number, userName: String): String = "you called the function toUser!"
+
+In this example, the type constraints define that the function `toUser` accepts only a first argument of type `Number` and a second argument of type `String`.
+
+Also, the function specifies a constraint for the result to be of type `String`. This return type constraint does not affect the function call; rather, this constraint applies to the function code to validate that the function generates a result of the defined type.
+
+You can find more details about the DataWeave type system in [https://docs.mulesoft.com/dataweave/latest/dataweave-type-system](https://docs.mulesoft.com/dataweave/latest/dataweave-type-system).
+
+## Optional Parameters Definition
+
+You can define optional parameters by assigning a default value to them. The following example shows a function that defines one parameter that is mandatory (`name`) and a second parameter that is optional (`countryCode`) and has a default value:
+
+```
+%dw 2.0
+output application/json
+fun createUserData(name, countryCode = "US") = { "User name" : name, "Location": countryCode}
+---
+[createUserData("Cristian", "AR"), createUserData("Max The Mule")]
+```
+dataweave```
+[
+  {
+    "User name": "Cristian",
+    "Location": "AR"
+  },
+  {
+    "User name": "Max The Mule",
+    "Location": "US"
+  }
+]
+```
+### Optional Parameter Order
+
+DataWeave enables you to define optional parameters at the beginning or at the end of the parameter definition:
+
+```
+%dw 2.0
+output application/json
+fun optionalParamsLast(a, b = 2, c = 3)
+fun optionalParamsFirst(a = 1, b = 2, c)
+```
+dataweaveWhen you call a function, the arguments are assigned from left to right. However, if you define optional parameters first, then the arguments are assigned from right to left. In addition, if all the parameters in a function are optional, the assignment is also from right to left:
+
+```
+%dw 2.0
+output application/json
+fun optionalParamsLast(param1, param2 = 2, param3 = 3) =
+    { "param1": param1, "param2": param2, "param3": param3}
+fun optionalParamsFirst(param1 = 1, param2 = 2, param3) =
+    { "param1": param1, "param2": param2, "param3": param3}
+fun allParametersOptional(param1 = 1, param2 = 2, param3 = 3) =
+    { "param1": param1, "param2": param2, "param3": param3}
+---
+{
+  "optionalParamsLast(A)":optionalParamsLast('A'),
+  "optionalParamsLast(A, B)":optionalParamsLast('A', 'B'),
+  "optionalParamsLast(A, B, C)":optionalParamsLast('A', 'B', 'C'),
+  "optionalParamsFirst(A)":optionalParamsFirst('A'),
+  "optionalParamsFirst(A, B)":optionalParamsFirst('A', 'B'),
+  "optionalParamsFirst(A, B, C)":optionalParamsFirst('A', 'B', 'C'),
+  "allParametersOptional(A)":allParametersOptional('A'),
+  "allParametersOptional(A, B)":allParametersOptional('A', 'B'),
+  "allParametersOptional(A, B, C)":allParametersOptional('A', 'B', 'C')
+}
+```
+dataweave```
+{
+  "optionalParamsLast(A)": {
+    "param1": "A",
+    "param2": 2,
+    "param3": 3
+  },
+  "optionalParamsLast(A, B)": {
+    "param1": "A",
+    "param2": "B",
+    "param3": 3
+  },
+  "optionalParamsLast(A, B, C)": {
+    "param1": "A",
+    "param2": "B",
+    "param3": "C"
+  },
+  "optionalParamsFirst(A)": {
+    "param1": 1,
+    "param2": 2,
+    "param3": "A"
+  },
+  "optionalParamsFirst(A, B)": {
+    "param1": 1,
+    "param2": "A",
+    "param3": "B"
+  },
+  "optionalParamsFirst(A, B, C)": {
+    "param1": "A",
+    "param2": "B",
+    "param3": "C"
+  },
+  "allParametersOptional(A)": {
+    "param1": 1,
+    "param2": 2,
+    "param3": "A"
+  },
+  "allParametersOptional(A, B)": {
+    "param1": 1,
+    "param2": "A",
+    "param3": "B"
+  },
+  "allParametersOptional(A, B, C)": {
+    "param1": "A",
+    "param2": "B",
+    "param3": "C"
+  }
+}
+```
+## Type Parameters Definition
+
+DataWeave function definitions support the use of type parameters, which are similar to generics in some programming languages.
+
+`%dw 2.0 output application/json fun toArray<T>(x: T): Array<T> = [x] --- toArray(2)`dataweace
+
+DataWeave also supports adding type parameter constraints, which limit accepted inputs for a function.
+
+`%dw 2.0 output application/json fun getName<T <: { name: String }>(x: T): String = x.name --- { name: getName({ name: "Andrés" }) //name: getName({ age: 20 }) invalid call as the parameter does not fullfill the constraint }`dataweace
+
+## Function Overloading
+
+DataWeave enables you to create multiple functions with the same name but different parameters. This feature is useful for defining different behaviors based on the arguments of a function call.
+
+Parameters in overloaded functions differ in number or type. To understand more about defining type constraints on function parameters, see [Type System](dataweave-type-system).
+
+DataWeave uses the first function it finds that accepts the arguments of the function call, based on the order in which the functions are declared in the script.
+
+```
+%dw 2.0
+output application/json
+fun toUpper(a: String) = upper(a)
+fun toUpper(a: Any) = null
+fun toUpper(a: String, b: Number) = upper(a) ++ b as String
+---
+toUpper("hi!")
+```
+dataweaveThe argument of the function call `toUpper("hi!")` matches the types String and Any, so it is possible to call the function with the first two definitions. However, DataWeave executes the function `fun toUpper(a: String) = upper(a)` because that function is defined before the one that uses the type Any.
+
+"HI!"
+
+null
+
+"AGE: 26"

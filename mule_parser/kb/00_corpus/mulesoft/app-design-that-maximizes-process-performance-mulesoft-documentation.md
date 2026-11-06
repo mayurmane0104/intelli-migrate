@@ -1,0 +1,235 @@
+# App Design That Maximizes Process Performance | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/mule-runtime/latest/tuning-app-design](https://docs.mulesoft.com/mule-runtime/latest/tuning-app-design)
+
+---
+
+```
+<set-variable value='"Hello"' doc:name="Set Variable" variableName="hello"/>
+<set-variable value='"world!"' doc:name="Set Variable" variableName="world"/>
+```
+xml# App Design That Maximizes Process Performance
+
+As you design your applications, consider the following best practices for enhancing processing performance. These practices include guidelines on choosing a Mule runtime engine (Mule) version, avoiding certain app design issues, and specific settings for using Mule components and connectors.
+
+## Mule Runtime Engine Version
+
+Before you start tuning your application, review the following Mule version recommendations:
+
+- 
+Use the latest Mule version to create and run the application. 
+- 
+Update your application dependencies to the latest version so you take advantage of the recent performance improvements and bug fixes. 
+- 
+Update to the latest version of the Mule patch whenever possible. 
+- 
+When developing and testing an application, use the same Mule version as used to deploy that application in your environments. 
+
+## Tips to Design for Enhanced Processing Performance
+
+As you design your apps, consider the following recommendations to increase performance:
+
+- 
+Instead of repeatedly using the Java module to reuse code such as Java libraries, create an SDK module with operations that wrap Java invocations. 
+- 
+Use DataWeave to transform or enrich data, and create payloads instead of custom scripting code such as Java and Groovy. 
+- 
+Avoid sequences of `set-variable/set-payload`components such as in the following example:Instead, combine them into a single `ee:transform`operation that avoids generating a new event for each component:`<ee:transform doc:name="Transform Message" > <ee:variables > <ee:set-variable variableName="hello" ><![CDATA[%dw 2.0 output application/json --- "Hello"]]></ee:set-variable> <ee:set-variable variableName="world" ><![CDATA[%dw 2.0 output application/json --- "world"]]></ee:set-variable> </ee:variables> </ee:transform>`xml
+- 
+Avoid using store transient values in `set-variable`, as shown in the following example:`<flow name="FileComponentWithsetVariableFlow" doc:id="daa9e38a-bb8c-4c87-a4c0-ba2dd90316b2" > <set-variable value="#['file_path/' ++ attributes.queryParams['filename']]" doc:name="Set Variable" doc:id="cf876447-12a6-4267-9b26-5e849153142c" variableName="fileName"/> <file:read doc:name="Read" doc:id="e4ad1ad4-0edb-45c9-ab43-d7f07effa277" path="#[vars.fileName]"/> </flow>`xmlInstead, move these values into components that need them: `<flow name="FileComponentWithoutsetVariableFlow" doc:id="0d44d155-cabe-4a79-99e4-81de22743edb" > <file:read doc:name="Read" doc:id="09dfb229-67fd-4508-862f-489c123527ba" path="#['file_path/' ++ attributes.queryParams['filename']]"/> </flow>`xml
+- 
+Avoid creating property resolvers, which require using DataWeave for every event and thereby increase process overhead: `<flow-ref name="#[p(someProp) default p(otherProp)]"/>`xmlInstead, place DataWeave logic in a property placeholder and use a static flow reference: `<flow-ref name="${propertyContainer.propertyName}"/>`xml
+
+## Avoid Recursive Flow References
+
+Using `flow-ref` to create recursive patterns (a flow that calls itself, or mutual recursion between flows) is an antipattern that can lead to resource exhaustion and should be replaced with iterative constructs.
+
+### Why Recursion Is Problematic
+
+The Mule runtime maintains a flow call stack for each event being processed. Each `flow-ref` invocation adds an entry to this stack. When the stack depth limit is exceeded, the runtime raises a `CRITICAL` error that can’t be handled by error handlers.
+
+Additionally, extremely long flows with many processors generate deeply nested internal execution chains. When these flows are combined with recursive patterns or very deep call chains, the accumulated nesting can exhaust the JVM thread stack and produce a `StackOverflowError` or `VirtualMachineError`, which leaves the runtime in an inconsistent state (see [What Happens After a FATAL_JVM_ERROR](mule-error-concept#fatal_jvm_errors)).
+
+### Antipattern: Recursive Flow-Ref
+
+This example is an antipattern because it creates a recursive pattern by calling the same flow repeatedly.
+
+```
+<!-- ANTIPATTERN: Do NOT do this -->
+<flow name="process-items">
+  <choice>
+    <when expression="#[sizeOf(payload) > 0]">
+      <!-- process first item -->
+      <set-payload value="#[payload[1 to -1]]"/>
+      <!-- recursive call to self -->
+      <flow-ref name="process-items"/>
+    </when>
+  </choice>
+</flow>
+```
+xml### Recommended Alternatives
+
+| Use Case | Recommended Pattern | 
+|---|---|
+| Process each item in a collection | Use  | 
+| Process items in large datasets | Use  | 
+| Retry an operation | Use  | 
+| Poll until a condition is met | Use a source-based polling trigger (for example, a Scheduler with a watermark). | 
+| Paginated API calls | Use connector-native pagination or a  | 
+| Complex iterative logic that can’t be expressed using built-in scopes | Implement a custom router by using the  | 
+
+### Example: Replace Recursion with For Each
+
+This example shows how to replace recursion with a For Each scope.
+
+```
+<!-- CORRECT: Iterative processing -->
+<flow name="process-items">
+  <foreach collection="#[payload]">
+    <!-- process each item -->
+  </foreach>
+</flow>
+```
+xml### Keep Flows Short
+
+Beyond avoiding recursion, keep individual flows at a reasonable length. Flows with hundreds of processors generate deep internal execution chains. If a flow grows too large, split it into smaller flows and invoke the flows with `flow-ref`. Unlike subflows, which are inlined at execution time and don’t reduce internal nesting, separate flows introduce independent execution chains and reset internal nesting depth. This helps prevent stack overflow conditions while improving readability and maintainability.
+
+## Components and Connectors Best Practices
+
+When designing your apps using Mule components and connectors, consider the following recommendations to enhance the performance.
+
+### APIkit
+
+To improve performance, disable APIkit validations. If payload validations are required, APIkit validates input requests against API specification.
+
+### DataWeave
+
+When using DataWeave, consider the following ways to improve performance:
+
+- 
+If payloads are large, include `indent=false`to improve client parsing and reduce response size.
+- 
+Define `content-type`to avoid verbose messages in the log.
+- 
+Use inline DataWeave scripts during development and then move them to an external file to have a clean XML and reusable scripts. 
+- 
+Do not log complex DataWeave expressions with every request. 
+- 
+Avoid patterns of iterating over a collection and then transforming each individual item: `<foreach> <ee:transform > <ee:message > <ee:set-payload ><![CDATA[%dw 2.0 output application/json --- payload mapObject (value, key) -> { (upper(key)): value } ]]></ee:set-payload> </ee:message> </ee:transform> ... </foreach>`xmlInstead, transform the entire collection and iterate later: `<ee:transform> <ee:message > <ee:set-payload ><![CDATA[%dw 2.0 output application/json --- payload map (item, index) -> { book: item mapObject (value, key) -> { (upper(key)): value } } ]]></ee:set-payload> </ee:message> </ee:transform> <foreach> ... </foreach>`xml
+
+### Validator
+
+Use Validator Module instead of throwing exceptions with Groovy Scripts.
+
+### HTTP and HTTPS
+
+For HTTP and HTTPS, consider the following recommendations:
+
+- 
+Use the authentication mechanisms provided by Anypoint Connector for HTTP (HTTP Connector) instead using manual authentications such as manually generating the Basic auth header with a DataWeave expression. 
+- 
+If HTTPS is required, use the HTTPS Listener with a TLS Context reference, configuring the keystore with key-pair values generated with Keytool. 
+ You can avoid HTTPS configuration if the SSL can also be terminated at the Load Balancer level when using a dedicated load balancer in CloudHub or if there is an on-premises load balancer for hybrid scenarios:`<tls:context name="TLS_Context" doc:name="TLS Context"> <tls:key-store type="jks" path="company-keystore.jks" alias="${jks.alias}" keyPassword="${jks.key.password}" password="${jks.password}"/> </tls:context>`xml
+
+### Database
+
+Use parameterized queries. If you must use dynamic queries, remember to validate inputs first. Using dynamic queries could cause SQL-Injection vulnerability.
+
+### File Connector
+
+Instead of using a transform component for the transformation in the write operation, use a DataWeave expression. This avoids message payload changes that occur after the write operation, as shown in the following example:
+
+```
+<file:write path="output.csv">
+ <file:content>#[%dw 2.0
+                 output application/csv
+                 ---
+                 payload.customers.email
+               ]
+ </file:content>
+</file:write>
+```
+xmlUse the recursive parameter to list files and folders within subfolders:
+
+`<file:list config-ref="File_Config" directoryPath="relativePath" recursive="true" />`xml### Web Service Consumer Connector
+
+To import WSDLs including all references (XSDs) in your project, use Anypoint Connector for Web Service Consumer (Web Service Consumer Connector) and point the configuration to the local WSDL.
+
+### AMQP Connector
+
+Because the server constrains the performance and configuration of Anypoint Connector for AMQP (AMQP Connector), when you investigate performance issues, explore the server-side configuration to determine if consume or publish parameters have an impact on performance.
+
+#### Consume Parameters
+
+Review consume parameters that can have an impact on performance.
+
+##### Number of Consumers
+
+Setting the number of consumers for an AMQP configuration and the Listener source determines how many consumers are spawned by the source and receive AMQP messages concurrently, as each consumer creates and uses a different channel.
+
+Message throughput depends on the number of consumers, becoming greater as the number of consumers increases. However, throughput is also affected by the performance characteristics of the flow.
+
+##### ACK Mode Parameter
+
+ACK mode determines the acknowledgment mode to use when consuming from the AMQP broker. You set acknowledgment mode (ACK) at the configuration level (using the **Consumer** tab), but Listener and consume operations can override this mode.
+
+There are three acknowledgment modes:
+
+- 
+`AUTO`
+ Use Automatic to acknowledge a received message automatically only if the flow execution finishes successfully.
+- 
+`MANUAL`
+ Use Manual if you want the app logic to control message acknowledgment.
+- 
+`IMMEDIATE`
+ Use Immediate when you want to acknowledge messages as your app consumes them, before processing them.
+
+Note that if a transaction is opened in the channel, the ACK mode parameter is overruled and the commit automatically process the message acknowledgment and the rollback automatically process the recovery.
+
+##### Quality of Service Tab
+
+You set QoS parameters at the configuration level (using the **Quality of Service** tab), with 0 representing an unlimited value. A Listener operation can override this setting.
+
+These are the parameters:
+
+- 
+Prefetch Size 
+ Defines a prefetch size window. The broker sends as many messages as possible without exceeding the prefetch size window in octets (bytes).
+- 
+Prefetch Count 
+ Specifies a global prefetch window in terms of the maximum number of whole messages. You can use this parameter in combination with the`prefetch-size`parameter to send a message in advance only it both prefetch windows sizes allow it.
+
+##### ACK Mode and Prefetch
+
+The acknowledgment mode and QoS prefetch value that you choose have a significant effect on consumer throughput. In general, increasing the prefetch value and choosing Immediate acknowledgment mode yield the best possible rate of delivery. However, with both choices the number of delivered but not yet processed messages also increases, thereby increasing consumer RAM consumption
+
+Automatic acknowledgement mode or Manual acknowledgment mode with unlimited prefetch should be used with care. Consumption of a lot of messages without acknowledgement leads to increased memory consumption on the broker node. Finding a suitable prefetch value is a matter of trial and error and can vary from workload to workload.
+
+#### Publish Parameters
+
+Set the following parameters at the configuration level, using the **Publisher** tab. Publish and Publish-consume operations can override these parameters. Depending on your use case, you might need to enable only one of these parameters.
+
+##### Delivery Mode Parameter
+
+Setting this parameter determines the delivery mode used to publish to the AMQP broker. Possible parameters values are:
+
+- 
+`PERSISTENT`
+ Delivered messages to durable queues are logged to disk on the broker.
+- 
+`TRANSIENT`
+ Delivered messages are not logged.
+
+The broker is responsible for the implementation of the recordable storage mechanism for persistent messages. The impact of this feature on performance depends on the AMQP server.
+
+##### Request Broker Confirm Parameter
+
+If the broker provides no confirmation, setting this parameter determines whether the operation fails. Using this parameter adds one extra communication between the broker and the client per message published.
+
+## See Also
+
+- 
+[SQL Injection](https://owasp.org/www-community/attacks/SQL_Injection)
+- 
+[Finding bottlenecks with RabbitMQ 3.3](https://www.rabbitmq.com/blog/2014/04/14/finding-bottlenecks-with-rabbitmq-3-3/)

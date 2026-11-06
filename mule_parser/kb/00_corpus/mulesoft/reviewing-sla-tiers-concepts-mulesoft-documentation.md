@@ -1,0 +1,88 @@
+# Reviewing SLA Tiers Concepts | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/api-manager/latest/defining-sla-tiers](https://docs.mulesoft.com/api-manager/latest/defining-sla-tiers)
+
+---
+
+X-RateLimit-Limit: 20 X-RateLimit-Remaining: 14 X-RateLimit-Reset: 19100
+
+# Reviewing SLA Tiers Concepts
+
+A Service Level Access (SLA) tier is a category of user access that you define for an instance. The tier definition combined with an SLA-based policy determines whether access at a certain level requires your approval. The tier definition also can limit the number of requests an application can make to the instance. To enforce SLA tiers, you need to apply a rate-limiting or throttling policy that is SLA-based.
+
+To define SLA tiers for a version of an instance (for example, an API) or to manage applications that request access to specific tiers, you need to set the instance URL.
+
+You can monitor SLA performance to ensure that your instances are performing in line with the SLA tier approved for them.
+
+## Defining a Tier
+
+When you define a tier, you name the tier and define limits, such as the number of requests calling apps can make. You also indicate whether application access requests at this tier level should be automatically approved or require manual approval.
+
+On the SLA Tiers section of the instance details page, a summary of the SLA tier definition appears showing how many applications are registered on that tier and other information, such as tier name, limits, status, and required approval type.
+
+You can edit and delete the tier using the provided controls.
+
+### Layered SLAs
+
+API Manager supports multiple SLA limits.
+
+You can set multiple throughput limits for a single SLA tier. For example, a single SLA tier named *gold* can limit requests to 100 per second as well as limiting requests to 10,000 per day.
+This technique ensures that applications registered on a *gold* tier don’t exceed a bursting limit of 100 requests per second. Applications do not overwhelm the instance, and registered applications get the expected 10,000 requests per day.
+
+Setting the Visible flag on an SLA hides the first limit from application developers at registration time. If you define only one limit, you cannot hide it.
+
+#### Response Headers
+
+Three headers are included in request responses that inform users about the SLA restrictions and the remaining spare capacity that the SLA allows. When multiple SLA-based policies are in place, the headers report spare capacity for only the most restrictive policy.
+
+For example, a user may receive a response that includes these headers:
+
+In this case, the response tells users that within the next 19100 milliseconds, only 14 more requests are allowed by the SLA, which is set to allow 20 within this time window.
+
+## Enforcing a Tier
+
+To enforce SLA tiers, you need to apply a rate-limiting or throttling policy that is SLA-based. These policies require all applications that consume the instance to register for access to a specific tier, then pass their client credentials in calls, so that Anypoint Platform can identify them, associate them with their contracted tier, and enforce the throughput limitation.
+
+## Editing a Tier
+
+If you edit a tier that already has applications approved to use it, those applications are immediately held to the terms of the edited tier. Thus, if you change the throughput values without warning, you might inconvenience users.
+
+If you originally set the tier to require manual approval, and change it to allow automatic approvals, API Manager grants any pending approval requests.
+
+## Managing Applications
+
+After you define an SLA for an instance, you can approve or revoke access requests from app developers through the Exchange Portal. This action binds consumption of the application to an SLA.
+
+If a developer requests access at a higher SLA tier than you want to approve, you can override the request by applying another SLA tier.
+
+If you set the tiers for manual approval, email notifications are sent when developers request access for their applications. You can review the applications on the instance details page and approve, reject, or revoke requests. If a developer asks to change tiers, you can also review the change request and approve the application for the new tier or reject the change request.
+
+## Deprecate a Tier
+
+After you assign applications to SLA tiers, you have the option to deprecate a tier to prevent developers from signing up new applications for that tier. You cannot delete an SLA tier that has applications assigned to it.
+
+To deprecate a tier:
+
+- 
+Create a new tier and notify application owners of the new tier name. 
+- 
+Revoke application access to the existing, deprecated tier. 
+- 
+Ask the application owners to re-request access using the new tier. 
+
+## Delete a Tier
+
+After all application owners sign up for a new tier and you approve their move to the new tier, you can delete the deprecated tier.
+
+To delete a tier:
+
+- 
+Navigate to **Anypoint Platform**>**API Manager**.
+- 
+In the menu, select **API Instances**or**Agent & Tool Instances**
+- 
+Click on an instance name. 
+- 
+On the instance dashboard, select **SLA Tiers**from the menu.
+- 
+For the tier to delete, select **Delete**from the**More actions**menu.

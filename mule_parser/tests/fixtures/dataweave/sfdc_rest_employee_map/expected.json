@@ -1,0 +1,20 @@
+{
+  "records": [
+    {
+      "EMP_ID": "E1",
+      "EMP_NAME": "Ann",
+      "EMP_SAL": 95000,
+      "EMP_ADDRESS": "1 Main St",
+      "EMP_PHONE": "555-0100",
+      "EMP_EMAIL": "ann@example.com"
+    },
+    {
+      "EMP_ID": "E2",
+      "EMP_NAME": "Ben",
+      "EMP_SAL": 87000,
+      "EMP_ADDRESS": "2 Oak Ave",
+      "EMP_PHONE": "555-0101",
+      "EMP_EMAIL": "ben@example.com"
+    }
+  ]
+}

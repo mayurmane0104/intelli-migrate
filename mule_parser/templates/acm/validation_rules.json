@@ -1,0 +1,4 @@
+{
+  "required_terms": ["AWS::CertificateManager::Certificate", "acm.Certificate"],
+  "forbidden_terms": ["ECS", "AppFlow", "Amazon MQ", "MSK", "Glue", "DynamoDB", "EMR", "Batch"]
+}

@@ -1,0 +1,12 @@
+{
+  "id": "static_object_concat",
+  "description": "Static object with literal ++ attributes concat field",
+  "function_name": "transform_account",
+  "output_format": "application/json",
+  "script": "%dw 2.0\noutput application/json\n---\n{\n\t\"AccountId\": ((\"01axx000003MLytAAG\" default \"\") ++ attributes.uriParams.autoLoanId),\n\t\"AccountName\": \"Salesforce.com\"\n}",
+  "compare": {
+    "records": true,
+    "record_order": true,
+    "body": false
+  }
+}

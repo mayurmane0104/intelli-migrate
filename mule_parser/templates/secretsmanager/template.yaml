@@ -1,0 +1,6 @@
+Resources:
+  {{resource_prefix}}Secret:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      Name: mule-migration/{{resource_prefix}}
+      Description: Migrated Mule secret reference

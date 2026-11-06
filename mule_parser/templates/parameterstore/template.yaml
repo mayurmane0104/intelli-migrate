@@ -1,0 +1,7 @@
+Resources:
+  {{resource_prefix}}Parameter:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: /{{resource_prefix}}/config
+      Type: String
+      Value: REPLACE_AT_DEPLOYMENT

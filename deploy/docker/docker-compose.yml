@@ -1,0 +1,127 @@
+# Migration Studio — production (Docker Hub → EC2)
+#
+# On EC2 (~/migration-studio/):
+#   1. Copy .env.example → .env and fill in values
+#   2. export IMAGE=yourdockerhubuser/migration-studio:latest
+#   3. docker compose pull && docker compose up -d
+#   4. Open http://YOUR_EC2_PUBLIC_IP  (port 80)
+#
+# Build & push (on your laptop, from repo root):
+#   docker build -f deploy/docker/Dockerfile -t yourdockerhubuser/migration-studio:latest .
+#   docker push yourdockerhubuser/migration-studio:latest
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: migration_studio
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d migration_studio"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  chromadb:
+    image: chromadb/chroma:0.6.3
+    restart: unless-stopped
+    volumes:
+      - chroma_data:/chroma/chroma
+    environment:
+      ANONYMIZED_TELEMETRY: "FALSE"
+      ALLOW_RESET: "TRUE"
+    healthcheck:
+      # curl is built into the chromadb image – no Python process overhead.
+      # /api/v2/heartbeat is the canonical endpoint in ChromaDB 0.6+.
+      test:
+        [
+          "CMD",
+          "curl",
+          "--silent",
+          "--fail",
+          "--max-time", "4",
+          "http://127.0.0.1:8000/api/v2/heartbeat",
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  rabbitmq:
+    image: rabbitmq:3.13-management-alpine
+    restart: unless-stopped
+    ports:
+      - "${RABBITMQ_PORT:-5672}:5672"
+      - "${RABBITMQ_MGMT_PORT:-15672}:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-studio_user}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASS:-studio_secure_password}
+      RABBITMQ_DEFAULT_VHOST: ${RABBITMQ_VHOST:-studio_vhost}
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 15s
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  migration-studio:
+    build:
+      context: ../..
+      dockerfile: deploy/docker/Dockerfile
+    image: migration-studio:local
+    container_name: migration-studio-app
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      chromadb:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "${HOST_PORT:-80}:10000"
+    volumes:
+      - ${ENV_FILE:-./.env}:/app/.env:ro
+      - ./load-env.sh:/load-env.sh:ro
+      - ./entrypoint.sh:/entrypoint.sh:ro
+      - ../../mule_parser:/app/mule_parser
+      - ../../frontend/src:/app/frontend/src
+      - ../../frontend/prisma:/app/frontend/prisma
+    environment:
+      APP_ENV_FILE: /app/.env
+      EMBED_INFRA: "false"
+      PORT: "10000"
+      DATABASE_URL: "postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-migration_studio}"
+      CHROMA_HOST: "chromadb"
+      CHROMA_PORT: "8000"
+      CELERY_BROKER_URL: "amqp://${RABBITMQ_USER:-studio_user}:${RABBITMQ_PASS:-studio_secure_password}@rabbitmq:5672/${RABBITMQ_VHOST:-studio_vhost}"
+      REDIS_URL: "redis://redis:6379/0"
+
+
+volumes:
+  postgres_data:
+  chroma_data:
+  rabbitmq_data:
+  redis_data:

@@ -1,0 +1,107 @@
+# Setting User Access Permissions | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/exchange/to-set-permissions](https://docs.mulesoft.com/exchange/to-set-permissions)
+
+---
+
+```
+curl -X DELETE 'https://anypoint.mulesoft.com/accounts/api/organizations/:organizationId/roles?role_groups=true&teams=true' \
+  -H 'Authorization: bearer YOUR_TOKEN' \
+  -H 'Content-Type: application/json' \
+-d '{
+           "assign": [],
+           "unassign": [
+                   {
+                       "identity_ids": [
+                           "141nab7c-64d7-4763-816f-a2jj365e8c03"
+                       ],
+                    "role_id": "67a4f1bc-f798-48ce-a0f5-d96b48cf5c3e",
+                   "context_params": {
+                       "org": "ebb22016-f209-4767-s074-2e57245e4399",
+                       "product": "exchange",
+                       "projectId": "abfa4920-eelf-22f3-8g71-1e60bd71e12c"
+                   }
+               }
+           ]
+       }'
+```
+# Setting User Access Permissions
+
+Exchange provides multiple ways to set up access management to provide collaboration across teams and meet governance requirements. Anypoint Platform comes with predefined permissions and roles that can be set in the Access Management section of Anypoint Platform to provide users with different access levels.
+
+| To see updated permissions, users must log out of Exchange and log in again. | 
+
+## Exchange Permissions
+
+To control access to assets in a business group, add users or teams to role groups for Exchange permissions.
+
+The following permissions pertain to every business group level:
+
+- Exchange Viewers
+- 
+Enables users to view and download assets within a business group. Users with this permission cannot add new assets, edit asset portal content, or share an asset with another user. Assign this permission to those who consume your assets in a specific business group. 
+- Exchange Contributors
+- 
+Enables users to view, create, and download assets within a business group. Users with this permission can edit asset portal content in an existing asset version. Use this permission to invite users to edit and maintain your asset portal descriptions. 
+- Exchange Administrators
+- 
+Enables users to view, create, and download assets within a business group. Users with this permission have all the same access as users with the Exchange contributor and Exchange viewer permissions, and access to share an asset with another user, deprecate an asset, and delete an asset. Use this permission to set up Exchange administrators for all the assets within a specific business group. 
+- Exchange Creator
+- 
+Enables users to create new assets within a business group’s catalog, but cannot modify assets or asset versions created by other users in the business group. Once the users with this permission create an asset, the Asset Administrator role is automatically assigned for the assets they create. The Asset Administrator role allows these users to modify only the assets that they create. Use this permission to restrict modification of assets other than assets created by this user while allowing all developers across all teams in a business group to create new assets in Exchange. For connected apps, the experience differs. If an asset is created using a connected app, the Asset Administrator role is granted to the connected app owner. You can’t use connected apps with the Exchange Creator permission to create new versions of existing assets. 
+
+## Asset Permissions
+
+To control access to individual assets, add users or teams to role groups for asset permissions.
+
+The following permissions extend access to assets in addition to the permissions that a user has at the business group level:
+
+- Asset Viewers
+- 
+Enables users to view and download an asset. Users with this permission cannot edit asset portal content or share an asset with another user. Use this permission to invite a user outside your business group to view and download an asset. 
+- Asset Contributors
+- 
+Enables users to view, add a new version, and download an asset. Use this permission to invite a user outside your business group to view, download, and add edit portal content for an asset. 
+- Asset Administrators
+- 
+Enables users to view, create, download, deprecate, and delete an asset. Users with this permission have the same access as users with the Exchange Administrators permission, but on only a single asset. This permission is assigned by default to an asset creator. Use this permission to extend administrator permissions to an asset to an additional user. 
+
+## Summary of Exchange Permissions
+
+| Permission | Visibility | Actions | 
+|---|---|---|
+| Exchange Viewers | For all assets within a business group | View, Download | 
+| Exchange Contributors | For all assets within a business group | View, Download, Edit Portal | 
+| Exchange Administrators | For all assets within a business group | View, Download, Edit Portal, Delete, Share, Deprecate Asset Version, Manage API Instances | 
+| Exchange Creator | For only assets that this user creates within a business group | View, Download, Edit Asset, Share, Manage API Instances, and Delete | 
+| Asset Viewers | For a specific asset in any business group | View, Download | 
+| Asset Contributors | For a specific asset in any business group | View, Download, Edit Portal | 
+| Asset Administrators | For a specific asset in any business group | View, Download, Edit Portal, Delete, Share, Deprecate Asset Version, Manage API Instances | 
+
+- 
+Exchange Viewers have visibility within a business group and can view and download assets. 
+- 
+Exchange Contributors have visibility within a business group and can view and download assets. This permission can also edit asset descriptions. 
+- 
+Exchange Administrators have visibility within a business group and can view, download, edit descriptions, deprecate, delete, and share assets. 
+- 
+Exchange Creators have visibility within a business group and can view, download, edit descriptions, deprecate, delete, and share only assets that they own. 
+- 
+Asset Viewers can view an asset in a business group and can view and download the asset. 
+- 
+Asset Contributors can view an asset in a business group and can view and download the asset. This permission can also edit the asset’s content. 
+- 
+Asset Administrators can view an asset in a business group and can view, download, edit the content, deprecate, delete, and share the asset. 
+
+## Remove Roles When Limits Are Reached
+
+Remove roles, including Project Administrator, when you reach the limit. Project Administrator is included in the Exchange Contributor permission.
+
+Use this code example to remove roles. Make sure to replace the values with your own.
+
+The `identity_ids` value is the user ID. The remaining values identify the role to remove. To identify the role data, retrieve existing roles using this request:
+
+```
+curl 'https://anypoint.mulesoft.com/accounts/api/users/:userId/roles?role_groups=true&teams=true' \
+  -H 'Authorization: bearer YOUR_TOKEN'
+```

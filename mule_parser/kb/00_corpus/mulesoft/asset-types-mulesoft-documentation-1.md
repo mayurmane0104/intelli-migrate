@@ -1,0 +1,55 @@
+# Asset Types | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/exchange/asset-types](https://docs.mulesoft.com/exchange/asset-types)
+
+---
+
+# Asset Types
+
+The following asset types are supported in Exchange:
+
+- 
+Agents Programs that perform tasks autonomously or semiautonomously. AI agents can use the Agent2Agent (A2A) protocol to communicate and collaborate with each other to perform tasks. When agent network projects created in Anypoint Code Builder are published to Exchange, the individual agentic assets defined in the agent network project YAML file are registered as either agents or MCP servers. Brokers, which are published with the agent asset type, are automatically tagged as brokers for easy identification. 
+- 
+API Groups A set of APIs bundled into a single asset. 
+- 
+API Spec Fragments A part of an API specification that is reused to build a complete API specification. 
+- 
+AsyncAPI Specifications An AsyncAPI specification file that specifies an event-driven API. Exchange supports AsyncAPI 2.0 and 2.6. AsyncAPI 2.6 supports specs with Avro schemas. The file type for AsyncAPIs with Avro schemas is AVSC. 
+- 
+Connectors Packaged connectivity to an Anypoint Platform endpoint using third-party APIs and standard integration protocols. Use connectors within your application’s flows to send and receive data using a protocol or specific API. Anypoint Studio comes with many bundled connectors, and Exchange has many more. 
+- 
+Custom A description and an optional file to explain aspects of your system, to provide instructional videos, or to describe product or organizational documentation. 
+- 
+DataWeave Libraries Packaged modules and mappings to share and reuse across applications. 
+- 
+Examples Applications that are ready to run in Anypoint Studio and demonstrate a use case or solution. 
+- 
+GraphQL API A schema definition that contains the object types and definitions that are used to interact with the API through the GraphQL specification. GraphQL enables you to query an API that supports this language in a much more flexible way than REST. 
+- 
+gRPC API A Protocol Buffers (.proto) specification that defines a gRPC API—its services and message contracts. gRPC is RPC-based and supports unary and streaming calls. Interface definitions use the proto3 syntax, with message payloads expressed as Protobuf message schemas, and the .proto file type. 
+- 
+HTTP APIs A placeholder for an endpoint for use by private Exchange users who want to manage the endpoint with API Manager. Instead of requesting access to multiple APIs to satisfy a use case, a developer can access the group in one step. 
+- 
+LLMs (Large Language Models) AI assets for processing, understanding, and generating human readable language. Only OpenAI is supported for the broker. The LLM asset type defines only the provider and contract information. The model and connectivity details are defined separately in the YAML configuration file created in Anypoint Code Builder. 
+- 
+MCP Servers Applications or APIs exposed through the Model Context Protocol (MCP). MCP is an open protocol designed to standardize how applications provide context and capabilities to LLMs and AI agents. 
+- 
+Mule Applications Applications that perform system integrations. These applications are published and consumed using APIs and don’t appear in the Exchange UI. Use the Exchange Maven Facade API or REST API to publish and manage Mule application assets. For more information, see: 
+- 
+Policies Configuration modules to extend the functionality of an API and enforce capabilities such as security. 
+- 
+REST APIs RAML or OAS files that specify APIs referenced by an HTTP Request connector to expose metadata to Anypoint Studio. 
+- 
+RPA Templates - 
+RPA Activity Templates Activity templates are reusable code within RPA to standardize the most used activity steps and make them available to other developers in the organization. File type is `.calw`.
+- 
+RPA Process templates Templates for RPA processes that can be imported into RPA Builder as projects and are customizable before deploying to RPA bots. Process templates are built on common patterns for RPA to build automation faster. File type is `.crpa`.
+ 
+- 
+- 
+Ruleset YAML files that describe a ruleset. 
+- 
+SOAP APIs A WSDL file that specifies an API. 
+- 
+Templates Packaged integration patterns built on best practices to address common use cases. Complete the template’s use case or solution by supplying your own information, customizing, or extending the templates as needed.

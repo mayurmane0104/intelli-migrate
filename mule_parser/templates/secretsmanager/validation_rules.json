@@ -1,0 +1,4 @@
+{
+  "required_terms": ["AWS::SecretsManager::Secret", "secretsmanager.Secret"],
+  "forbidden_terms": ["password:", "secret:", "ECS", "AppFlow", "Amazon MQ", "MSK", "Glue", "DynamoDB", "EMR", "Batch"]
+}

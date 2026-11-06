@@ -1,0 +1,18 @@
+[
+  {
+    "id": "E1",
+    "name": "Ann",
+    "sal": 95000,
+    "address": "1 Main St",
+    "phone": "555-0100",
+    "email": "ann@example.com"
+  },
+  {
+    "id": "E2",
+    "name": "Ben",
+    "sal": 87000,
+    "address": "2 Oak Ave",
+    "phone": "555-0101",
+    "email": "ben@example.com"
+  }
+]

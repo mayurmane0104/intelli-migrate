@@ -1,0 +1,119 @@
+# Installing and Authorizing GitHub Synchronization | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/design-center/design-ghs-install-authorize](https://docs.mulesoft.com/design-center/design-ghs-install-authorize)
+
+---
+
+# Installing and Authorizing GitHub Synchronization
+
+Installing the GitHub Synchronization application in an organization is the first step in making the organization’s repositories accessible to API Designer.
+
+Install the GitHub Synchronization application within the GitHub user interface. Perform this action either as a GitHub organization administrator or as a GitHub user. Then, authorize the application when performing a GitHub Synchronization action for the first time within API Designer. Synchronization actions include creating new GitHub repositories for existing API specifications and creating new API specifications that are synchronized with existing GitHub repositories.
+
+## Install the GitHub Synchronization Application as a GitHub Organization Administrator
+
+To get started, first install the GitHub Synchronization application within the GitHub user interface.
+
+### Before You Begin
+
+To install the GitHub Synchronization application as a GitHub organization administrator, you must have:
+
+- 
+A GitHub account 
+- 
+A membership in the GitHub organization in which you want to install the application 
+- 
+The administrator permission to access the GitHub organization (as configured through your GitHub account settings) 
+
+| 
+ | 
+
+### Install the GitHub Synchronization application
+
+- 
+Navigate to the [US GitHub Synchronization application page](https://github.com/apps/mulesoft-github-integration)or[EU Github Synchronization application page](https://github.com/apps/mulesoft-github-integration-eu)depending on your region.
+- 
+Click **Install**.
+- 
+In the **Install MuleSoft GitHub Integration**dialog, select an organization in which to install the application.
+- 
+Click **All repositories**to make all repositories available, or click**Only select repositories**and specify individual repositories.
+- 
+Click **Install**.
+
+The application must be authorized in API Designer to complete the integration with GitHub. See [Authorize the GitHub Sync Application in API Designer](#authorize-the-github-synchronization-application-in-api-designer).
+
+## Install the GitHub Synchronization Application as a GitHub User
+
+Installing the GitHub Synchronization application in a GitHub user account enables you to sync your individual GitHub user repositories.
+
+### Before You Begin
+
+To install the GitHub Synchronization application as a GitHub user, you must have:
+
+- 
+A GitHub account 
+- 
+A membership in the GitHub organization in which you want to install the application 
+
+| In the email settings for the GitHub account you want to use with GitHub Synchronization, if you select Keep my email addresses private, ensure you do not selectBlock command line pushes that expose my email. The block setting will prevent you from pushing commits in your synchronized project. | 
+
+### Install the GitHub Synchronization Application
+
+- 
+Navigate to the [US GitHub Synchronization application page](https://github.com/apps/mulesoft-github-integration)or[EU Github Synchronization application page](https://github.com/apps/muesoft-github-integration-eu)depending on your region.
+- 
+Click **Install**.
+- 
+In the **Install MuleSoft GitHub Integration**dialog, select a GitHub user account (typically the first items in the displayed list).
+- 
+Click **All repositories**to make all repositories available or click**Only select repositories**and specify individual repositories.
+- 
+Click **Install**.
+
+The application must be authorized in API Designer to complete the integration with GitHub. See [Authorize the GitHub Synchronization Application in API Designer](#authorize-the-github-synchronization-application-in-api-designer).
+
+## Authorize the GitHub Synchronization Application in API Designer
+
+To authorize the GitHub Synchronization application, ensure your user ID is assigned the Design Center Developer permission.
+
+- 
+Sign in to the Anypoint Platform. 
+- 
+On the Design Center **Projects**page, click**Create +**.
+- 
+Select **New API Specification**.
+- 
+In the **New API Specification**panel, click**Authorize the MuleSoft app now to get started**.
+- 
+Click **Authorize**.
+- 
+In the subsequent dialog, click **Authorize MuleSoft GitHub Integration**.
+
+You are redirected to API Designer, which displays an **Authorized Successfully** message. You can now complete the process that originally triggered the application authorization.
+
+## Troubleshooting GitHub Synchronization Application Installation
+
+If you encounter errors when attempting to authorize the GitHub Synchronization application, try deauthorizing and then reauthorizing the GitHub Synchronization application:
+
+- 
+Click **Revoke**in the GitHub user interface (**Settings**>**Applications**>**Authorized GitHub Apps**).
+
+If you see an empty list, ensure you’ve installed the application either in a GitHub organization or in a GitHub user account before performing any sync action.
+
+## Disabling the GitHub Integration
+
+Your organization administrator can disable the Github Integration:
+
+- 
+On the Design Center **Projects**page, click**Settings**.
+- 
+Under **Integrations**, unselect**Enable Github Integration**.
+- 
+A confirmation dialog box appears. 
+- 
+Click **Disable GitHub**.
+
+The integration is now disabled. If your organization has sub-organizations, the organization administrator can enable or disable the integration for each sub-organization as needed.
+
+| This action disables source syncing for all users and projects in your organization. If the integration is re-enabled, all past synchronizations are lost even when the repositories still exist on GitHub. |

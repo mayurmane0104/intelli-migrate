@@ -1,0 +1,62 @@
+# Microsoft Dynamics 365 Business Central Connector 1.0 | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/microsoft-dynamics-365-business-central-connector/latest](https://docs.mulesoft.com/microsoft-dynamics-365-business-central-connector/latest)
+
+---
+
+# Microsoft Dynamics 365 Business Central Connector 1.0
+
+Anypoint Connector for Microsoft Dynamics 365 Business Central (Microsoft Dynamics 365 Business Central Connector) enables you to manage entities for your companies in Microsoft Dynamics 365 Business Central.
+
+For information about compatibility and fixed issues, refer to the Microsoft Dynamics 365 Business Central Connector Release Notes.
+
+## Before You Begin
+
+To use this connector, you must be familiar with:
+
+- 
+The Microsoft Dynamics 365 Business Central API 
+- 
+Anypoint Connectors 
+- 
+Mule runtime engine (Mule) 
+- 
+Elements and global elements in a Mule flow 
+- 
+How to create a Mule app using Anypoint Studio 
+
+Before creating an app, you must have:
+
+- 
+Credentials to access the Microsoft Dynamics 365 Business Central target resource 
+- 
+Anypoint Platform 
+- 
+Anypoint Studio or Anypoint Code Builder 
+
+## Common Use Cases for the Connector
+
+Some common use cases for Microsoft Dynamics 365 Business Central Connector include:
+
+- 
+Viewing sales order statuses on an account 
+- 
+Creating a Business Central sales order when an opportunity is closed in Salesforce 
+- 
+Keeping Salesforce accounts and Business Central customers in sync 
+
+## Connection Types
+
+Microsoft Dynamics 365 Business Central connections use the following authentication types:
+
+- 
+Basic Auth Uses access keys. 
+- 
+OAuth2 Uses a user’s Microsoft 365 or Azure AD credentials. 
+
+## See Also
+
+- 
+[Use Exchange to Discover Connectors, Templates, and Examples](../../connectors/introduction/intro-use-exchange)
+- 
+[Salesforce Help](https://help.salesforce.com)

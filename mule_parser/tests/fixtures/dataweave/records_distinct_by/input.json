@@ -1,0 +1,7 @@
+{
+  "records": [
+    {"Email": "a@test.com", "Name": "First"},
+    {"Email": "a@test.com", "Name": "Duplicate"},
+    {"Email": "b@test.com", "Name": "Second"}
+  ]
+}

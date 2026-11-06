@@ -1,0 +1,195 @@
+# Searching the Graph API | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/exchange/to-search-with-graph-api](https://docs.mulesoft.com/exchange/to-search-with-graph-api)
+
+---
+
+```
+curl --location --request POST 'https://anypoint.mulesoft.com/accounts/login' \
+     --header 'Content-Type: application/json' \
+     --header 'Accept: application/json' \
+     --data-raw '{
+        "username":"ANYPOINT_USERNAME",
+        "password":"ANYPOINT_PASSWORD"
+     }' | jq -r ".access_token"
+```
+# Searching the Graph API
+
+Search Exchange assets for a string value by using the Exchange Graph API. You can specify what values to receive in each search.
+
+The Exchange Graph API accesses Anypoint Exchange and Anypoint Platform, and a search requires authentication to access assets in a private Exchange. If you only search for MuleSoft public assets, you don’t need authentication.
+
+The Exchange Graph API can be used without an Anypoint Platform account to find assets made publicly available by MuleSoft. Accessing private content through the API requires an Anypoint Platform account.
+
+## Authentication
+
+Use either an access token or a connected application for authentication.
+
+You only need authentication if you are searching for assets that are not created by MuleSoft.
+
+To use token authentication:
+
+- 
+Log in to Anypoint Platform. 
+- 
+Obtain an access token with a cURL command. 
+
+You can also use Postman or another application for sending HTTP commands.
+
+Replace `ANYPOINT_USERNAME` with your Anypoint Platform user account name and replace `ANYPOINT_PASSWORD` with your password.
+
+Use this access token in your API calls.
+
+Your organization administrator sets the expiration time for access tokens to a value from 15 to 180 minutes. If you perform a search or other operation that requires more time, you must request an additional token.
+
+See also [Access Management API Authentication](https://anypoint.mulesoft.com/exchange/portals/anypoint-platform/f1e97bc6-315a-4490-82a7-23abe036327a.anypoint-platform/access-management-api/minor/1.0/).
+
+To use connected application authentication:
+
+- 
+Choose whether to use basic authentication or query variable authentication. If both basic authentication and query variable authentication are set, the API uses basic authentication and ignores the query variable authentication. 
+- 
+To use basic authentication, provide basic authentication and define the username as `~~~Client~~~`and the password as`clientID~?~clientSecret`.- 
+Replace `clientID`with the client ID.
+- 
+Replace `clientSecret`with the client secret.
+ 
+- 
+- 
+To use query variable authentication, define the connected application authentication as an authorization field in the query variables: `{ "authorization": "Basic ABC123" }`jsonReplace `ABC123`with the base64 encoding of the concatenated client ID and client secret:`~~~Client~~~:clientID~?~clientSecret`
+
+## Graph API Access URL
+
+You can access the Graph API at the `https://anypoint.mulesoft.com/graph/api/v1/graphql` URL. To search
+using the API, send a POST command containing the search string.
+
+For example:
+
+```
+curl -X POST \
+  https://anypoint.mulesoft.com/graph/api/v1/graphql \
+  -H 'content-type: application/json' \
+  -d '{"query": "{ assets(query: { searchTerm: \"searchTerm\" }) { groupId, assetId, version } }"}'
+```
+jsonThe query field contains the GraphQL query, which allows fetching more asset fields.
+
+```
+{
+  assets(asset: {groupId: "some-group-id", assetId: "some-asset-id", version: "some-version-1.2.3"}) {
+    # Possible fields to retrieve
+    groupId
+    assetId
+    version
+    description
+    name
+    type
+    contactName
+    contactEmail
+    tags {
+      value
+      key
+    }
+    createdBy {
+      id
+      userName
+      firstName
+      lastName
+    }
+    files {
+      classifier
+      packaging
+      externalLink
+      md5
+    }
+    rating
+    numberOfRates
+    createdAt
+    organizationId
+    assetLink
+    runtimeVersion
+    productAPIVersion
+    dependencies {
+      groupId
+      assetId
+      version
+      name
+      type
+    }
+    related(relationshipType: OtherVersions) {
+      groupId
+      assetId
+      version
+      name
+      type
+      runtimeVersion
+      productAPIVersion
+    }
+  }
+}
+```
+jsonYou can get the group ID, asset ID, and version of a Mule 4.x asset with this example:
+
+```
+curl -X POST \
+  https://anypoint.mulesoft.com/graph/api/v1/graphql \
+  -H 'content-type: application/json' \
+  -d '{"query":"{assets(query: {tags: {key: \"min-mule-version\", value: \"4.0.0\"}}) {groupId assetId version}}"}'
+```
+json## Search Only a Private Exchange
+
+- 
+Get the organization ID for the Private Exchange by clicking an asset in your Private Exchange. An example URL is: https://anypoint.mulesoft.com/exchange/42424242/product-api/1.0.0/ `42424242`is the organization ID.
+- 
+Add the organization ID using the organizationIds field. A single organization ID would be: `organizationIds: ["42424242"]``{ assets( query: { searchTerm: "product", organizationIds: ["4141141", "32322", "2342345"] }, latestVersionsOnly: true ) { assetId, description } }`jsonThe output for this example is: `{ "data": { "assets": [ { "assetId": "product-datatype", "description": "Product Datatype Asset" }, { "assetId": "product-api", "description": "Product API Asset" } ] } }`json
+
+## Asset Lifecycle State
+
+To consume an asset and its lifecycle state, replace `ANYPOINT_TOKEN`, `:groupId`, `:assetId`, and `:version` with your information, and execute this command:
+
+```
+curl -X POST \
+  https://anypoint.mulesoft.com/graph/api/v2/graphql \
+  -H 'Authorization: bearer ANYPOINT_TOKEN' \
+  -H 'content-type: application/json' \
+  -d '{"query":"{asset(groupId: \":groupId\",assetId: \":assetId\",version: \":version\"){groupId assetId version status}}"}'
+```
+To search for an asset by lifecycle state, replace `ANYPOINT_TOKEN` with your information, replace `[development, published, deprecated]` with your list of desired lifecycle states, and execute this command:
+
+```
+curl -X POST \
+  https://anypoint.mulesoft.com/graph/api/v2/graphql \
+  -H 'Authorization: bearer ANYPOINT_TOKEN' \
+  -H 'content-type: application/json' \
+  -d '{"query":"{assets(status:[development, published, deprecated]){groupId assetId version status}}"}'
+```
+## Reference: Query Filter Parameters
+
+You can specify filters to display additional information about each asset.
+
+The following filters let you refine query output:
+
+| Parameter | Description | 
+|---|---|
+| assetId | Asset ID for each asset. | 
+| createdAt | Date and time an asset was created, for example, 2018-08-11T04:48:20.585Z. | 
+| createdBy { id, userName, firstName, lastName } | Display who created the asset. | 
+| dependencies { groupId, assetId, version, name, type } | Returns the assets the listed asset depends on. | 
+| files { classifier, packaging, externalLink, md5 } | File information. | 
+| name | Asset name. | 
+| contactName | Name of a person to contact about the asset. | 
+| contactEmail | Email address of a person to contact about the asset. | 
+| numberOfRates | The number of star ratings for an asset. | 
+| organizationId | Organization ID for an asset. | 
+| rating | Star rating value for an asset. | 
+| runtimeVersion | Mule Runtime version. | 
+| tags { value, key, mutable } | The asset tags. The tags created in the user interface and when publishing are only  | 
+| type | Lowercase values corresponding to the Exchange All Types menu: connector, template, example, rest-api, soap-api, raml-fragment, and custom. | 
+| version | Version for an asset. | 
+| groupId | Group ID for an asset. | 
+
+## See Also
+
+- 
+[Exchange Graph API](https://anypoint.mulesoft.com/exchange/portals/anypoint-platform/f1e97bc6-315a-4490-82a7-23abe036327a.anypoint-platform/exchange-graph-http/)
+- 
+[Anypoint Exchange](https://anypoint.mulesoft.com/exchange/)

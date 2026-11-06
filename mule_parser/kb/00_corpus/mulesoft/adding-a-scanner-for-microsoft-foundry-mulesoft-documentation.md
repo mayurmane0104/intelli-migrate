@@ -1,0 +1,68 @@
+# Adding a Scanner for Microsoft Foundry | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/exchange/adding-microsoft-foundry-scanner](https://docs.mulesoft.com/exchange/adding-microsoft-foundry-scanner)
+
+---
+
+# Adding a Scanner for Microsoft Foundry
+
+Add a scanner to discover, import, and sync agents from Microsoft Foundry into Exchange. Then you can govern the agents and consume them in other applications.
+
+## Before You Begin
+
+This setup requires specific configurations and access privileges within the Azure environment to enable the agent scanner to access and list Microsoft Foundry agents.
+
+- 
+Prerequisites - 
+An Active Azure Subscription is required for creating a Microsoft Foundry project. 
+- 
+An Azure App Registration must be completed in the Azure portal to generate necessary credentials in the Azure portal. 
+- 
+A new project created using the resource type, Microsoft Foundry resource. 
+ 
+- 
+- 
+Required Configuration Values These values, which are obtained during the Azure App registration setup, are required for scanner configuration: - 
+Tenant ID (Directory ID) 
+- 
+Client ID (Application ID) 
+- 
+Client Secret 
+ 
+- 
+- 
+Required Permissions and Roles: - 
+The application principal from the prerequisite step must be assigned the Azure AI Developer role within the Azure portal to grant the scanner access. 
+ 
+- 
+- 
+Scanner Configuration Limitations: Agent listing is project-specific: - 
+The user must provide all corresponding Project IDs during scanner configuration if agents are spread across multiple projects. 
+- 
+A new scanner configuration is required for every new project created. 
+ For more information, see the [Microsoft Foundry documentation](https://learn.microsoft.com/en-us/azure/ai-foundry/).
+- 
+
+## Add a Scanner for Microsoft Foundry
+
+- 
+Verify that you are in the business group where you want to add the scanner. 
+- 
+From the sidebar in Exchange, click **Scanners**.
+- 
+Enter a name for the scanner. 
+- 
+In **Scanner Run Configuration**, complete these fields or options:**Field/Option****Value****Run Schedule**Select a frequency and local time. **Sync Review**Select an option: Auto-resolve or Ask to review. 
+- 
+From **Connection Configuration**, complete these fields:**Field****Value****Provider**Select **Azure AI Foundry**.**Asset Type**Only agents are supported. **Authentication Method**Select **OAuth 2 Client Credentials**.**Tenant ID**Enter the application ID. **Client ID**Enter the directory ID. **Client Secret**Enter the client secret. **Project Endpoints**Enter the project endpoint URLs separated by commas. 
+- 
+Click **Test Connection**.If the connection fails, review the **Connection Configuration**settings. Update the settings, and then test the connection again.
+- 
+To send email notifications: - 
+Select **Advanced Settings**and turn on**Send Email Notifications**.
+- 
+Enter an email address. 
+ 
+- 
+- 
+Click **Add Scanner**.

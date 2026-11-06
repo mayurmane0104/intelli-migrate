@@ -1,0 +1,26 @@
+{
+  "vars": {
+    "paymentOrders": [
+      {
+        "PaymentId": "P1",
+        "Payments": {
+          "PayeeReference": { "PayeeName": "Acme" },
+          "PaymentDefinition": { "PaymentAmount": { "Amount": "100" } }
+        }
+      },
+      {
+        "PaymentId": "P2",
+        "Payments": {
+          "PayeeReference": { "PayeeName": "Beta" },
+          "PaymentDefinition": { "PaymentAmount": { "Amount": "200" } }
+        }
+      }
+    ]
+  },
+  "attributes": {
+    "queryParams": {
+      "paymentId": "P1",
+      "amount": "100"
+    }
+  }
+}

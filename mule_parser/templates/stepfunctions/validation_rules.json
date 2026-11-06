@@ -1,0 +1,4 @@
+{
+  "required_terms": ["AWS::StepFunctions::StateMachine", "sfn.StateMachine"],
+  "forbidden_terms": ["ECS", "AppFlow", "Amazon MQ", "MSK", "Glue", "DynamoDB", "EMR", "Batch"]
+}

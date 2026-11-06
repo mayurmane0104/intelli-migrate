@@ -1,0 +1,69 @@
+# Viewing Conversation History | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/anypoint-code-builder/vibes-conversation-history](https://docs.mulesoft.com/anypoint-code-builder/vibes-conversation-history)
+
+---
+
+# Viewing Conversation History
+
+MuleSoft Vibes allows you to return to tasks you have previously started and continue working from where you left off.
+
+To open a recently started task:
+
+- 
+In the MuleSoft Vibes panel, locate the **Recent Tasks**section.
+- 
+Select the task you want to reopen. 
+
+If the task is not listed under Recent Tasks:
+
+- 
+Click **View All History**.
+- 
+Use the search bar to find a specific task, or browse your full history list. 
+
+You can sort tasks by:
+
+- 
+**Newest**
+- 
+**Oldest**
+- 
+**Most Tokens**
+- 
+Other available criteria 
+
+You can also filter tasks by:
+
+- 
+**Workspace**
+- 
+**Favorites**
+
+To favorite a task, click the **Star** icon next to the task entry.
+
+## Delete History
+
+You can remove past tasks in two ways:
+
+- 
+**Delete specific tasks**– Deletes the specific tasks you select.
+- 
+**Delete all history**– Clears all tasks.
+
+## Reduce Token Usage with Chat History Summaries
+
+MuleSoft Vibes automatically summarizes conversation history to reduce total token consumption while preserving relevant context.
+
+As tasks grow in complexity, conversation history becomes larger. Instead of sending the full history with each interaction, Vibes compacts previous messages into summaries. This maintains performance and reduces tokens usage.
+
+Chat history summaries:
+
+- 
+Preserve the intent and key decisions from earlier steps 
+- 
+Reduce redundant context sent to the model 
+- 
+Keep interactions fast and efficient 
+
+Vibes manages this process automatically. You don’t need to manually trim or rewrite previous messages to optimize token usage.

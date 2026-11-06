@@ -1,0 +1,42 @@
+# Assigning Permissions | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/cloudhub-2/ps-assign-permissions](https://docs.mulesoft.com/cloudhub-2/ps-assign-permissions)
+
+---
+
+# Assigning Permissions
+
+Before you set up your private space, ensure you have the required permissions assigned to your user account or a team to which you belong. To assign permissions, you need access to Access Management and the Organization Administrator permission.
+
+- 
+To set up and manage a private space, you need the CloudHub Network Administrator permission. 
+- 
+To view a private space as an individual user within an organization, you need at least one of the following permissions: - 
+Cloudhub Network Viewer, which enables you to view private spaces and their details. 
+- 
+Organization Administrator, which enables you to manage and update private spaces. 
+- 
+Cloudhub Network Administrator, which enables you to manage and update private spaces. Without at least one of these permissions, you can’t see any details upon selecting the **Private Spaces**tab. Instead, you receive a**Not Authorized**message.
+ 
+- 
+- 
+To deploy applications from Exchange, you must assign the Exchange Contributor and Exchange Viewer permissions to the Business Organization that owns the asset. 
+- 
+To deploy applications in Runtime Manager, you need the Create Applications permission. 
+- 
+To view all applications on the **Applications**page in Runtime Manager, you need the Read Applications and CloudHub Network Viewer permission.
+- 
+To view applications deployed to Runtime Fabric and CloudHub 2.0, you also need the following two permissions: - 
+Read Applications for the Environment. 
+- 
+Read Runtime Fabrics for the Business Group. 
+ 
+- 
+- 
+Assigning the **Create Applications**role to a user also gives the**Read Applications**role that is required to deploy applications.
+- 
+To view the schedules in applications deployed to CloudHub 2.0 and Runtime Fabric, you must assign the Exchange Viewer permission to the Business Organization that owns the asset. 
+
+Depending on your organization’s permission structure, you can assign these permissions using the [Teams](../access-management/teams) feature, the [Roles](../access-management/users#grant-user-permissions) feature (deprecated), or by assigning an [individual user permission](../access-management/users#grant-user-permissions).
+
+Note that users who have the Organization Administrator permission can also view and manage all private spaces and additional privileges across Anypoint Platform. However, you should not assign this permission as a substitute for CloudHub 2.0-specific privileges. For more information, see [general permissions](../access-management/permissions-by-product).

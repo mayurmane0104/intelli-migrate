@@ -1,0 +1,16 @@
+# Determining API Instance ID on API Manager | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/api-manager/latest/find-api-id-task](https://docs.mulesoft.com/api-manager/latest/find-api-id-task)
+
+---
+
+# Determining API Instance ID on API Manager
+
+API Manager generates the `apiId` of new API instances managed by API Manager and displays the ID on the API instance dashboard. The API Instace ID cannot be changed.
+
+To find the API instance ID:
+
+- 
+Navigate to **Anypoint Platform**>**API Manager**.
+- 
+In **API Administration**, click the name of the API instance whose ID you want.The API instance ID is displayed under **API Instance ID**.

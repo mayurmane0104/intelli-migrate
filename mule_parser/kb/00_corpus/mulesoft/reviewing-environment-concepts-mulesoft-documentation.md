@@ -1,0 +1,53 @@
+# Reviewing Environment Concepts | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/api-manager/latest/environments-concept](https://docs.mulesoft.com/api-manager/latest/environments-concept)
+
+---
+
+![API Manager API Administration with the environment sandbox selected.](_images/environment3.png) 
+
+# Reviewing Environment Concepts
+
+The support for environments in strategic components of Anypoint Platform eliminates the need to construct version names to reflect an environment. The administrator grants permissions per environment. A user who is granted environment access permission has full access to operations inside the specific environment:
+
+![API Manager API Administration with the environment sandbox selected.](_images/environment3.png) 
+
+API Manager environment administrator only relates to actions inside of API Manager. The API Manager Environment Administration permission allows you to do the following things:
+
+- 
+Create and modify your APIs as well as modifying those created by others 
+- 
+Apply policies 
+- 
+Define SLAs 
+- 
+Create alerts 
+
+As organization administrator, you grant permissions to users as described in the topic linked below.
+
+When you navigate to API Manager, you see the environment control bearing the name of your default environment. In this example, Sandbox is the default environment:
+
+![API Manager API Administration with the environment sandbox selected.](_images/environment3.png) 
+
+When you click the environment control, a list of your production and sandbox environments appears.
+
+To connect Mule Runtime to API Manager through Autodiscovery, you need to provide the one of the following credential pairs:
+
+- 
+The client ID and secret of the environment 
+- 
+The client ID and secret of the organization where you registered the API 
+- 
+The client ID and secret of the parent of the organization where you registered the API. For example, you can have a parent business group(BG) for ABC Corp, and that parent can have children ABC-BG1 and ABC-BG2. You can track the ABC-BG1 API using credentials of ABC. - 
+ABC - 
+ABC-BG1 
+- 
+ABC-BG2 
+ 
+- 
+ 
+- 
+
+## Reviewing Unclassified APIs and Permissions concepts
+
+If you upgraded APIs from the earlier versions of API Manager to API Manager 2.x, you might have APIs residing in the Unclassified environment. Other APIs that you haven’t associated with an environment, such as an API you create in Design Center, published to Exchange, and set up to manage from Exchange also appear unclassified in API Manager. You need to classify an API to manage it. Until you classify the API, the user permissions under the earlier release apply to all operations. After classification, the permissions per environment that you grant to users applies.

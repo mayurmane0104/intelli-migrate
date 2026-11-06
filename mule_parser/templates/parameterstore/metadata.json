@@ -1,0 +1,7 @@
+{
+  "template_id": "parameterstore",
+  "name": "Parameter Store Entry",
+  "service": "Parameter Store",
+  "target": "ParameterStore",
+  "required_variables": ["resource_prefix"]
+}

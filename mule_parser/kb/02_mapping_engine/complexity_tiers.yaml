@@ -1,0 +1,154 @@
+version: "1.0"
+description: >
+  Seven-tier complexity classification for MuleSoft flows.
+  Each tier maps to expected effort, risk, and AWS pattern recommendations.
+
+tiers:
+
+  tier_1_trivial:
+    label: "Tier 1 — Trivial"
+    description: Pass-through or single-transform, no external connectors
+    capability_score_max: 5
+    indicators:
+      - single_flow: true
+      - connector_count_max: 1
+      - transform_count_max: 1
+      - no_error_handling: true
+      - no_parallel: true
+    aws_pattern: Pattern 1 or Pattern 5
+    lambda_count: 1
+    estimated_days: 0.5
+    risk: low
+    auto_migrate: true
+
+  tier_2_basic:
+    label: "Tier 2 — Basic"
+    description: Single connector, simple transform, basic error handling
+    capability_score_max: 15
+    indicators:
+      - connector_count_max: 2
+      - has_error_handling: true
+      - no_parallel: true
+      - transform_count_max: 3
+    aws_pattern: Pattern 1, 5, or 6
+    lambda_count: 1
+    estimated_days: 1
+    risk: low
+    auto_migrate: true
+
+  tier_3_intermediate:
+    label: "Tier 3 — Intermediate"
+    description: Multiple connectors, DataWeave transforms, retry logic
+    capability_score_max: 30
+    indicators:
+      - connector_count_max: 4
+      - has_dataweave: true
+      - has_retry: true
+      - flow_count_max: 3
+    aws_pattern: Pattern 2, 3, or 6
+    lambda_count: 2
+    estimated_days: 2
+    risk: medium
+    auto_migrate: true
+    human_review: optional
+
+  tier_4_standard:
+    label: "Tier 4 — Standard"
+    description: Batch processing, sub-flows, moderate DataWeave complexity
+    capability_score_max: 50
+    indicators:
+      - has_batch_job: true
+      - sub_flow_count_max: 5
+      - connector_count_max: 6
+      - has_complex_dataweave: true
+    aws_pattern: Pattern 3 or Pattern 4
+    lambda_count: 3
+    estimated_days: 3
+    risk: medium
+    auto_migrate: true
+    human_review: recommended
+
+  tier_5_complex:
+    label: "Tier 5 — Complex"
+    description: Parallel processing, scatter-gather, multi-step batch
+    capability_score_max: 75
+    indicators:
+      - has_scatter_gather: true
+      - has_parallel_foreach: true
+      - connector_count_max: 8
+      - flow_count_max: 10
+    aws_pattern: Pattern 4 or Pattern 7
+    lambda_count: 4
+    requires_step_functions: true
+    estimated_days: 5
+    risk: high
+    auto_migrate: false
+    human_review: required
+
+  tier_6_enterprise:
+    label: "Tier 6 — Enterprise"
+    description: Cross-app orchestration, SAP/Workday, complex security
+    capability_score_max: 100
+    indicators:
+      - has_sap_connector: true
+      - has_workday_connector: true
+      - has_oauth_chain: true
+      - connector_count_min: 8
+      - has_saga_pattern: true
+    aws_pattern: Pattern 9
+    lambda_count: "5+"
+    requires_step_functions: true
+    estimated_days: 10
+    risk: very_high
+    auto_migrate: false
+    human_review: mandatory
+    notes: Architect review before migration begins
+
+  tier_7_migration_risk:
+    label: "Tier 7 — Migration Risk"
+    description: >
+      Contains patterns with no clean AWS equivalent, or platform-specific
+      features that require redesign rather than migration.
+    indicators:
+      - has_mule_domain_project: true
+      - has_api_autodiscovery: true
+      - has_custom_policy: true
+      - has_clustering_config: true
+      - has_jms_transactions: true
+    aws_pattern: Varies — requires redesign
+    estimated_days: "15+"
+    risk: critical
+    auto_migrate: false
+    human_review: mandatory
+    escalation: true
+    notes: >
+      Flag for architect + product owner review.
+      These may need to be split into multiple migration phases.
+
+# ── Scoring Algorithm ─────────────────────────────────────────────────────────
+scoring:
+  base_scores:
+    per_connector: 3
+    per_transform: 2
+    per_flow: 1
+    per_sub_flow: 1
+    per_error_handler: 2
+    scatter_gather: 10
+    parallel_foreach: 8
+    batch_job: 5
+    batch_step: 3
+    batch_aggregator: 5
+    sap_connector: 15
+    workday_connector: 12
+    oauth_chain: 8
+    custom_script: 6
+    mule_domain: 20
+
+  tier_thresholds:
+    tier_1: [0, 5]
+    tier_2: [6, 15]
+    tier_3: [16, 30]
+    tier_4: [31, 50]
+    tier_5: [51, 75]
+    tier_6: [76, 100]
+    tier_7: [101, 999]  # or any migration-risk flag present

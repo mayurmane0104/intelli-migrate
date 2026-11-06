@@ -1,0 +1,44 @@
+# Adding a Scanner for Kong Gateway | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/exchange/adding-kong-gateway-scanner](https://docs.mulesoft.com/exchange/adding-kong-gateway-scanner)
+
+---
+
+# Adding a Scanner for Kong Gateway
+
+Add a scanner to discover, import, and sync APIs from Kong Gateway into Anypoint Exchange. Once imported, you can apply governance rulesets and publish them to your developer portal.
+
+## Before You Begin
+
+Before adding the scanner, verify that you have the permission, context, and these Kong credentials:
+
+- 
+Exchange Administrator permission *Kong Control Plane Viewer permission 
+- 
+Kong Gateway region 
+- 
+Personal access token (PAT) 
+
+## Add a Scanner for Kong Gateway
+
+- 
+Verify that you are in the business group where you want to add the scanner. 
+- 
+From the sidebar in Exchange, click **Scanners**.
+- 
+Enter a name for the scanner. 
+- 
+From **Scanner Run Configuration**, complete these fields or options:**Field/Option****Value****Run Schedule**Select a frequency and local time. **Sync Review**Select an option: Auto-resolve or Ask to review. 
+- 
+From **Connection Configuration**, complete these fields:**Field****Value****Provider**Select **Kong**.**Platform**Select **Kong Gateway**.**Service Type****REST APIs**selected by default.**Authentication Method****Service Account**selected by default.**Kong Gateway Region**Select the Kong Gateway region. **Personal Access Token**Enter the personal access token. 
+- 
+Click **Test Connection**.If the connection fails, review the **Connection Configuration**settings. Update the settings, and then test the connection again.
+- 
+To send email notifications: - 
+Select **Advanced Settings**and turn on**Send Email Notifications**.
+- 
+Enter an email address. 
+ 
+- 
+- 
+Click **Add Scanner**.

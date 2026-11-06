@@ -1,0 +1,7 @@
+Resources:
+  {{resource_prefix}}RdsEndpointParameter:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: /{{resource_prefix}}/rds/endpoint
+      Type: String
+      Value: REPLACE_WITH_RDS_PROXY_ENDPOINT

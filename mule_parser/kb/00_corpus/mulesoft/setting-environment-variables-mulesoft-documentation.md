@@ -1,0 +1,20 @@
+# Setting Environment Variables | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/mule-runtime/latest/setting-environment-variables](https://docs.mulesoft.com/mule-runtime/latest/setting-environment-variables)
+
+---
+
+# Setting Environment Variables
+
+If you’re deploying multiple applications as a shared resource, you shouldn’t set any properties in the project properties files. This might cause conflicts between the various apps that share a domain. Instead, you can set environment variables over the scope of the deployed app, its domain, and other apps under that domain.
+
+The steps below explain how to set environment variables in Studio. These variables are only used when you deploy locally through Studio. When you deploy your applications to a standalone server, you must provide these variables through the command line.
+
+- 
+Under **Run**, select**Run Configurations**.
+- 
+Select the corresponding run configuration. If a run configuration does not exist for your project, you can create one by using the new button. 
+- 
+Select the **Environment**tab, and add the variables you need.The environment variables you create are defined at the domain level. These will affect all of the applications associated with that domain when you deploy locally using Studio. 
+
+Setting environment variables only works when running the application in the Mule runtime engine within Studio. This configuration does not affect design time operations such as DataSense, automatic completion, or validation.

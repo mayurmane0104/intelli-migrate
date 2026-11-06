@@ -1,0 +1,51 @@
+# Exchange Public Portals | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/exchange/about-portals](https://docs.mulesoft.com/exchange/about-portals)
+
+---
+
+# Exchange Public Portals
+
+Exchange public portals are accessible to anyone using the internet, enabling developers outside of an organization to access that organization’s REST, SOAP, and HTTP APIs. Users who are not logged in can download assets from public portals.
+
+Exchange public portals replace what used to be known as *developer portals*.
+
+You can customize the appearance and the content of the portal by adding a logo, banner image, text, or a favicon for the browser tab.
+
+## Share an Asset or Update the Asset Description
+
+As an Exchange administrator, you can edit the description of an asset in your organization so that users outside the organization can identify it, and then share the asset by publishing to a public portal:
+
+- 
+Locate the asset in your organization’s Exchange instance. 
+- 
+Edit the asset description and then publish the asset. 
+- 
+Verify the change by returning to the public portal and clicking the asset. 
+
+## How Users from Other Organizations Access Your Portal
+
+Anyone can view a public portal without logging in.
+
+Anypoint users can click the **Login** button on any page to use features such as reviewing assets, downloading assets, creating a client application to request API access, and accessing an API.
+
+Anypoint users who belong to other Anypoint organizations and not your organization are *external users* of your organization’s portal.
+
+An organization administrator can see only the basic profile of an external user.
+
+A basic profile has only these fields:
+
+- 
+**Name**
+- 
+**Username**
+- 
+**Email**
+- 
+**Primary Organization**
+
+The first time an external user attempts to log in to your public portal, the portal requests permission for read-only access to this basic profile. When the user approves this request, they are logged in to your public portal and their information is added to the **External Users** tab. To view this tab in Anypoint Platform click **Access Management** > **Users** > **External Users**.
+
+As your organization’s administrator, you can enable or disable each external user on that tab. Users are enabled by default. If you disable them, they cannot log in to your public portal.
+
+Users in your organization can access features that external users cannot, such as deploying an application. You can invite an external user to join your organization so they can use these features.

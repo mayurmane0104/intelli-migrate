@@ -1,0 +1,57 @@
+# Configure Proxies for Your APIs | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/api-manager/latest/api-proxy-landing-page](https://docs.mulesoft.com/api-manager/latest/api-proxy-landing-page)
+
+---
+
+# Configure Proxies for Your APIs
+
+Protect your APIs or web services against attacks by using API proxies, which function as intermediaries between the external applications and the backend server. The API proxy is agnostic to your backend’s location and programming language. Additionally, your backend can be a non-Mule application.
+
+When you deploy an API proxy in front of your API, the proxy adopts API gateway capabilities to secure the API by using different types of [policies](../../gateway/latest/flex-gateway-secure-apis). Anypoint Platform enables you to deploy the proxy application directly to CloudHub or Anypoint Runtime Fabric. Your proxy application is then automatically tracked by API Manager.
+
+API Manager automatically generates the proxy application when you configure your API as an endpoint with a proxy and includes an API Autodiscovery feature in the application. Mule locks the API until all policies have been applied. The client application (consumer) calls the proxy, which then forwards the call to the API. After you deploy the application, the Mule instance calls API Manager using the client ID and secret to obtain the policies for the API.
+
+## When to Use API Proxies
+
+You can use API proxies:
+
+- 
+If your API is live, but not yet hosted in a Mule runtime engine (Mule) server 
+- 
+If you already have a Mule application, but can’t use [API Autodiscovery](../../mule-gateway/mule-gateway-config-autodiscovery-mule4)because you have a closed-code backend API
+- 
+If you want to perform schema validation on every incoming request for a RAML, OAS, or SOAP API 
+
+Depending on the type of specification you used to create your API, you can apply one of the following API proxies:
+
+- 
+HTTP or [HTTPS](building-https-proxy)
+
+## How API Proxies Work
+
+The API proxy intercepts incoming API requests, and can provide authentication, rate limiting, request and response transformation, and logging features.
+
+When a client application sends a request to your backend API, the request is first intercepted by the API proxy. The proxy applies policies for the requested backend API, and the policies determine whether, and how, to forward the request to your backend API.
+
+If a policy fails any of the validations, the API proxy returns an error response (appropriate to the failed policy) and the request does not reach your backend.
+
+If all the policy validations and actions are successful, the proxy forwards the (possibly transformed) request to your backend API. The API proxy then intercepts the response from your backend, applies any relevant policies to the response, and then returns the (possibly transformed) API response to the client application.
+
+## API Proxy Advantages
+
+API proxies improve team performance and backend API security, and validate incoming requests using policies. The API proxies:
+
+- 
+Increases engineering bandwidth You can deploy a proxy directly to a [Runtime Fabric](../../runtime-fabric/latest/),[CloudHub](../../cloudhub/),[Hybrid](../../runtime-manager/deployment-strategies#hybrid-deployments.adoc), or[standalone Mule](../../mule-runtime/latest/mule-deployment-model)instance with just a few clicks. Even if you don’t know how to create a Mule application, API Manager builds and configures it using API Autodiscovery, so your API can be automatically tracked by API Manager after the deployment has completed.
+- 
+Enables customization In most cases, the proxy generated in API Manager is suitable for deployment. However, in the Mule environment, you can use [Anypoint Studio](../../studio/import-export-packages)to edit the proxy to meet custom requirements.
+- 
+Secures and governs your APIs using policies and [Mule API Analytics](viewing-api-analytics)The proxy enables you to protect your API with the full capabilities of the API gateway, including access to Mule API Analytics. 
+- 
+Implements validations Most proxies, including RAML, REST, and WSDL proxies, enable you to perform validations on all incoming requests, using your API definition. You can choose different levels of validation, depending on your requirements: - 
+Regular validations Compare the payload, query parameters, URI parameters, headers, and form parameters with the schema defined in your API specification. When using this configuration, the unspecified query parameters and headers in the API specification are also sent to the backend service. 
+- 
+Strict validations Accept only those requests, parameters, and headers that are explicitly defined in your API specification, thereby ensuring security of your APIs by controlling the parameters that the backend receives. 
+ 
+-

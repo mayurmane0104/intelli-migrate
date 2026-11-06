@@ -1,0 +1,45 @@
+# Deleting an Asset | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/exchange/to-delete-asset](https://docs.mulesoft.com/exchange/to-delete-asset)
+
+---
+
+```
+DELETE '/api/v2/assets/:groupId/:assetId/:version'
+--header 'x-delete-type: hard-delete'
+--header 'Authorization: ***
+```
+# Deleting an Asset
+
+Keep your asset catalog maintained by deleting outdated or redundant assets. This makes it easier for consumers to find and reuse the assets they need.
+
+When deleting assets, admins determine if the GAV (group ID, asset ID, and version) information of the deleted asset can be reused for a different asset. Therefore, when you delete an asset, you might not be able to reuse its GAV for a new asset.
+
+An asset can’t be restored or undeleted.
+
+If you try to delete an asset version with dependent assets, Exchange shows a warning. Remove the dependencies and then delete the asset version.
+
+If you try to delete an API or policy asset version with dependent API instances, Exchange shows a warning. Remove the dependencies and then delete the asset version. The **API instances** page displays each API asset’s instances.
+
+You can’t delete a policy asset that is applied to any managed API instances. On the policy asset’s page, the **APIs using this policy** tab shows which API instances have that policy applied. Use API Manager to remove the policy from the instances, and then delete the policy.
+
+To delete a patch version of an asset:
+
+- 
+In the asset details, click **Manage versions**.
+- 
+Click the three dots menu and select **Delete version**.When GAV reuse is enabled, you have the option to reuse the GAV for another asset. If you don’t select this option, the GAV for that asset won’t be available for reuse. If you do select it, the GAV can be reused for another asset. 
+- 
+Click **Delete asset**.
+
+To delete an entire asset, delete all of its patch versions.
+
+## Review GAV Information for Deleted Assets
+
+You can review details about deleted assets. Find out which GAV information is unavailable for reuse using this endpoint:
+
+`/api/v2/organizations/:organizationId/softDeleted?limit=40&offset=0`
+
+The limit and offset query parameters are optional. The default limit value is 20. The default offset value is 0.
+
+Identify unavailable GAVs of deleted assets for cleanup and permanent deletion. Then, you can make GAVs reusable by permanently deleting the asset using this example API call:

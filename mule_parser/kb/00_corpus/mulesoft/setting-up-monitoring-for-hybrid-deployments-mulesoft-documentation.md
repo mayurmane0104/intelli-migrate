@@ -1,0 +1,469 @@
+# Setting Up Monitoring for Hybrid Deployments | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/monitoring/am-installing](https://docs.mulesoft.com/monitoring/am-installing)
+
+---
+
+**US**
+
+# Setting Up Monitoring for Hybrid Deployments
+
+Install the Anypoint Monitoring agent on an on-premises server to monitor applications that are running on that server and managed in the cloud.
+
+The Anypoint Monitoring agent sends monitoring data to the Anypoint Monitoring cloud endpoint. Anypoint Monitoring data is transferred using an open-source protocol for transferring log data over a highly efficient bidirectional binary channel. Data is securely transmitted using mutual TLS encryption.
+
+To use Anypoint Monitoring across a server group or cluster, you must install Anypoint Monitoring on each individual server.
+
+## Before You Begin
+
+Before installing the Anypoint Monitoring agent, set up and run a Mule runtime engine instance on your server. For guidance, see [Run Mule Runtime Engine On-Premises](../mule-runtime/latest/mule-standalone).
+
+If you have an outbound firewall, open ports based on the `am.zip` installer version for the Anypoint Monitoring agent:
+
+- 
+443 for all installer versions 
+- 
+8443 for 3.x installer versions 
+
+Outbound connections are made to the following endpoints:
+
+- 
+US Control Plane - 
+3.x installers: - 
+us1.ingest.mulesoft.com:8443 
+- 
+data-authenticator.anypoint.mulesoft.com:443 
+- 
+s3.amazonaws.com:443 
+ 
+- 
+- 
+2.x installers: - 
+dias-ingestor-router.us-east-1.prod.cloudhub.io:443 
+- 
+data-authenticator.anypoint.mulesoft.com:443 
+- 
+s3.amazonaws.com:443 
+ 
+- 
+ 
+- 
+- 
+US-GOV Control Plane - 
+data-authenticator.gov.anypoint.mulesoft.com:443 
+- 
+dias-ingestor-router.us-gov-west-1.gprod.msap.io:443 
+ 
+- 
+- 
+EU Control Plane - 
+3.x installers: - 
+eu1.ingest.mulesoft.com:8443 
+- 
+data-authenticator.anypoint.mulesoft.com:443 
+- 
+s3.eu-central-1.amazonaws.com:443 
+ 
+- 
+- 
+2.x installers: - 
+dias-ingestor-router.eu-central-1.prod-eu.msap.io:443 
+- 
+data-authenticator.eu1.anypoint.mulesoft.com:443 
+- 
+s3.eu-central-1.amazonaws.com:443 
+ 
+- 
+ 
+- 
+
+### Ports
+
+| Region | Name | Port | 
+|---|---|---|
+| us1.ingest.mulesoft.com | 8443 | |
+| 
+ | anypoint.mulesoft.com | 443 | 
+| 
+ | runtime-manager.anypoint.mulesoft.com | 443 | 
+| 
+ | analytics-ingest.anypoint.mulesoft.com | 443 | 
+| 
+ | data-authenticator.anypoint.mulesoft.com | 443 | 
+| 
+ | exchange-files.anypoint.mulesoft.com | 443 | 
+| 
+ | exchange2-asset-manager-kprod.s3.amazonaws.com | 443 | 
+| 
+ | runtime-manager.gov.anypoint.mulesoft.com | 443 | 
+| 
+ | gov.anypoint.mulesoft.com | 443 | 
+| 
+ | exchange-files.gov.anypoint.mulesoft.com | 443 | 
+| 
+ | exchange2-asset-manager-kgprod.s3.us-gov-west-1.amazonaws.com | 443 | 
+| 
+ | eu1.ingest.mulesoft.com | 8443 | 
+| 
+ | eu1.anypoint.mulesoft.com | 443 | 
+| 
+ | runtime-manager.eu1.anypoint.mulesoft.com | 443 | 
+| 
+ | analytics-ingest.eu1.anypoint.mulesoft.com | 443 | 
+| 
+ | data-authenticator.eu1.anypoint.mulesoft.com | 443 | 
+| 
+ | exchange2-asset-manager-kprod-eu.s3.eu-central-1.amazonaws.com | 443 | 
+
+## Supported Operating Systems
+
+Install the Anypoint Monitoring agent on a supported operating systems:
+
+- 
+3.x versions of the installer: - 
+RedHat Enterprise Linux 9 
+- 
+Ubuntu 20.04 
+- 
+Windows Server 2019 
+ 
+- 
+- 
+2.x versions of the installer: - 
+CentOS 7 
+- 
+RedHat Enterprise Linux 7 
+- 
+Ubuntu 16.04 and 18.04 
+- 
+Windows Server 2016, Windows Server 2019 
+ 
+- 
+
+To install the agent, you must have root or administrative privileges.
+
+## Supported Versions of Mule Runtime Engine
+
+Run your Mule app on a supported Mule runtime version. For supported versions, see [Mule Runtime Release Notes](../release-notes/mule-runtime/mule-esb).
+
+## Supported Versions of Mule Runtime Manager Agent
+
+You must install a supported version of the Anypoint Runtime Manager agent in the Mule runtime engine running on the server. For more information, see [Runtime Manager Agent](../runtime-manager/runtime-manager-agent).
+
+- 
+2.7.x An Anypoint Monitoring agent from the version 3.x installer requires Mule Runtime Manager agent version 2.7.1 or higher. 
+- 
+2.6.x 
+- 
+2.5.x 
+- 
+2.4.x 
+- 
+2.3.0 
+- 
+2.2.x 
+- 
+2.1.9 
+- 
+2.1.7 
+- 
+2.1.6 
+- 
+1.14.x 
+- 
+1.13.0 
+- 
+1.12.x 
+- 
+1.11.x 
+- 
+1.10.0 
+
+You must manage Mule deployments in Runtime Manager. You can add and check for your hybrid deployments from the [Runtime Manager UI](../runtime-manager/deploying-to-your-own-servers) or the [Runtime Manager REST API](../runtime-manager/runtime-manager-api).
+
+## Hardware Prerequisites
+
+Ensure that the server has the minimum hardware requirements for Anypoint Monitoring, which are:
+
+- 
+2GHz CPU or 1 virtual CPU 
+- 
+1GB RAM 
+- 
+4GB disk space 
+- 
+Intel x86 or x64 compatible CPU architecture 
+
+## Install the Anypoint Monitoring Agent
+
+- 
+Meet the prerequisites in [Before You Begin](#prereqs):Mule runtime engine must be installed and running. 
+- 
+In the sidebar, click **Settings**.
+- 
+To monitor applications deployed to a local server, select **Hybrid**, and follow the procedure to install Anypoint Monitoring agent from the latest version of the agent’s installer in`am.zip`.- 
+When you extract the `am.zip`file, a folder called`am`is created in the location where you extracted the ZIP.
+- 
+The installation script asks if you want Anypoint Monitoring installed as a service. - 
+If you don’t want to have it preset as a service by the installer, select **No**.
+- 
+You can call the installation script with the `-x`argument to skip this prompt. If you skip the prompt, Anypoint Monitoring is not installed as a service.
+ 
+- 
+- 
+You cannot install the Anypoint Monitoring agent on a server that has an existing filebeat instance running. 
+- 
+When you install the Anypoint Monitoring agent on a hybrid server in a server group, use Runtime Manager to restart the server to enable Anypoint Monitoring to begin collecting metrics. 
+- 
+To change the telemetry listening port (defaults to port `8888`), set the`-t`parameter to an integer from 1024 through 65535.Example: `$ ./install -t 8889`.
+- 
+To install multiple instances of the agent on a Linux host, see [Install Multiple Agents to a Linux Host](#install-multiple-agents).
+- 
+For traces in Anypoint Monitoring, see [Enable Trace Data Collection for Hybrid Runtime Servers](#tracing-setup).
+ 
+- 
+
+### Install Multiple Agents to a Linux Host
+
+On a Linux host, you can install multiple agent instances:
+
+- 
+Non-service installations: To install multiple agent instances, assign a unique port to each agent instance. Set the `-t`parameter to an integer from 1024 through 65535.Example: `$ ./install -t 8889`
+- 
+Service installations: To install multiple agent instances as services, assign a unique port and installation name to each instance. - 
+For the first service installation, you can use the default configuration. The `-t`and`-n`parameters are optional.
+- 
+For subsequent service installations, you must use both `-t`and`-n`.Example: `$ ./install -t <port> -n <installation-name>`The installer prompts you for a unique port and installation name. 
+ 
+- 
+
+Parameters:
+
+- 
+`-t`: Sets the port number to an integer from 1024 through 65535. The default is 8888.
+- 
+`-n`: Sets a unique name that becomes part of the service name. The name must be no more than eight alphanumeric characters. The default is an unnamed port. Required for the second and subsequent agent instances on a single Linux host. Supported with`-t`only for service installations.
+
+## Enable Trace Data Collection for Hybrid Runtime Servers
+
+| 
+ | 
+
+For installer version 3.2.14 or later, you can enable trace data collection for Anypoint Monitoring. On each hybrid server where you want to collect trace data, configure a JVM property and install agent with the trace data collection option. Version 3.2.1.4 was released on [March 5, 2025](../release-notes/monitoring/anypoint-monitoring-installer-release-notes#march-5-2026).
+
+- 
+Upgrade to an Anypoint Monitoring agent version that supports trace data collection (am-3.2.14.0.zip or later). 
+- 
+Stop Mule. 
+- 
+Add this line to `$MULE_HOME/conf/wrapper.conf`:`wrapper.java.additional.<N>=-Dmule.openTelemetry.tracer.exporter.enabled=true``<N>`: The next available property index.
+- 
+Install the agent using the `-g 4317`option:`$MULE_HOME/am/bin/install -g 4317`Mule runtime uses port 4317 for trace data collection by default (see [OpenTelemetry Support in Mule Runtime](../mule-runtime/latest/otel-support)).
+- 
+Restart Mule. 
+- 
+Finish setting up the agent: `$MULE_HOME/am/bin/setup`
+
+## Proxy Settings
+
+If you proxy your monitoring data as it leaves the data center, you must configure the Anypoint Monitoring agent to communicate through the proxy.
+
+The configuration and supported protocol depends on the version of the Anypoint Monitoring agent’s installer:
+
+See also, [Supported Operating Systems](#os-support).
+
+### Configure Proxy Communication for Monitoring Agents from Version 3.x Installers (HTTP/HTTPS Protocol)
+
+If you proxy your monitoring data as it leaves the data center and you’re using an Anypoint Monitoring agent from a *version 3.x* installer, the proxy must support the HTTP/HTTPS protocol, and you must configure the Anypoint Monitoring agent to communicate through the proxy.
+
+To configure the agent for an HTTP or HTTPS proxy:
+
+- 
+Set up Runtime Manager with a proxy. See [Create a Server in Runtime Manager](../runtime-manager/servers-create).
+- 
+Install the Anypoint Monitoring agent and use the `-p`option. For example, on a Linux server, at the command line, enter:$ ./install -p https://user:password@https-server:1080 For a user or password of the proxy configuration that contains URI-reserved characters, you must percent-encode the characters according to the encoding rules of RFC 3986. 
+
+### Configure Proxy Communication for Monitoring Agents from Version 2.x Installers (SOCKS5 Protocol)
+
+If you proxy your monitoring data as it leaves the data center and you’re using an Anypoint Monitoring agent from a *version 3.x* installer, the proxy must support the SOCKS5 protocol, and you must configure the Anypoint Monitoring agent to communicate through the proxy.
+
+To configure the agent for the SOCKS5 proxy:
+
+- 
+Set up Runtime Manager with a proxy. See [Create a Server in Runtime Manager](../runtime-manager/servers-create).
+- 
+Install the Anypoint Monitoring agent and use the `-p`option. For example, on a Windows server, at the command line, enter:<location-of-am-folder\bin>powershell -file install.ps1 -p socks5://user:password@socks5-server:1080 For a Linux server, enter: $ ./install -p socks5://user:password@socks5-server:1080 For a user or password of the proxy configuration that contains URI-reserved characters, you must percent-encode the characters according to the encoding rules of RFC 3986. 
+
+## Verify the Anypoint Monitoring Agent is Running
+
+- 
+Wait 10 minutes for the configuration to propagate. 
+- 
+Log in to Anypoint Platform with a user account that has [permission to access Anypoint Monitoring content](am-permissions).
+- 
+Navigate to Anypoint Monitoring: Click **Monitoring**from the Anypoint Platform home page or from the**Runtimes**menu in the header.
+- 
+On the **Built-in Dashboards**page, select an app that is deployed on the server where you installed the Anypoint Monitoring agent.
+- 
+Check whether the CPU Utilization and Memory Utilization charts are displaying data. 
+ If you see data in the charts, the Anypoint Monitoring agent is installed and running.
+ If you do not see data in the charts, verify that Anypoint Monitoring is able to connect to the endpoint.If necessary, you can add the endpoint to an allowlist for outbound firewall rules so your server allows connections. The endpoints to add to the allowlist are listed in [Before You Begin](#prereqs).
+- 
+Log into the server on which the Anypoint Monitoring agent is running. 
+- 
+Open the log file for the data-transfer agent: - 
+3.x log file path: `./am/logs`If this agent is running as a service on Linux, the log file path is `/var/log/otel-collector`.
+- 
+2.x log file path: `/var/log/filebeat`If this agent is running as a service on Linux, the log file path is /var/log/filebeat`. 
+ 
+- 
+- 
+Look for entries that mention connection failures or connection retries. 
+
+## Update the Anypoint Monitoring Agent
+
+When you upgrade the Runtime Manager agent, you must reinstall the Anypoint Monitoring agent.
+
+If you need to update the Anypoint Monitoring agent at some point in the future, follow these steps:
+
+- 
+Stop Mule. 
+- 
+In the `am`folder, run the following command:
+ `./bin/uninstall`
+- 
+Delete the `am`folder.
+- 
+Follow the instructions for [installing the Anypoint Monitoring agent](#install_ap_monitoring_onprem)on-premises.
+- 
+Restart Mule. 
+
+| If you add or remove a Mule runtime from the cluster or a server group, you must reinstall the Anypoint Monitoring agent. | 
+
+## Performance Impact
+
+Enabling monitoring can impact CPU utilization and memory utilization depending on your specific application configuration. Before enabling monitoring in your production environment, test any performance impact in your pre-production environment to ensure optimal performance and sizing.
+
+## Troubleshooting
+
+- 
+If you find connection failure or retry entries, ensure that port 8443 (Anypoint Monitoring agents from installer version 3.x and later only) and 443 (all Anypoint Monitoring agents) in your outbound firewall are open. 
+- 
+If you don’t find connection failure or retry entries, contact the support team. 
+- 
+On Windows, if Anypoint Monitoring agent is configured to run as a service and throws Error 1064 when starting, find the root cause by opening the Windows application Events Viewer to **Windows Logs**→**Applications**.
+- 
+If you encounter inconsistent path normalization, refer to [Normalize API Paths](#normalize-path).
+
+## Disable Log Forwarding for Hybrid Runtime Servers
+
+| 
+ | 
+
+You can disable log forwarding to Anypoint Monitoring if you have AM installer v.2.5.10 or later. To disable this feature, you must configure a JVM property on each hybrid server for which you want to disable log forwarding. You cannot disable log forwarding per application.
+
+To disable log forwarding:
+
+- 
+Upgrade the Anypoint Monitoring agent to a version that supports disabling log forwarding (am-2.5.10.0.zip or later). 
+- 
+Stop Mule. 
+- 
+Add the following line in the `MULE_HOME/conf/wrapper.conf`file (where`<N>`is the next available property index):
+ `wrapper.java.additional.<N>=-Danypoint.platform.monitoring.logs_forwarding.enabled=false`
+- 
+Restart Mule. 
+
+## Normalize API Paths
+
+Proper path normalization helps to ensure correct counting of requests to inbound HTTP endpoints in Runtime Manager and Anypoint Monitoring dashboards. Normalization enables charts in these dashboards to ignore insignificant differences, typically from dynamic variables, between URLs that make requests to the same endpoint.
+
+For inbound HTTP endpoints, you can rely on the [default path normalization](#normalization-default) or configure a [custom normalization pattern](#normalization-custom) with the `anypoint.platform.config.analytics.endpoint.patterns` property.
+
+Supported deployment types:
+
+- 
+CloudHub 
+- 
+CloudHub 2.0 
+- 
+Hybrid 
+- 
+Runtime Fabric 
+
+### Default Path Normalization
+
+The default path normalization process follows these substitution patterns for:
+
+- 
+Digits: Replace any part of the path containing a digit with `X`. For example,`/booking/abc123/pax/A1B2C4`becomes`/booking/X/pax/X`.
+- 
+Uppercase segments: Replace any part of the path containing uppercase characters but no lower case characters with `X`. For example,`/booking/ABC/pax/A1B2C4`becomes`/booking/X/pax/X`.
+
+Parts that contain a mix of upper case and lower case characters remain the same. For example, `/booking/abc123/pax/PAisdf` remains `/booking/X/pax/PAisdf`.
+
+### Configure a Custom Path Normalization Pattern
+
+To override the default behavior, you can configure `anypoint.platform.config.analytics.endpoint.patterns` on a running Mule app in Runtime Manager or when deploying a new application:
+
+- 
+Log in to your Anypoint Platform account and select **Runtime Manager**.
+- 
+Either click **Deploy Application**for a new deployment, or select an existing application and click**Manage Application**.
+- 
+Navigate to the **Properties**tab in the**Settings**section.
+- 
+Under **New Key**, add`anypoint.platform.config.analytics.endpoint.patterns`.
+- 
+Under **New Value**, add the pattern for your dynamic endpoint, for example,`/api/V1/proc/payments/{paymentId}/cancel`.
+- 
+Click **Apply Changes**.
+
+By defining an explicit pattern, you can ensure consistent normalization of dynamic endpoints. All incoming requests matching the pattern are correctly normalized to a single endpoint.
+
+For example, provide a pattern that identifies the variable part.
+
+For variables, you can use:
+
+- 
+`{}`with an empty string
+- 
+`{string}`with a string value
+
+For example, assume property values that follow these patterns:
+
+- 
+`/v1/payments/{paymentId}/cancel`(single property)
+- 
+`/v1/order/{orderId},/v1/order/{}/cancel`(multiple properties separated by`,`)
+
+These incoming requests match one of the defined patterns:
+
+- 
+`/v1/order/jAXjh`
+- 
+`/v1/payments/CAjjAXjh/cancel`
+- 
+`/v1/order/jAXjh/cancel`
+
+Normalized results for the example requests:
+
+- 
+`/v1/payments/X/cancel`
+- 
+`/v1/order/X`
+- 
+`/v1/order/X/cancel`
+
+## Restart After Changing Subscription Tiers
+
+For the *2.x version* of Anypoint Monitoring agent, changes to your subscription tier require further action to continue collecting metrics.
+
+To trigger metrics collection through a 2.x agent after changing your subscription:
+
+- 
+Stop Mule runtime engine. 
+- 
+Uninstall and reinstall the agent. 
+
+This action isn’t required for the 3.x version of the agent. Version 3.x maintains persistent monitoring connectivity and adapts to backend infrastructure updates dynamically.

@@ -1,0 +1,4 @@
+{
+  "required_terms": ["AWS::IAM::Role", "iam.Role"],
+  "forbidden_terms": ["Action: '*'", "Resource: '*'", "ECS", "AppFlow", "Amazon MQ", "MSK", "Glue", "DynamoDB", "EMR", "Batch"]
+}

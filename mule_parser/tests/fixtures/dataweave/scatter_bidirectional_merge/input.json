@@ -1,0 +1,34 @@
+{
+  "0": {
+    "payload": [
+      {
+        "Name": "Alice",
+        "Email": "a@test.com",
+        "Id": "SF1",
+        "Username": "alice@sfdc"
+      },
+      {
+        "Name": "Bob",
+        "Email": "b@test.com",
+        "Id": "SF2",
+        "Username": "bob@sfdc"
+      }
+    ]
+  },
+  "1": {
+    "payload": [
+      {
+        "name": "Alice",
+        "email": "a@test.com",
+        "id": "DB1",
+        "username": "alice@db"
+      },
+      {
+        "name": "Carol",
+        "email": "c@test.com",
+        "id": "DB3",
+        "username": "carol@db"
+      }
+    ]
+  }
+}

@@ -1,0 +1,56 @@
+# Metrics for a Specific Asset and Version | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/exchange/metrics-for-a-specific-asset-version](https://docs.mulesoft.com/exchange/metrics-for-a-specific-asset-version)
+
+---
+
+![Assets details page with usage and engagement metrics](_images/ex-metrics-for-asset-version.png) 
+
+# Metrics for a Specific Asset and Version
+
+Administrators and asset owners with contributor permission can view usage details for a specific API specification fragment, REST API asset, and their versions on the asset details page. This page identifies asset versions with overall high usage and versions with low usage. The usage rates can help you understand the performance and stickiness of specific asset versions within your organization and enable you to make informed decisions about reuse and improvements.
+
+The following graphic shows the asset details page with usage and engagement metrics:
+
+![Assets details page with usage and engagement metrics](_images/ex-metrics-for-asset-version.png) 
+
+The following data is collected and analyzed:
+
+- 
+Version The version of the asset. 
+- 
+Created by The name of the person who created this version of the asset. 
+- 
+Created on The date that the asset was created. 
+- 
+Lifecycle state Which state the asset is currently in. The states are In Development, Stable, or Deprecated. 
+- 
+Conformance Conformance status appears for all REST APIs and AsyncAPIs. The status can be Conformant, Not Conformant, and Not Validated. 
+- 
+Engagement contribution The engagement contribution is the percentage of usage of the given asset patch or minor version with regards to its respective minor or major version. 
+- 
+Downloads The number of times the asset was downloaded from Exchange. You can sort by ascending or descending order. 
+- 
+API Designer imports The number of times the asset was imported in to Design Center. You can sort by ascending or descending order. 
+- 
+Studio imports The number of times the asset was imported in to Studio. You can sort by ascending or descending order. 
+- 
+All-time stats - 
+Dependents The number of dependent assets from the time the version was created. 
+- 
+Contracts The number of approved contracts from the time the version was created. 
+ 
+- 
+
+## View Asset Version Engagement
+
+To view usage and engagement metrics for the asset versions of API specification fragments and REST APIs:
+
+- 
+In the Exchange catalog, select an API specification fragment or REST API. The asset details page displays the asset metadata. 
+- 
+In the navigation bar, click **Asset versions engagement**.![The navigation bar with Asset versions engagement option highlighted](_images/ex-nav-asset-versions-engagement.png)  The **Asset versions engagement**page displays.
+- 
+If you want to filter by date, select a date range from 7 days, 30 days, or 90 days. The default date range is the last 7 days. 
+- 
+If you want to export the usage data, click **Export to CSV**.

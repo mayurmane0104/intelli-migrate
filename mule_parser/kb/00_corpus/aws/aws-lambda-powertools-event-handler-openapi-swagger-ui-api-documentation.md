@@ -1,0 +1,51 @@
+# aws_lambda_powertools.event_handler.openapi.swagger_ui API documentation
+
+**Source:** [https://docs.aws.amazon.com/powertools/python/latest/api/event_handler/openapi/swagger_ui/index.html](https://docs.aws.amazon.com/powertools/python/latest/api/event_handler/openapi/swagger_ui/index.html)
+
+---
+
+# Module `aws_lambda_powertools.event_handler.openapi.swagger_ui`
+
+## Sub-modules
+
+## Functions
+
+- `def generate_oauth2_redirect_html() ‑> str`
+- 
+## Expand source code`def generate_oauth2_redirect_html() -> str: """ Generates the HTML content for the OAuth2 redirect page. Source: https://github.com/swagger-api/swagger-ui/blob/master/dist/oauth2-redirect.html """ return """ <!doctype html> <html lang="en-US"> <head> <title>Swagger UI: OAuth2 Redirect</title> </head> <body> <script> 'use strict'; function run () { var oauth2 = window.opener.swaggerUIRedirectOauth2; var sentState = oauth2.state; var redirectUrl = oauth2.redirectUrl; var isValid, qp, arr; if (/code|token|error/.test(window.location.hash)) { qp = window.location.hash.substring(1).replace('?', '&'); } else { qp = location.search.substring(1); } arr = qp.split("&"); arr.forEach(function (v,i,_arr) { _arr[i] = '"' + v.replace('=', '":"') + '"';}); qp = qp ? JSON.parse('{' + arr.join() + '}', function (key, value) { return key === "" ? value : decodeURIComponent(value); } ) : {}; isValid = qp.state === sentState; if (( oauth2.auth.schema.get("flow") === "accessCode" || oauth2.auth.schema.get("flow") === "authorizationCode" || oauth2.auth.schema.get("flow") === "authorization_code" ) && !oauth2.auth.code) { if (!isValid) { oauth2.errCb({ authId: oauth2.auth.name, source: "auth", level: "warning", message: "Authorization may be unsafe, passed state was changed in server. The passed state wasn't returned from auth server." }); } if (qp.code) { delete oauth2.state; oauth2.auth.code = qp.code; oauth2.callback({auth: oauth2.auth, redirectUrl: redirectUrl}); } else { let oauthErrorMsg; if (qp.error) { oauthErrorMsg = "["+qp.error+"]: " + (qp.error_description ? qp.error_description+ ". " : "no accessCode received from the server. ") + (qp.error_uri ? "More info: "+qp.error_uri : ""); } oauth2.errCb({ authId: oauth2.auth.name, source: "auth", level: "error", message: oauthErrorMsg || "[Authorization failed]: no accessCode received from the server." }); } } else { oauth2.callback({auth: oauth2.auth, token: qp, isValid: isValid, redirectUrl: redirectUrl}); } window.close(); } if (document.readyState !== 'loading') { run(); } else { document.addEventListener('DOMContentLoaded', function () { run(); }); } </script> </body> </html> """.strip()`Generates the HTML content for the OAuth2 redirect page. Source: [https://github.com/swagger-api/swagger-ui/blob/master/dist/oauth2-redirect.html](https://github.com/swagger-api/swagger-ui/blob/master/dist/oauth2-redirect.html)
+- `def generate_swagger_html(spec: str,`
+ swagger_js: str,
+ swagger_css: str,
+ swagger_base_url: str,
+ oauth2_config:- [OAuth2Config](#aws_lambda_powertools.event_handler.openapi.swagger_ui.OAuth2Config)| None,
+ persist_authorization: bool = False) ‑> str
+- 
+## Expand source code`def generate_swagger_html( spec: str, swagger_js: str, swagger_css: str, swagger_base_url: str, oauth2_config: OAuth2Config | None, persist_authorization: bool = False, ) -> str: """ Generate Swagger UI HTML page Parameters ---------- spec: str The OpenAPI spec swagger_js: str Swagger UI JavaScript source code or URL swagger_css: str Swagger UI CSS source code or URL swagger_base_url: str The base URL for Swagger UI oauth2_config: OAuth2Config, optional The OAuth2 configuration. persist_authorization: bool, optional Whether to persist authorization data on browser close/refresh. """ # If Swagger base URL is present, generate HTML content with linked CSS and JavaScript files # If no Swagger base URL is provided, include CSS and JavaScript directly in the HTML if swagger_base_url: swagger_css_content = f"<link rel='stylesheet' type='text/css' href='{swagger_css}'>" swagger_js_content = f"<script src='{swagger_js}'></script>" else: swagger_css_content = f"<style>{swagger_css}</style>" swagger_js_content = f"<script>{swagger_js}</script>" # Prepare oauth2 config oauth2_content = ( f"ui.initOAuth({oauth2_config.json(exclude_none=True, exclude_unset=True)});" if oauth2_config else "" ) return f""" <!DOCTYPE html> <html> <head> <meta charset="UTF-8"> <title>Swagger UI</title> <meta http-equiv="Cache-control" content="no-cache, no-store, must-revalidate" /> {swagger_css_content} </head> <body> <div id="swagger-ui"> Loading... </div> </body> {swagger_js_content} <script> var currentUrl = new URL(window.location.href); var baseUrl = currentUrl.protocol + "//" + currentUrl.host + currentUrl.pathname; var swaggerUIOptions = {{ dom_id: "#swagger-ui", docExpansion: "list", deepLinking: true, filter: true, layout: "BaseLayout", showExtensions: true, showCommonExtensions: true, spec: {spec}, presets: [ SwaggerUIBundle.presets.apis, SwaggerUIBundle.SwaggerUIStandalonePreset ], plugins: [ SwaggerUIBundle.plugins.DownloadUrl ], withCredentials: true, persistAuthorization: {str(persist_authorization).lower()}, oauth2RedirectUrl: baseUrl + "?format=oauth2-redirect", }} var ui = SwaggerUIBundle(swaggerUIOptions) ui.specActions.updateUrl(currentUrl.pathname + "?format=json"); {oauth2_content} </script> </html> """.strip()`Generate Swagger UI HTML page ## Parameters- `spec`- `str`
+- The OpenAPI spec
+- `swagger_js`- `str`
+- Swagger UI JavaScript source code or URL
+- `swagger_css`- `str`
+- Swagger UI CSS source code or URL
+- `swagger_base_url`- `str`
+- The base URL for Swagger UI
+- `oauth2_config`- [OAuth2Config](#aws_lambda_powertools.event_handler.openapi.swagger_ui.OAuth2Config)
+- The OAuth2 configuration.
+- `persist_authorization`- `bool`, optional
+- Whether to persist authorization data on browser close/refresh.
+ 
+
+## Classes
+
+- `class OAuth2Config (**data: Any)`
+- 
+## Expand source code`class OAuth2Config(BaseModel): """ OAuth2 configuration for Swagger UI """ # The client ID for the OAuth2 application clientId: Optional[str] = Field(alias="client_id", default=None) # The client secret for the OAuth2 application. This is sensitive information and requires the explicit presence # of the POWERTOOLS_DEV environment variable. clientSecret: Optional[str] = Field(alias="client_secret", default=None) # The realm in which the OAuth2 application is registered. Optional. realm: Optional[str] = Field(default=None) # The name of the OAuth2 application appName: str = Field(alias="app_name") # The scopes that the OAuth2 application requires. Defaults to an empty list. scopes: Sequence[str] = Field(default=[]) # Additional query string parameters to be included in the OAuth2 request. Defaults to an empty dictionary. additionalQueryStringParams: Dict[str, str] = Field(alias="additional_query_string_params", default={}) # Whether to use basic authentication with the access code grant type. Defaults to False. useBasicAuthenticationWithAccessCodeGrant: bool = Field( alias="use_basic_authentication_with_access_code_grant", default=False, ) # Whether to use PKCE with the authorization code grant type. Defaults to False. usePkceWithAuthorizationCodeGrant: bool = Field(alias="use_pkce_with_authorization_code_grant", default=False) model_config = MODEL_CONFIG_ALLOW @field_validator("clientSecret") def client_secret_only_on_dev(cls, v: Optional[str]) -> Optional[str]: if not v: return None if not powertools_dev_is_set(): raise ValueError( "cannot use client_secret without POWERTOOLS_DEV mode. See " "https://docs.aws.amazon.com/powertools/python/latest/#optimizing-for-non-production-environments", ) else: warnings.warn( "OAuth2Config is using client_secret and POWERTOOLS_DEV is set. This reveals sensitive information. " "DO NOT USE THIS OUTSIDE LOCAL DEVELOPMENT", stacklevel=2, ) return v`OAuth2 configuration for Swagger UI Create a new model by parsing and validating input data from keyword arguments. Raises [ `ValidationError`][pydantic_core.ValidationError] if the input data cannot be validated to form a valid model.`self`is explicitly positional-only to allow`self`as a field name.### Ancestors- pydantic.main.BaseModel
+ ### Class variables- `var additionalQueryStringParams : Dict[str, str]`
+- `var appName : str`
+- `var clientId : str | None`
+- `var clientSecret : str | None`
+- `var model_config`
+- `var realm : str | None`
+- `var scopes : Sequence[str]`
+- `var useBasicAuthenticationWithAccessCodeGrant : bool`
+- `var usePkceWithAuthorizationCodeGrant : bool`
+ ### Static methods- `def client_secret_only_on_dev(v: str | None) ‑> str | None`

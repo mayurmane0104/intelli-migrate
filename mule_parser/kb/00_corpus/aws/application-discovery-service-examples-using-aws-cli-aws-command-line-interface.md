@@ -1,0 +1,47 @@
+# Application Discovery Service examples using AWS CLI - AWS Command Line Interface
+
+**Source:** [https://docs.aws.amazon.com/cli/latest/userguide/cli_application-discovery-service_code_examples.html](https://docs.aws.amazon.com/cli/latest/userguide/cli_application-discovery-service_code_examples.html)
+
+---
+
+The following code examples show you how to perform actions and implement common scenarios by using the AWS Command Line Interface with Application Discovery Service.
+
+*Actions* are code excerpts from larger programs and must be run in context. While actions show you how to call individual service functions, you can see actions in context in their related scenarios.
+
+Each example includes a link to the complete source code, where you can find instructions on how to set up and run the code in context.
+
+###### Topics
+
+## Actions
+
+    The following code example shows how to use `describe-agents`.
+
+- **AWS CLI**
+- 
+            
+                    **Describe agents with specified collectionStatus states**This example command describes collection agents with collection status of "STARTED" or "STOPPED". Command: `aws discovery describe-agents --filters name="collectionStatus",values="STARTED","STOPPED",condition="EQUALS" --max-results``3`Output: `{ "Snapshots": [ { "version": "1.0.40.0", "agentType": "EC2", "hostName": "ip-172-31-40-234", "collectionStatus": "STOPPED", "agentNetworkInfoList": [ { "macAddress": "06:b5:97:14:fc:0d", "ipAddress": "172.31.40.234" } ], "health": "UNKNOWN", "agentId": "i-003305c02a776e883", "registeredTime": "2016-12-09T19:05:06Z", "lastHealthPingTime": "2016-12-09T19:05:10Z" }, { "version": "1.0.40.0", "agentType": "EC2", "hostName": "ip-172-31-39-64", "collectionStatus": "STARTED", "agentNetworkInfoList": [ { "macAddress": "06:a1:0e:c7:b2:73", "ipAddress": "172.31.39.64" } ], "health": "SHUTDOWN", "agentId": "i-003a5e5e2b36cf8bd", "registeredTime": "2016-11-16T16:36:25Z", "lastHealthPingTime": "2016-11-16T16:47:37Z" } ] }`- 
+                    For API details, see [DescribeAgents](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/discovery/describe-agents.html)in*AWS CLI Command Reference*.
+ 
+- 
+                    
+
+The following code example shows how to use `describe-configurations`.
+
+- **AWS CLI**
+- 
+            
+                    **Describe selected asset configurations**This example command describes the configurations of two specified servers. The action detects the type of asset from the configuration ID. Only one type of asset is allowed per command. Command: `aws discovery describe-configurations --configuration-ids``"d-server-099385097ef9fbcfb"``"d-server-0c4f2dd1fee22c6c1"`Output: `{ "configurations": [ { "server.performance.maxCpuUsagePct": "0.0", "server.performance.maxDiskReadIOPS": "0.0", "server.performance.avgCpuUsagePct": "0.0", "server.type": "EC2", "server.performance.maxNetworkReadsPerSecondInKB": "0.19140625", "server.hostName": "ip-172-31-35-152", "server.configurationId": "d-server-0c4f2dd1fee22c6c1", "server.tags.hasMoreValues": "false", "server.performance.minFreeRAMInKB": "1543496.0", "server.osVersion": "3.14.48-33.39.amzn1.x86_64", "server.performance.maxDiskReadsPerSecondInKB": "0.0", "server.applications": "[]", "server.performance.numDisks": "1", "server.performance.numCpus": "1", "server.performance.numCores": "1", "server.performance.maxDiskWriteIOPS": "0.0", "server.performance.maxNetworkWritesPerSecondInKB": "0.82421875", "server.performance.avgDiskWritesPerSecondInKB": "0.0", "server.networkInterfaceInfo": "[{\"name\":\"eth0\",\"macAddress\":\"06:A7:7D:3F:54:57\",\"ipAddress\":\"172.31.35.152\",\"netMask\":\"255.255.240.0\"},{\"name\":\"lo\",\"macAddress\":\"00:00:00:00:00:00\",\"ipAddress\":\"127.0.0.1\",\"netMask\":\"255.0.0.0\"},{\"name\":\"eth0\",\"macAddress\":\"06:A7:7D:3F:54:57\",\"ipAddress\":\"fe80::4a7:7dff:fe3f:5457\"},{\"name\":\"lo\",\"macAddress\":\"00:00:00:00:00:00\",\"ipAddress\":\"::1\"}]", "server.performance.avgNetworkReadsPerSecondInKB": "0.04915364583333333", "server.tags": "[]", "server.applications.hasMoreValues": "false", "server.timeOfCreation": "2016-10-28 23:44:00.0", "server.agentId": "i-4447bc1b", "server.performance.maxDiskWritesPerSecondInKB": "0.0", "server.performance.avgDiskReadIOPS": "0.0", "server.performance.avgFreeRAMInKB": "1547210.1333333333", "server.performance.avgDiskReadsPerSecondInKB": "0.0", "server.performance.avgDiskWriteIOPS": "0.0", "server.performance.numNetworkCards": "2", "server.hypervisor": "xen", "server.networkInterfaceInfo.hasMoreValues": "false", "server.performance.avgNetworkWritesPerSecondInKB": "0.1380859375", "server.osName": "Linux - Amazon Linux AMI release 2015.03", "server.performance.totalRAMInKB": "1694732.0", "server.cpuType": "x64" }, { "server.performance.maxCpuUsagePct": "100.0", "server.performance.maxDiskReadIOPS": "0.0", "server.performance.avgCpuUsagePct": "14.733333333333338", "server.type": "EC2", "server.performance.maxNetworkReadsPerSecondInKB": "13.400390625", "server.hostName": "ip-172-31-42-208", "server.configurationId": "d-server-099385097ef9fbcfb", "server.tags.hasMoreValues": "false", "server.performance.minFreeRAMInKB": "1531104.0", "server.osVersion": "3.14.48-33.39.amzn1.x86_64", "server.performance.maxDiskReadsPerSecondInKB": "0.0", "server.applications": "[]", "server.performance.numDisks": "1", "server.performance.numCpus": "1", "server.performance.numCores": "1", "server.performance.maxDiskWriteIOPS": "1.0", "server.performance.maxNetworkWritesPerSecondInKB": "12.271484375", "server.performance.avgDiskWritesPerSecondInKB": "0.5333333333333334", "server.networkInterfaceInfo": "[{\"name\":\"eth0\",\"macAddress\":\"06:4A:79:60:75:61\",\"ipAddress\":\"172.31.42.208\",\"netMask\":\"255.255.240.0\"},{\"name\":\"eth0\",\"macAddress\":\"06:4A:79:60:75:61\",\"ipAddress\":\"fe80::44a:79ff:fe60:7561\"},{\"name\":\"lo\",\"macAddress\":\"00:00:00:00:00:00\",\"ipAddress\":\"::1\"},{\"name\":\"lo\",\"macAddress\":\"00:00:00:00:00:00\",\"ipAddress\":\"127.0.0.1\",\"netMask\":\"255.0.0.0\"}]", "server.performance.avgNetworkReadsPerSecondInKB": "2.8720052083333334", "server.tags": "[]", "server.applications.hasMoreValues": "false", "server.timeOfCreation": "2016-10-28 23:44:30.0", "server.agentId": "i-c142b99e", "server.performance.maxDiskWritesPerSecondInKB": "4.0", "server.performance.avgDiskReadIOPS": "0.0", "server.performance.avgFreeRAMInKB": "1534946.4", "server.performance.avgDiskReadsPerSecondInKB": "0.0", "server.performance.avgDiskWriteIOPS": "0.13333333333333336", "server.performance.numNetworkCards": "2", "server.hypervisor": "xen", "server.networkInterfaceInfo.hasMoreValues": "false", "server.performance.avgNetworkWritesPerSecondInKB": "1.7977864583333332", "server.osName": "Linux - Amazon Linux AMI release 2015.03", "server.performance.totalRAMInKB": "1694732.0", "server.cpuType": "x64" } ] }`**Describe selected asset configurations**This example command describes the configurations of two specified applications. The action detects the type of asset from the configuration ID. Only one type of asset is allowed per command. Command: `aws discovery describe-configurations --configuration-ids``"d-application-0ac39bc0e4fad0e42"``"d-application-02444a45288013764q"`Output: `{ "configurations": [ { "application.serverCount": "0", "application.name": "Application-12345", "application.lastModifiedTime": "2016-12-13 23:53:27.0", "application.description": "", "application.timeOfCreation": "2016-12-13 23:53:27.0", "application.configurationId": "d-application-0ac39bc0e4fad0e42" }, { "application.serverCount": "0", "application.name": "Application-67890", "application.lastModifiedTime": "2016-12-13 23:53:33.0", "application.description": "", "application.timeOfCreation": "2016-12-13 23:53:33.0", "application.configurationId": "d-application-02444a45288013764" } ] }`- 
+                    For API details, see [DescribeConfigurations](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/discovery/describe-configurations.html)in*AWS CLI Command Reference*.
+ 
+- 
+                    
+
+The following code example shows how to use `list-configurations`.
+
+- **AWS CLI**
+- 
+            
+                    **To list all of the discovered servers meeting a set of filter conditions**This example command lists discovered servers matching either of two hostname patterns and not running Ubuntu. Command: `aws discovery list-configurations --configuration-type``SERVER`--filters name="server.hostName",values="172-31-35","172-31-42",condition="CONTAINS" name="server.osName",values="Ubuntu",condition="NOT_CONTAINS"Output: `{ "configurations": [ { "server.osVersion": "3.14.48-33.39.amzn1.x86_64", "server.type": "EC2", "server.hostName": "ip-172-31-42-208", "server.timeOfCreation": "2016-10-28 23:44:30.0", "server.configurationId": "d-server-099385097ef9fbcfb", "server.osName": "Linux - Amazon Linux AMI release 2015.03", "server.agentId": "i-c142b99e" }, { "server.osVersion": "3.14.48-33.39.amzn1.x86_64", "server.type": "EC2", "server.hostName": "ip-172-31-35-152", "server.timeOfCreation": "2016-10-28 23:44:00.0", "server.configurationId": "d-server-0c4f2dd1fee22c6c1", "server.osName": "Linux - Amazon Linux AMI release 2015.03", "server.agentId": "i-4447bc1b" } ] }`- 
+                    For API details, see [ListConfigurations](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/discovery/list-configurations.html)in*AWS CLI Command Reference*.
+ 
+-

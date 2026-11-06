@@ -1,0 +1,80 @@
+# FAQ | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/exchange/exchange2-faq](https://docs.mulesoft.com/exchange/exchange2-faq)
+
+---
+
+https://maven.anypoint.mulesoft.com/api/v1/organizations/:organizationId/maven/:groupId/:assetId/:version/:assetId-:version-icon.svg
+
+# FAQ
+
+This topic lists frequently asked questions and provides answers.
+
+## What is the expected workflow for reviewing and publishing drafts?
+
+Exchange provides a drafts feature. Content in the draft state is hidden until the draft is published.
+
+One user can create drafts and share the URLs with a second user, and the second user can review and publish these pages.
+
+All contributors have the same permissions, including the permission to publish drafts. The separation of duties is not enforced by Exchange and must be observed by the users.
+
+Users can delete a draft, which discards all changes made in the draft.
+
+## Where is the latest version of the Developer Portal?
+
+The MuleSoft Developer Portal is at [https://anypoint.mulesoft.com/exchange/portals/anypoint-platform/](https://anypoint.mulesoft.com/exchange/portals/anypoint-platform/).
+
+## How do I create an API Portal?
+
+If you are an Anypoint Platform Organization Administrator or Exchange Administrator, when you first log into Exchange,
+Exchange creates a Public Portal for you. The link to the portal appears in
+the left navigation bar. After you add API assets to the portal, it becomes visible
+to the Internet. See [Why don’t my assets appear in my Public Portal?](#whynoinpp) for how to add assets to the portal.
+
+The URL for your portal is in the form `https://anypoint.mulesoft.com/exchange/portals/YOUR_LOGIN_NAME/`.
+
+## Why don’t my assets appear in my Public Portal?
+
+You can add SOAP API, HTTP API, AsyncAPI, and OAS or RAML REST API assets to the Public Portal by clicking the Share button and clicking Add to the public portal. When you share an asset to the Public Portal, the asset is then public and visible by anyone on the internet at the URL of your Public Portal.
+
+## How do I remove an asset from a Public Portal?
+
+Click the asset in Exchange and click Share. Click Add to the Public Portal. Click the API version field checkbox to uncheck the field. Click Share. In Exchange, refresh the browser screen and you can see that the Visibility setting in the asset’s Overview has changed to Private.
+
+## When I rename an asset, why does Exchange use the old name?
+
+After changing the name for an asset, press the Return (or Enter) key on your keyboard. If you don’t press Return, Exchange reverts the asset name back to what it was before you changed it.
+
+## Can I add a JSON snippet to Exchange and refer to the snippets from another JSON schema?
+
+You can use RAML data types, but not a JSON referenced by another JSON schema.
+
+## Why is the CSS missing in Exchange assets in Windows 7 using Studio 6?
+
+Exchange only works in Windows with the latest versions of Chrome, Firefox, and Internet Explorer 11. IE 9 is not supported and displays Exchange incorrectly.
+
+## When I push a custom connector through Maven to Exchange, how can I define a custom icon?
+
+You can upload an SVG icon with the icon classifier using a PUT to the Exchange REST API. Exchange adds the round border around the icon. You need to pass the authorization header with a bearer and access token.
+
+For example, add the icon file to the HTTP body and use a PUT such as:
+
+## Can I integrate publication of assets to Exchange as part of a CI and CD pipeline?
+
+You can use the [Exchange Experience API](https://anypoint.mulesoft.com/exchange/portals/anypoint-platform/f1e97bc6-315a-4490-82a7-23abe036327a.anypoint-platform/exchange-experience-api/) to detect the difference if it exists so you don’t republish to Exchange when there is no change.
+
+## Is there an API to download RAML files from Exchange?
+
+You can use the [Graph API (preferred)](https://anypoint.mulesoft.com/exchange/portals/anypoint-platform/f1e97bc6-315a-4490-82a7-23abe036327a.anypoint-platform/exchange-graph-http/), or the [Exchange Experience API](https://anypoint.mulesoft.com/exchange/portals/anypoint-platform/f1e97bc6-315a-4490-82a7-23abe036327a.anypoint-platform/exchange-experience-api/).
+
+## How do I change an API’s owner?
+
+You can use this REST API command:
+
+```
+curl -X POST \
+https://anypoint.mulesoft.com/apiplatform/repository/v2/organizations/<org-id>/apis/<api-id>/permissions \
+-H 'authorization: Bearer <OMITTED>' \
+-H 'content-type: application/json' \
+-d '{"userId":"<user-id>"}'
+```

@@ -1,0 +1,13 @@
+{
+  "id": "sfdc_rest_employee_map",
+  "description": "REST API payload map — rename employee fields (SFDC_Rest pattern)",
+  "function_name": "transform_employees",
+  "output_format": "application/json",
+  "ir_relative": "../frontend/IR_Outputs/SFDC_Rest/SFDC_Rest_unknown_20260619_094758_cb3f22.json",
+  "ir_dataweave_index": 0,
+  "compare": {
+    "records": true,
+    "record_order": true,
+    "body": false
+  }
+}

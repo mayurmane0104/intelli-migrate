@@ -1,0 +1,110 @@
+# NetSuite OpenAir Connector | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/netsuite-openair-connector/latest](https://docs.mulesoft.com/netsuite-openair-connector/latest)
+
+---
+
+```
+<dependency>
+  <groupId>com.mulesoft.connectors</groupId>
+  <artifactId>mule-netsuite-openair-connector</artifactId>
+  <version>x.x.x</version>
+  <classifier>mule-plugin</classifier>
+</dependency>
+```
+xml# NetSuite OpenAir Connector
+
+NetSuite OpenAir Connector v2.0
+
+Anypoint Connector for NetSuite OpenAir (NetSuite OpenAir Connector) is a closed-source enterprise connector that provides a connection between OpenAir and third-party software.
+
+Release Notes: [NetSuite OpenAir Connector Release Notes](../../release-notes/connector/netsuite-openair-connector-release-notes-mule-4)
+
+Exchange: [NetSuite OpenAir Connector](https://www.mulesoft.com/exchange/com.mulesoft.connectors/mule-netsuite-openair-connector/)
+
+## Before You Begin
+
+To use this information, you must be familiar with NetSuite OpenAir, Mule runtime engine (Mule), Anypoint Connectors, Anypoint Studio, Mule concepts, elements in a Mule flow, and Global Elements.
+
+To use this connector, you need:
+
+- 
+A NetSuite OpenAir instance 
+- 
+A set of valid credentials, including username, password, companyID, API namespace, and key. 
+- 
+A MuleSoft Enterprise License 
+
+OpenAir complex types are limited to a set of OpenAir operations.
+See the OpenAir documentation for information about its object types. For example, object `oaActualCost` works with `read`, `add`, `modify`, and `upsert` methods, while object `oaApproval` works only with the `submit` method.
+
+## POM File Information
+
+Replace `x.x.x` with the version that corresponds to the connector you are using.
+
+To obtain the most up-to-date `pom.xml` file information, access the connector in [Anypoint Exchange](https://www.mulesoft.com/exchange/) and click **Dependency Snippets**.
+
+## Add the Connector to Your Project
+
+Anypoint Studio provides two ways to add the connector to your Studio project: from the Exchange button in the Studio taskbar or from the Mule Palette view.
+
+### Add the Connector Using Exchange
+
+- 
+In Studio, create a Mule project. 
+- 
+Click the Exchange icon **(X)**in the upper-left of the Studio task bar.
+- 
+In Exchange, click **Login**and supply your Anypoint Platform username and password.
+- 
+In Exchange, search for "openair". 
+- 
+Select the connector and click **Add to project**.
+- 
+Follow the prompts to install the connector. 
+
+### Add the Connector in Studio
+
+- 
+In Studio, create a Mule project. 
+- 
+In the Mule Palette view, click **(X) Search in Exchange**.
+- 
+In **Add Modules to Project**, type "openair" in the search field.
+- 
+Click this connector’s name in **Available modules**.
+- 
+Click **Add**.
+- 
+Click **Finish**.
+
+## Configure in Studio
+
+- 
+Drag the connector operation to the Studio Canvas. 
+- 
+Configure the Global Element for the connector: ![Global element properties window on Account tab](_images/netsuite-openair-anypoint-config.png)  
+- 
+If needed, configure a connection: ![Global element properties window on Connection tab](_images/netsuite-openair-anypoint-connect.png)  - 
+Enable the automatic reconnection feature. 
+- 
+Access the OpenAir Global Element configuration window from Studio. 
+- 
+Click the **Advanced**tab (next to Connection).
+- 
+Select the **Standard**option in Reconnection Strategy.
+- 
+Adjust the **Frequency (ms)**and**Reconnection Attempts**fields accordingly.
+ 
+- 
+
+## Log HTTP Requests and Responses
+
+To log the HTTP interactions of the connector with NetSuite OpenAir, configure the log4j2.xml file for the Mule app as follows, and use a Logger component in your project to display the results:
+
+`<AsyncLogger name="org.mule.service.http" level="DEBUG"/>`xml## See Also
+
+- 
+[NetSuite OpenAir SOAP API Guide (PDF)](https://www.netsuitesuiteprojectspro.com/download/XMLAndSOAPAPI.pdf)
+- 
+[Salesforce Help](https://help.salesforce.com)

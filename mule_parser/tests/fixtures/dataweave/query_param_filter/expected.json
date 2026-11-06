@@ -1,0 +1,15 @@
+{
+  "records": [
+    {
+      "PaymentOrders": [
+        {
+          "PaymentId": "P1",
+          "Payments": {
+            "PayeeReference": { "PayeeName": "Acme" },
+            "PaymentDefinition": { "PaymentAmount": { "Amount": "100" } }
+          }
+        }
+      ]
+    }
+  ]
+}

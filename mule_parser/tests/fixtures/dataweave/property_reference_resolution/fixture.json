@@ -1,0 +1,7 @@
+{
+  "id": "property_reference_resolution",
+  "description": "Test DataWeave p('prop') application property resolution mapping to config/environment",
+  "function_name": "transform_with_property",
+  "output_format": "application/json",
+  "script": "%dw 2.0\noutput application/json\n---\n{\n  \"custom_prop\": p('my_custom_prop'),\n  \"user_id\": payload.user.id\n}"
+}

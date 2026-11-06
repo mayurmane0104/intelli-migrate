@@ -1,0 +1,14 @@
+{
+  "id": "auto_606151eee5",
+  "description": "Auto-catalogued from Analysis (needs input/expected)",
+  "function_name": "transform_auto",
+  "output_format": "",
+  "ir_relative": "../frontend/IR_Outputs/Analysis/Analysis_unknown_20260519_092403_037bfd.json",
+  "ir_dataweave_index": 48,
+  "compare": {
+    "records": true,
+    "record_order": false,
+    "body": false
+  },
+  "status": "catalogue_only"
+}

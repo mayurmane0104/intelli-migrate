@@ -1,0 +1,152 @@
+# IBM CICS Transaction Gateway Connector 3.0 | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/ibm-ctg-connector/latest](https://docs.mulesoft.com/ibm-ctg-connector/latest)
+
+---
+
+![config connector](_images/ibm-ctg-config-studio-1.png) 
+
+# IBM CICS Transaction Gateway Connector 3.0
+
+Anypoint Connector for IBM CICS Transaction Gateway (IBM CTG Connector) provides integration with back-end CICS apps using the CICS Transaction Gateway. For Java platforms, CTG implements the Java Cryptography Architecture (JCA) resource adapter to connect Java applications to the Customer Information Control System (CICS) system. The connector serves as a link between Mule apps and the IBM CTG.
+
+Release Notes: [IBM CICS Transaction Gateway Connector Release Notes](../../release-notes/connector/ibm-ctg-connector-release-notes-mule-4)
+
+Exchange: [IBM CICS Transaction Gateway Connector](https://www.mulesoft.com/exchange/com.mulesoft.connectors/mule-ibm-ctg-connector/)
+
+## Before You Begin
+
+To use this information, you must be familiar with IBM CTG, Mule runtime engine (Mule), Anypoint Connectors, Anypoint Studio, Mule concepts, elements in a Mule flow, and Global Elements.
+
+You need login credentials to test your connection to your target resource.
+
+To use this connector with Apache Maven, view the pom.xml file dependency information from
+the **Dependency Snippets** link in [Anypoint Exchange](https://www.mulesoft.com/exchange/com.mulesoft.connectors/mule-ibm-ctg-connector/).
+
+## Terminology
+
+- CICS (Customer Information Control System)
+- 
+Set of enterprise application servers with support for high-transaction workloads in a secure, scalable, cost efficient environment. CICS applications are written in a variety of languages, from Java to COBOL. 
+- CICS Region
+- 
+Named collection of resources that are controlled by CICS as a unit. A CICS resource is any facility or component of a CICS system that is required to perform a task. 
+- CICS TG (CICS Transaction Gateway)
+- 
+Set of client and server software components that allow a remote client application to invoke services in a CICS region. The client application can be either a Java application or a non-Java application. The CICS TG is available through the following two products: CICS TG on z/OS and CICS TG for Multiplatforms. 
+- COMMAREA
+- 
+Block of contiguous memory used to pass data between programs. It is the binary equivalent of a COBOL structure and it is character-based. 
+- ECI (External Call Interface)
+- 
+Simple remote procedural call style interface, used for linking to CICS applications. The COMMAREA or channel is the data interface used for the exchange of data between the client application and the CICS. 
+- JCA
+- 
+Standard architecture for connecting the J2EE platform to heterogeneous Enterprise Information Systems (EIS), such as CICS. The JCA enables an EIS vendor to provide a standard resource adapter for its EIS. A resource adapter is the middle tier between a Java application and an EIS and connects the Java application to the EIS. 
+
+## Add the Connector to a Studio Project
+
+Anypoint Studio provides two ways to add the connector to your Studio project: from the Exchange button in the Studio taskbar or from the Mule Palette view.
+
+### Add the Connector Using Exchange
+
+- 
+In Studio, create a Mule project. 
+- 
+Click the Exchange icon **(X)**in the upper-left of the Studio task bar.
+- 
+In Exchange, click **Login**and supply your Anypoint Platform username and password.
+- 
+In Exchange, search for "ctg". 
+- 
+Select the connector and click **Add to project**.
+- 
+Follow the prompts to install the connector. 
+
+### Add the Connector in Studio
+
+- 
+In Studio, create a Mule project. 
+- 
+In the Mule Palette view, click **(X) Search in Exchange**.
+- 
+In **Add Modules to Project**, type "ctg" in the search field.
+- 
+Click this connector’s name in **Available modules**.
+- 
+Click **Add**.
+- 
+Click **Finish**.
+
+## Configure a Studio Project
+
+- 
+Drag a connector’s operation to the Studio canvas. 
+- 
+Configure the Global Element for the connector: ![config connector](_images/ibm-ctg-config-studio-1.png)  Field Description **Required Libraries**- 
+ctgserver.jar (CTG Server Library) 
+- 
+cicsjee.jar (CICS JEE) 
+- 
+ccf2.jar (CICS Common Connector Framework) 
+- 
+ctgclient.jar (CTG Client Library) 
+- 
+geronimo-j2ee-connector_1.6_spec.jar 
+ Note: Use the JAR files that come bundled within the installation of the CTG server instead of downloading the SDK ZIP from IBM’s web site to ensure the compatibility between the connector and the CTG system. **Host**Enter the host name of the CICS TG. **Port**Enter the port on which the CICS TG is running. Default value is 2006. **Server name**Enter the name of the target CICS server as defined in the CICS TG configuration file. Optional. **Username**Enter the CICS user ID. Optional, if security is not enabled in the CICS region. **Password**Enter the password for the CICS user ID. Optional, if security is not enabled in the CICS region. 
+- 
+- 
+To add the dependencies, select **Add dependency**and complete the fields.![dependency connector](_images/ibm-ctg-config-studio-2.png)  
+- 
+Go to the **Additional Settings**tab and complete the configuration:![config connector](_images/ibm-ctg-config-advanced-studio.png)  Field Description **Keystore location**Enter the location of the keystore containing the certificates required for an SSL client. Optional. **Keystore Password**Enter the password required to access the keystore for an SSL client. Optional. **Connection Timeout**Enter the socket timeout for the client to CTG. Default value is 0 (no timeout). **Response Timeout**Enter the response timeout for the client to CTG. Default value is 30000 milliseconds (30 seconds). **†****CTG Trace**If set to `True`, enables all debug levels of CTG tracing. Default value is`False`.**†****Response Timeout**is overridden by the`ecitimeout`parameter if configured on the server side. See[IBM ECI Timeout](https://www.ibm.com/docs/en/cics-tg-multi/9.0.0).
+- 
+Choose the operation. ![operations connector](_images/ibm-ctg-operations.png)  The IBM CTG connector supports the following two outbound operations: Name Description **Execute**Invokes a CICS program with data encapsulated as channels and containers. **Execute using COMMAREA**Invokes a CICS program with data encapsulated as a COMMAREA. Requests are limited to a maximum of 32 KB. 
+
+## POM File Information
+
+```
+<dependency>
+  <groupId>com.mulesoft.connectors</groupId>
+  <artifactId>mule-ibm-ctg-connector</artifactId>
+  <version>x.x.x</version>
+  <classifier>mule-plugin</classifier>
+</dependency>
+```
+xmlReplace `x.x.x` with the version that corresponds to the connector you are using.
+
+To obtain the most up-to-date `pom.xml` file information, access the connector in [Anypoint Exchange](https://www.mulesoft.com/exchange/) and click **Dependency Snippets**.
+
+## Enable Logging for Requests and Responses
+
+To enable logging of the interactions of the connector with IBM CTG, a logger must be configured in the log4j2.xml file of the Mule app as follows. Put the AsyncLogger statement in the `Loggers` block in the log4j2.xml file:
+
+```
+<AsyncLogger
+	name="org.mule.modules.ibmctg.internal.service.CTGServiceImpl"
+	level="DEBUG"/>
+```
+xml## Common Use Cases
+
+- 
+Invoke a COMMAREA program 
+- 
+Invoke a channel program 
+- 
+Invoke a COMMAREA or channel program inside a Transactional Scope 
+- 
+Add custom metadata 
+
+| To successfully run the first three use cases, the target CICS system must have the specified programs. | 
+
+## See Also
+
+- 
+IBM’s [Developing Java applications for CICS](https://www.ibm.com/docs/en/cics-ts/5.3.0?topic=applications-developing-java-cics)
+- 
+High-level tutorial of JCA in [Introduction to the J2EE Connector Architecture](https://developer.ibm.com/languages/java/)
+- 
+[Redbooks for the IBM Mainframe](https://www.redbooks.ibm.com/domains/zsoftware)
+- 
+[IBM ECI Timeout](https://www.ibm.com/docs/en/cics-tg-multi/9.0.0)
+- 
+[Salesforce Help](https://help.salesforce.com)

@@ -1,0 +1,7 @@
+{
+  "template_id": "lambda",
+  "name": "Lambda Function",
+  "service": "Lambda",
+  "target": "Lambda",
+  "required_variables": ["resource_prefix", "function_name", "runtime", "handler"]
+}

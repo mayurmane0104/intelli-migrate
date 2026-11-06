@@ -1,0 +1,4 @@
+{
+  "required_terms": ["AWS::SQS::Queue", "sqs.Queue"],
+  "forbidden_terms": ["Amazon MQ", "MSK", "ECS", "AppFlow", "Glue", "DynamoDB", "EMR", "Batch"]
+}

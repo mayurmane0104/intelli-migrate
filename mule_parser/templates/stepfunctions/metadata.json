@@ -1,0 +1,7 @@
+{
+  "template_id": "stepfunctions",
+  "name": "Step Functions Workflow",
+  "service": "Step Functions",
+  "target": "Step Functions",
+  "required_variables": ["resource_prefix", "function_name"]
+}

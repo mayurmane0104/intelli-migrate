@@ -1,0 +1,160 @@
+# OAuth 2.0 Grant Types | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/api-manager/latest/oauth-grant-types-about](https://docs.mulesoft.com/api-manager/latest/oauth-grant-types-about)
+
+---
+
+`[implicit]`
+
+# OAuth 2.0 Grant Types
+
+OAuth 2.0 specifies the following grant type methods for requesting a token:
+
+- 
+AUTHORIZATION_CODE 
+- 
+IMPLICIT 
+- 
+RESOURCE_OWNER_PASSWORD_CREDENTIALS 
+- 
+CLIENT_CREDENTIALS 
+
+For RAML-based APIs, you must update the RAML to match the OAuth 2.0 security schema. The following table maps the RAML grant types to grant type names in the OAuth 2.0 policy configuration:
+
+| Authorization Grant Types Defined in RAML Definition | Equivalent Authorization Grant Type to Enable in the OAuth Provider Policy | Supported in embedded APIkit Console? | 
+|---|---|---|
+| Implicit | Yes | |
+| 
+ | Client Credentials | No | 
+| 
+ | Resource Owner Password Credentials | No | 
+| 
+ | Authorization Code | Yes | 
+
+[Reviewing OAuth 2.0 Policy Prerequisites](about-configure-api-for-oauth) document has additional details about this.
+
+## Authorization Code Grant Type
+
+The Authorization Code grant type is the most frequently used grant type and the most secure.
+
+To get a token using this grant type, the following information needs to be specified in the HTTP request to the Provider:
+
+- 
+Client ID of the client application 
+- 
+Client Secret of the client application 
+- 
+Redirect URL as specified on the client application definition 
+
+### HTTP request example against the provider to get a token
+
+Assuming that the provider is accessible on `http://localhost:8081` and the redirect URL of your client application is `http://localhost:1234`:
+
+Request authorization:
+
+```
+curl “http://localhost:8081/authorize” \
+-d “response_type=code&client_id=<application Client ID> \
+&scope=&redirect_uri=http://localhost:1234” \
+-X POST
+```
+The login page appears in the browser. After the user logs in, the provider sends a redirect to the `redirect_uri`. This redirect includes additional properties, including an access code.
+
+Response:
+
+http://localhost:1234/?code=<authorization code>#/login
+
+Send the access code to the token endpoint in a request that also includes the client ID, the client secret and some of the information in the previous call:
+
+Request token:
+
+```
+curl “http://localhost:8081/access-token” \
+-d “grant_type=authorization_code&client_id=<application Client ID>&client_secret=<application Client Secret> \
+&code=<authorization code>&redirect_uri=<http://localhost:1234 as in the previous request>” \
+-X POST
+```
+JSon Response:
+
+```
+{
+    "expires_in":86400,
+    "token_type":"bearer",
+    "refresh_token":"<oauth refresh token>",
+    "access_token":"<oauth token>"
+}
+```
+## Implicit
+
+The implicit grant type is not as secure as, but easier to use than the authorization code grant type. Javascript clients and mobile applications often use this grant type. The authorization server issues an access token directly and skips the step of issuing an intermediate access code.
+
+### HTTP request example against the provider to get a token
+
+Assuming that the provider is accessible on `http://localhost:8081` and the redirect URL of your client application is `http://localhost:1234`:
+
+Invoke the authorization endpoint with a request that includes the client ID, the type of authorization you want to perform, the redirect URL, and the scopes you want to authorize. The structure of the request should look like the URI below:
+
+Request token:
+
+```
+curl “http://localhost:8081/authorize” \
+-d “grant_type=implicit&client_id=<application Client ID> \
+&redirect_uri=http://localhost:1234&response_type=token” \
+-X POST
+```
+This displays the login page in the browser. After the user logs in, the provider sends a redirect to the `redirect_uri`. This redirect already includes the token, not just an access code:
+
+Response:
+
+http://localhost:1234/#access_token=<oauth token>&token_type=bearer&expires_in=86400
+
+## Resource Owner Password Credentials
+
+The resource owner password credentials grant type is less secure than both the implicit and the authorization code grant types. The client needs to handle the user’s credentials. This requires that users have a high degree of trust in the client. This grant type is often used when the consumer of the protected resource is a widget of the same service.
+
+### HTTP request example against the provider to get a token
+
+Assuming that the provider is accessible on `http://localhost:8081`:
+
+Send a POST request to the token endpoint that includes the user name and password:
+
+Request token:
+
+```
+curl "http://localhost:8081/access-token” \
+-d “grant_type=password&response_type=token&username=<username> \
+&password=<password>&client_id=<application client ID> \
+&client_secret=<application client secret>" \
+-X POST
+```
+JSon Response Example:
+
+```
+{
+    "expires_in":86400,
+    "token_type":"bearer",
+    "refresh_token":"<refresh oauth token>",
+    "access_token":"<oauth token>"
+}
+```
+json## Client Credentials
+
+The client credentials grant type is the least secure grant type. Use this grant type when the client is the resource owner or an authorization has previously been arranged with the authorization server. In this grant type, an access token is obtained if the client identifier and the client secret are valid.
+
+### HTTP request example against the provider to get a token
+
+Assuming that the provider is accessible on `http://localhost:8081` and the redirect URL of your client application is `http://localhost:1234`:
+
+Send a POST request to the token endpoint that includes the user name and password:
+
+Request token:
+
+```
+curl “http://localhost:8081/access-token” \
+-d “grant_type=client_credentials&client_id=<application client ID> \
+&client_secret=<application Client Secret>&response_type=token” \
+-X POST
+```
+JSon Response:
+
+http://localhost:1234/#access_token=<oauth token>&token_type=bearer&expires_in=86400

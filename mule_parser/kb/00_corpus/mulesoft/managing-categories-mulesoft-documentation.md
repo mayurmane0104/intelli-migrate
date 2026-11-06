@@ -1,0 +1,69 @@
+# Managing Categories | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/exchange/to-manage-categories](https://docs.mulesoft.com/exchange/to-manage-categories)
+
+---
+
+![The Setting page showing categories for API type](_images/ex-categories-api-type.png) 
+
+# Managing Categories
+
+Use categories to organize Exchange assets into groups to improve asset browsing and discovery.
+
+For example, a category named API Type with possible values System API, Experience API, and Integration API is applied to assets of type REST API, SOAP API, and HTTP API:
+
+![The Setting page showing categories for API type](_images/ex-categories-api-type.png) 
+
+To create a category, you must be either the root organization’s Exchange Administrator or Organization Owner.
+
+When you have one or more categories defined in the **Settings** page, your organization’s assets display the **Add categories** option in the asset details pane.
+
+## Create a Category
+
+- 
+In Anypoint Exchange, click **Login**and log in to your organization.
+- 
+Click **Settings**in the sidebar.
+- 
+Click **Add new category**.
+- 
+Enter a category name. Each category name must be unique. 
+- 
+Enter one or more values. Each category must have a value. 
+- 
+Press the Return/Enter key or click the plus sign next to the value to confirm the value: ![The Settings page showing the highlighted + icon to confirm a value](_images/ex-category-value.png)  Note: If a plus sign is not clicked, the check mark to indicate the category has no effect. 
+- 
+Choose the asset types that the category corresponds to. 
+- 
+Click the checkmark to enable the category. 
+
+## Apply a Category
+
+After a category is created, it can be applied to an asset in your organization.
+
+- 
+Click an asset in your organization. 
+- 
+In the asset details pane, click **Add categories**and choose the category and value from the list.
+
+## Search with Categories in Exchange Private Cloud Edition or MuleSoft Government Cloud
+
+In the Exchange search field, specify the `category:` search term and the category value to list the assets.
+
+For example, to find assets of API Type, search for `category:"API Type" = "System API"`.
+
+You can search for a combination of different categories, but you can’t search for multiple values of the same category. Multiple search terms use an implicit AND. OR is not supported.
+
+The following search terms return all assets marked as both System APIs and Salesforce products:
+
+`category:"API Type" = "System API" category:"Product" = "Salesforce"`
+
+## Search with Categories in Exchange Cloud
+
+Select a category such as **API Type** from the list, and select one or more values such as **System API**. Exchange shows assets that have one of the selected values for the selected category.
+
+You can search for a combination of categories, and you can search for multiple values for the same category. Multiple values for the same category are combined with the OR operator.
+
+## Change or Delete a Category
+
+Categories can be deleted at the individual asset level which only removes the category from that asset. Categories can also be deleted at the global level in Settings, but doing so removes the category from all assets.

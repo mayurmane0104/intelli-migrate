@@ -1,0 +1,75 @@
+# Configure Responses for Your GraphQL Implementation | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/anypoint-code-builder/tut-graphql-configure-flow-responses](https://docs.mulesoft.com/anypoint-code-builder/tut-graphql-configure-flow-responses)
+
+---
+
+`<set-payload value='{"id": 1, "name": "My Book", "pageCount": 28, "author": "author-1"}' mimeType="application/json" />`XML# Configure Responses for Your GraphQL Implementation
+
+Configure your GraphQL implementation to return a specific response for each flow.
+
+## Before You Begin
+
+Complete these procedures:
+
+## Add Logic to Your Flows
+
+- 
+In Anypoint Code Builder, open the **Books Implementation**project.
+- 
+From the Explorer, open `flows.xml`from the project directory.
+- 
+Within the `Query.bookById`flow,*replace*the**Set Payload**component after the`<graphql-router:data-fetcher/>`element with the following Set Payload configuration:The XML for the `Query.bookById`flow now has this configuration:`<flow name="Query.bookById"> <graphql-router:data-fetcher xmlns:graphql-router="http://www.mulesoft.org/schema/mule/graphql-router" config-ref="api-router-config" objectTypeName="Query" fieldName="bookById"/> <set-payload value='{"id": 1, "name": "My Book", "pageCount": 28, "author": "author-1"}' mimeType="application/json" /> <graphql-router:serialize xmlns:graphql-router="http://www.mulesoft.org/schema/mule/graphql-router" config-ref="api-router-config" objectTypeName="Query" fieldName="bookById"/> </flow>`XML
+- 
+Rebuild the application by clicking the ![](_images/icon-run-debug.png) ( (**Run and Debug**) icon in the activity bar, and then clicking the**Start Debugging (F5)**icon.
+- 
+From your IDE, open the Terminal window in the console: - 
+In the desktop IDE, select **View**>**Terminal**.
+- 
+In the cloud IDE, click the ![](_images/icon-menu.png) (menu) icon, and select (menu) icon, and select**Terminal**>**New Terminal**.
+- 
+For either IDE: Press Ctrl and then press the backtick key (`). If the application is already running, click **Start New**to rerun the application in debug mode.
+ 
+- 
+- 
+Run the following `curl`command from the command prompt:`curl --request POST \ --location 'http://localhost:8081/graphql' \ --header 'Content-Type: application/json' \ --data '{ "query": "query bookById($id: ID) {bookById(id: $id){ id name pageCount author{ id firstName lastName}}}", "variables": { "id": 1 } }'`curlAnypoint Code Builder returns your JSON response in the terminal (manually reformatted to enhance readability): `{ "data": { "bookById": { "id":"1", "name":"My Book", "pageCount":28, "author": { "id":"urn:uuid:123e4567-e89b-12d3-a456-426655440000", "firstName":"This is some example data", "lastName":"Hello World!" } } } }`JSON
+
+After testing the `bookById` endpoint, you can use Set Payload to add mock responses for testing the remaining flows. For example:
+
+```
+<flow name="api-main-flow">
+  <http:listener xmlns:http="http://www.mulesoft.org/schema/mule/http" config-ref="http-listener-config" path="${http.listener.path}"/>
+  <graphql-router:route xmlns:graphql-router="http://www.mulesoft.org/schema/mule/graphql-router" config-ref="api-router-config"/>
+</flow>
+<flow name="Query.bookById">
+  <graphql-router:data-fetcher xmlns:graphql-router="http://www.mulesoft.org/schema/mule/graphql-router" config-ref="api-router-config" objectTypeName="Query" fieldName="bookById"/>
+  <set-payload value='{"id": 1, "name": "My Book", "pageCount": 28, "author": "author-1"}' mimeType="application/json" />
+  <graphql-router:serialize xmlns:graphql-router="http://www.mulesoft.org/schema/mule/graphql-router" config-ref="api-router-config" objectTypeName="Query" fieldName="bookById"/>
+</flow>
+<flow name="Query.books">
+  <graphql-router:data-fetcher xmlns:graphql-router="http://www.mulesoft.org/schema/mule/graphql-router" config-ref="api-router-config" objectTypeName="Query" fieldName="books"/>
+  <set-payload value='[{"id": 1, "name": "My Book", "pageCount": 28, "author": "author-1"},{"id": 2, "name": "His Book", "pageCount": 12, "author": "author-2"},{"id": 3, "name": "Her Book", "pageCount": 41, "author": "author-1"}]' mimeType="application/json"/>
+  <graphql-router:serialize xmlns:graphql-router="http://www.mulesoft.org/schema/mule/graphql-router" config-ref="api-router-config" objectTypeName="Query" fieldName="books"/>
+</flow>
+<flow name="Query.bestsellers">
+  <graphql-router:data-fetcher xmlns:graphql-router="http://www.mulesoft.org/schema/mule/graphql-router" config-ref="api-router-config" objectTypeName="Query" fieldName="bestsellers"/>
+  <set-payload value='{"books": ["1,2"], "authors":["author-1", "author-2"]}' mimeType="application/json" />
+  <graphql-router:serialize xmlns:graphql-router="http://www.mulesoft.org/schema/mule/graphql-router" config-ref="api-router-config" objectTypeName="Query" fieldName="bestsellers"/>
+</flow>
+<flow name="Book.author">
+  <graphql-router:data-fetcher xmlns:graphql-router="http://www.mulesoft.org/schema/mule/graphql-router" config-ref="api-router-config" objectTypeName="Book" fieldName="author"/>
+  <set-payload value='{"id": "author-1", "firstName": "John", "lastName": "Doe"}' mimeType="application/json" />
+  <graphql-router:serialize xmlns:graphql-router="http://www.mulesoft.org/schema/mule/graphql-router" config-ref="api-router-config" objectTypeName="Book" fieldName="author"/>
+</flow>
+<flow name="Bestsellers.books">
+  <graphql-router:data-fetcher xmlns:graphql-router="http://www.mulesoft.org/schema/mule/graphql-router" config-ref="api-router-config" objectTypeName="Bestsellers" fieldName="books"/>
+  <set-payload value='[{"id": 1, "name": "My Book", "pageCount": 28, "author": "author-1"},{"id": 2, "name": "His Book", "pageCount": 12, "author": "author-2"},{"id": 2, "name": "Her Book", "pageCount": 41, "author": "author-1"}]' mimeType="application/json"/>
+  <graphql-router:serialize xmlns:graphql-router="http://www.mulesoft.org/schema/mule/graphql-router" config-ref="api-router-config" objectTypeName="Bestsellers" fieldName="books"/>
+</flow>
+<flow name="Bestsellers.authors">
+  <graphql-router:data-fetcher xmlns:graphql-router="http://www.mulesoft.org/schema/mule/graphql-router" config-ref="api-router-config" objectTypeName="Bestsellers" fieldName="authors"/>
+  <set-payload value='[{"id": "author-1", "firstName": "John", "lastName": "Doe"},{"id": "author-2", "firstName": "Anie", "lastName": "Eberts"}]' mimeType="application/json" />
+  <graphql-router:serialize xmlns:graphql-router="http://www.mulesoft.org/schema/mule/graphql-router" config-ref="api-router-config" objectTypeName="Bestsellers" fieldName="authors"/>
+</flow>
+```
+XML[Test Your GraphQL Project](tut-graphql-test-first-implementation)

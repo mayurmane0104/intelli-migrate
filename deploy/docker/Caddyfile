@@ -1,0 +1,55 @@
+# Single public port — Caddy routes UI + Socket.IO on one URL
+# Render / EC2 terminate TLS at the edge; container speaks plain HTTP.
+
+{
+	auto_https off
+}
+
+http://:{$PORT:10000} {
+	handle /health {
+		respond "ok" 200
+	}
+
+	# API routes — pass JSON errors through (no HTML "starting" page on 502/504)
+	@api path /api/*
+	handle @api {
+		reverse_proxy 127.0.0.1:3000 {
+			transport http {
+				dial_timeout 15s
+				response_header_timeout 300s
+			}
+		}
+	}
+
+	@socket path /socket.io*
+	handle @socket {
+		reverse_proxy 127.0.0.1:3001 {
+			transport http {
+				dial_timeout 15s
+				response_header_timeout 120s
+			}
+		}
+	}
+
+	handle {
+		reverse_proxy 127.0.0.1:3000 {
+			transport http {
+				dial_timeout 15s
+				response_header_timeout 120s
+			}
+			@upstream_down status 502 503 504
+			handle_response @upstream_down {
+				header Content-Type text/html
+				respond <<HTML
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Starting…</title>
+<meta http-equiv="refresh" content="15"></head>
+<body style="font-family:system-ui;text-align:center;padding:4rem">
+<h1>Migration Studio is starting</h1>
+<p>Wait 1–2 minutes after container start, then refresh.</p>
+</body></html>
+HTML 503
+			}
+		}
+	}
+}

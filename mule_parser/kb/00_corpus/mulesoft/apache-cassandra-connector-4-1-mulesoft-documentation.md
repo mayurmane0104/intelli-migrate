@@ -1,0 +1,44 @@
+# Apache Cassandra Connector 4.1 | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/cassandra-connector/latest](https://docs.mulesoft.com/cassandra-connector/latest)
+
+---
+
+# Apache Cassandra Connector 4.1
+
+Anypoint Connector for Apache Cassandra (Apache Cassandra Connector) creates connectivity between Apache Cassandra databases and third-party applications, systems, services such as SAP, PeopleSoft, or Workday, as well as other databases across the enterprise.
+
+Apache Cassandra is an open source distributed NoSQL database intended to manage large amounts of product, customer, and employee data, which implements the DataStax Java Driver for Apache Cassandra 3.10.1.
+
+## Before You Begin
+
+To use this connector, you must be familiar with:
+
+- 
+The Apache Cassandra API 
+- 
+Anypoint Connectors 
+- 
+Mule runtime engine (Mule) 
+- 
+Elements and global elements in a Mule flow 
+- 
+Creating a Mule app using Anypoint Studio or Anypoint Code Builder 
+
+Before creating an app, you must have:
+
+- 
+Credentials to access the Apache Cassandra target resource 
+- 
+Mule Enterprise Edition and the entitlements necessary to use this software 
+
+## Next
+
+Now that you’ve started, try using [Anypoint Studio](cassandra-connector-studio) to configure the Cassandra connector.
+
+## See Also
+
+- 
+[Use Exchange to Discover Connectors, Templates, and Examples](../../connectors/introduction/intro-use-exchange)
+- 
+[Salesforce Help](https://help.salesforce.com)

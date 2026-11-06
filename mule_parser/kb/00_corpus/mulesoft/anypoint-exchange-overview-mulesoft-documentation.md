@@ -1,0 +1,114 @@
+# Anypoint Exchange Overview | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/exchange](https://docs.mulesoft.com/exchange)
+
+---
+
+![List of business groups](_images/ex2-biz-groups.png) 
+
+# Anypoint Exchange Overview
+
+Anypoint Exchange is a curated catalog of reusable assets. See [Asset Types](asset-types) for more information about each type of asset that’s supported. You can catalog (publish), share, discover, learn about, and reuse assets within your organization of developers to facilitate collaboration, boost productivity, and promote standards.
+
+![Exchange catalog showing assets provided by MuleSoft](_images/exchange-landing-page.png)
+
+
+Use Exchange to discover, share, and incorporate assets and resources into your applications, and view asset usage and engagement metrics. You can create developer portals, view and test APIs, simulate sending data to APIs by using the mocking service, and create assets.
+
+Exchange assets are accessible from many places, such as Anypoint Studio (connectors, templates, and examples), API Manager (APIs, API groups, and policies), or Runtime Manager (applications). You can publish assets from agent network projects such as agents, brokers, and MCP servers, as well as APIs from Anypoint Code Builder and Design Center to Exchange.
+
+## MuleSoft Assets
+
+Assets in the **Provided by MuleSoft** organization are created by MuleSoft and its partners and certified by MuleSoft. These assets are publicly available to all customers.
+
+Exchange automatically discovers, translates, and publishes publicly hosted MCP servers from the [official MCP registry](https://registry.modelcontextprotocol.io/) into **Provided by MuleSoft**. Exchange labels these assets as **Publicly Available**. Find the assets using the **provider-managed** tag. These assets are maintained by their original providers, not by MuleSoft. When you create an instance from publicly available assets, the instance is created within your private organization in Exchange and managed like any other instance in API Manager. You can also request access to running instances from publicly available assets.
+
+However, assets that are created by an organization other than **Provided by MuleSoft** and published in that organization’s instance of Exchange are private and not visible outside that organization. Customers are responsible for any private assets they publish within their Exchange instance.
+
+## Agent Fabric Assets
+
+Agent Fabric is an enterprise platform for discovering, orchestrating, governing, and observing AI agents and tools. It serves as a central control plane and registry for agent assets in Anypoint Exchange.
+The registry contains AI assets, including agents, Large Language Models (LLMs), and Model Context Protocol (MCP) servers. Find these assets on the **Agents & Tools** tab. For more information, see [Get Started with Agent Fabric](../general/learning-map-agent-fabric). Verified agents show a verified badge if they are registered and verified via GoDaddy Agent Naming Service (ANS) in API Manager, which also appears on the agent details page and in the **Instances** list.
+
+![Exchange catalog showing assets in Agents & Tools](_images/ex-agents-and-tools.png)
+
+
+You create agent network projects in Anypoint Code Builder to define, validate, and publish brokers, LLMs, and MCP servers to allow agents to use the assets in your Agent Fabric. Anypoint Code Builder publishes agent network projects and their associated assets to Exchange. Exchange tags them as **brokers** for identification. See [Building Agent Networks for Agent Fabric](../anypoint-code-builder/af-agent-networks) in the Anypoint Code Builder documentation.
+
+AI assets are added to the registry via these methods:
+
+- 
+Manually create and publish assets directly in Exchange. For MCPs, enter an MCP server URL or load a schema from a file. 
+- 
+[Discovering and cataloging external agents using scanners](discovering-and-importing-external-agents).Discover and catalog agents from external providers into Exchange using scanners. 
+- 
+[Importing Agentforce agents from Settings](importing-agentforce-agents)Import Agentforce agents from Salesforce into Exchange from Settings. 
+- 
+[Creating agent network projects in Anypoint Code Builder and publishing them to Exchange](../anypoint-code-builder/af-agent-networks).Use Anypoint Code Builder to create agent network projects that define, validate, and publish brokers, agents, large language models (LLMs), and MCP servers. Anypoint Code Builder publishes agent network projects and their associated assets to the agent registry in Exchange with a **Broker**label.
+
+## Anypoint Exchange Spotlight Video
+
+Watch the Anypoint Exchange Product Spotlight video to see a quick overview of Exchange.
+
+## View Assets by Business Group
+
+A system administrator groups individuals within an organization into business groups. Each group has its own Exchange assets.
+
+To view the business groups, log in to Anypoint Platform and click a group name from the taskbar:
+
+![List of business groups](_images/ex2-biz-groups.png) 
+
+An Exchange administrator sets the groups that this menu displays for each user.
+
+If you can’t find an asset in the current business group scopes, search in other scopes. In the navigation menu, click **All assets** (assets provided by MuleSoft and your own root organization), **Provided by MuleSoft**, or a business group scope.
+
+## Get Started
+
+You can get started either by searching for an existing asset or creating a new one.
+
+- 
+From [Exchange](https://anypoint.mulesoft.com/exchange/), either search by asset type or enter the name of a known asset in the**Search assets**field.
+- 
+Select an asset from the search results view. 
+- 
+Review the description of the asset. 
+
+To create assets, log in to Exchange, then see [Workflow: Publish Assets](workflow-sharing-assets) for more information.
+
+## Test APIs
+
+You can test APIs using the mocking service.
+
+- 
+Click the **All Types**filter, select the REST APIs option, and click**Apply**.
+- 
+Click the asset and notice how the API functions appear in the left navigation bar. 
+- 
+Click a function and more information appears. At the right side of the screen, you can test the API by entering sample values to send to the API and get responses from the API. 
+
+## Language Support
+
+Using multiple languages with Unicode is supported fully throughout Exchange and in all metadata fields, including asset names, descriptions, markdown pages, categories, tags, and reviews.
+
+## Anypoint Exchange on Control Planes
+
+All features of Anypoint Exchange are supported Canada, Japan, and India control planes with these exceptions:
+
+- 
+[Usage and engagement metrics](usage-and-engagement-metrics)aren’t supported.
+- 
+Amazon CloudFront isn’t configured on control planes. To download files from Canada, Japan, or India control planes, use these URLs: - 
+Canada S3 Bucket URL: https://exchange-asset-manager-d1937357035a847d2ec3.s3.ca-central-1.amazonaws.com 
+- 
+Japan S3 Bucket URL: https://exchange-asset-manager-bf62561aafed7e20740f.s3.ap-northeast-1.amazonaws.com 
+- 
+India S3 Bucket URL: https://exchange-asset-manager-a2e86fbaee6d85765a10.s3.ap-south-1.amazonaws.com 
+ 
+- 
+
+## See Also
+
+- 
+[MuleSoft Trailblazer Community](https://trailhead.salesforce.com/trailblazer-community/neighborhoods/mulesoft)
+- 
+[Salesforce Help](https://help.salesforce.com)

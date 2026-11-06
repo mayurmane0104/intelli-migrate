@@ -1,0 +1,91 @@
+# Middleware factory - Powertools for AWS Lambda (Python)
+
+**Source:** [https://docs.aws.amazon.com/powertools/python/latest/utilities/middleware_factory](https://docs.aws.amazon.com/powertools/python/latest/utilities/middleware_factory)
+
+---
+
+We use essential cookies and similar tools that are necessary to provide our site and services. We use performance cookies to collect anonymous statistics, so we can understand how customers use our site and make improvements. Essential cookies cannot be deactivated, but you can choose “Customize” or “Decline” to decline performance cookies.
+
+If you agree, AWS and approved third parties will also use cookies to provide useful site features, remember your preferences, and display relevant content, including relevant advertising. To accept or decline all non-essential cookies, choose “Accept” or “Decline.” To make more detailed choices, choose “Customize.”
+
+Customize cookie preferences
+
+We use cookies and similar tools (collectively, "cookies") for the following purposes.
+
+Essential
+
+Essential cookies are necessary to provide our site and services and cannot be deactivated. They are usually set in response to your actions on the site, such as setting your privacy preferences, signing in, or filling in forms.
+
+Allowed
+
+Performance
+
+Performance cookies provide anonymous statistics about how customers navigate our site so we can improve site experience and performance. Approved third parties may perform analytics on our behalf, but they cannot use the data for their own purposes.
+
+Allowed
+
+Functional
+
+Functional cookies help us provide useful site features, remember your preferences, and display relevant content. Approved third parties may set these cookies to provide certain site features. If you do not allow these cookies, then some or all of these services may not function properly.
+
+Allowed
+
+Advertising
+
+Advertising cookies may be set through our site by us or our advertising partners and help us deliver relevant marketing content. If you do not allow these cookies, you will experience less relevant advertising.
+
+Allowed
+
+Blocking some types of cookies may impact your experience of our sites. You may review and change your choices at any time by selecting Cookie preferences in the footer of this site. We and selected third-parties use cookies or similar technologies as specified in the AWS Cookie Notice.
+
+Your privacy choices
+
+We and our advertising partners (“we”) may use information we collect from or about you to show you ads on other websites and online services. Under certain laws, this activity is referred to as “cross-context behavioral advertising” or “targeted advertising.”
+
+To opt out of our use of cookies or similar technologies to engage in these activities, select “Opt out of cross-context behavioral ads” and “Save preferences” below. If you clear your browser cookies or visit this site from a different device or browser, you will need to make your selection again. For more information about cookies and how we use them, read our Cookie Notice.
+
+To opt out of the use of other identifiers, such as contact information, for these activities, fill out the form here.
+
+For more information about how AWS handles your information, read the AWS Privacy Notice.
+
+Unable to save cookie preferences
+
+We will only store essential cookies at this time, because we were unable to save your cookie preferences.
+
+If you want to change your cookie preferences, try again later using the link in the AWS console footer, or contact support if the problem persists.
+
+All examples shared in this documentation are available within the project repository.
+
+You might need a custom middleware to abstract non-functional code. These are often custom authorization or any reusable logic you might need to run before/after a Lambda function invocation.
+
+fromdataclassesimportdataclass,fieldfromtypingimportCallablefromuuidimportuuid4fromaws_lambda_powertools.middleware_factoryimportlambda_handler_decoratorfromaws_lambda_powertools.utilities.jmespath_utilsimport(envelopes,query,)fromaws_lambda_powertools.utilities.typingimportLambdaContext@dataclassclassPayment:user_id:strorder_id:stramount:floatstatus_id:strpayment_id:str=field(default_factory=lambda:f"{uuid4()}")classPaymentError(Exception):...@lambda_handler_decoratordefmiddleware_before(handler:Callable[[dict,LambdaContext],dict],event:dict,context:LambdaContext,)->dict:# extract payload from a EventBridge eventdetail:dict=query(data=event,envelope=envelopes.EVENTBRIDGE)# check if status_id exists in payload, otherwise add default state before processing paymentif"status_id"notindetail:event["detail"]["status_id"]="pending"returnhandler(event,context)@middleware_beforedeflambda_handler(event:dict,context:LambdaContext)->dict:try:payment_payload:dict=query(data=event,envelope=envelopes.EVENTBRIDGE)return{"order":Payment(**payment_payload).__dict__,"message":"payment created","success":True,}exceptExceptionase:raisePaymentError("Unable to create payment")frome
+
+importtimefromtypingimportCallableimportrequestsfromrequestsimportResponsefromaws_lambda_powertools.event_handlerimportAPIGatewayRestResolverfromaws_lambda_powertools.middleware_factoryimportlambda_handler_decoratorfromaws_lambda_powertools.utilities.typingimportLambdaContextapp=APIGatewayRestResolver()@lambda_handler_decoratordefmiddleware_after(handler:Callable[[dict,LambdaContext],dict],event:dict,context:LambdaContext,)->dict:start_time=time.time()response=handler(event,context)execution_time=time.time()-start_time# adding custom headers in response object after lambda executingresponse["headers"]["execution_time"]=execution_timeresponse["headers"]["aws_request_id"]=context.aws_request_idreturnresponse@app.post("/todos")defcreate_todo()->dict:todo_data:dict=app.current_event.json_body# deserialize json str to dicttodo:Response=requests.post("https://jsonplaceholder.typicode.com/todos",data=todo_data)todo.raise_for_status()return{"todo":todo.json()}@middleware_afterdeflambda_handler(event:dict,context:LambdaContext)->dict:returnapp.resolve(event,context)
+
+importbase64fromdataclassesimportdataclass,fieldfromtypingimportAny,Callable,Listfromuuidimportuuid4fromaws_lambda_powertools.middleware_factoryimportlambda_handler_decoratorfromaws_lambda_powertools.utilities.jmespath_utilsimport(envelopes,query,)fromaws_lambda_powertools.utilities.typingimportLambdaContext@dataclassclassBooking:days:intdate_from:strdate_to:strhotel_id:intcountry:strcity:strguest:dictbooking_id:str=field(default_factory=lambda:f"{uuid4()}")classBookingError(Exception):...@lambda_handler_decoratordefobfuscate_sensitive_data(handler:Callable[[dict,LambdaContext],dict],event:dict,context:LambdaContext,fields:List,)->dict:# extracting payload from a EventBridge eventdetail:dict=query(data=event,envelope=envelopes.EVENTBRIDGE)guest_data:Any=detail.get("guest")# Obfuscate fields (email, vat, passport) before calling Lambda handlerforguest_fieldinfields:ifguest_data.get(guest_field):event["detail"]["guest"][guest_field]=obfuscate_data(str(guest_data.get(guest_field)))returnhandler(event,context)defobfuscate_data(value:str)->bytes:# base64 is not effective for obfuscation, this is an examplereturnbase64.b64encode(value.encode("ascii"))@obfuscate_sensitive_data(fields=["email","passport","vat"])deflambda_handler(event:dict,context:LambdaContext)->dict:try:booking_payload:dict=query(data=event,envelope=envelopes.EVENTBRIDGE)return{"book":Booking(**booking_payload).__dict__,"message":"booking created","success":True,}exceptExceptionase:raiseBookingError("Unable to create booking")frome
+
+For advanced use cases, you can instantiate Tracer inside your middleware, and add annotations as well as metadata for additional operational insights.
+
+importtimefromtypingimportCallableimportrequestsfromrequestsimportResponsefromaws_lambda_powertoolsimportTracerfromaws_lambda_powertools.event_handlerimportAPIGatewayRestResolverfromaws_lambda_powertools.middleware_factoryimportlambda_handler_decoratorfromaws_lambda_powertools.utilities.typingimportLambdaContexttracer=Tracer()app=APIGatewayRestResolver()@lambda_handler_decorator(trace_execution=True)defmiddleware_with_advanced_tracing(handler:Callable[[dict,LambdaContext],dict],event:dict,context:LambdaContext,)->dict:tracer.put_metadata(key="resource",value=event.get("resource"))start_time=time.time()response=handler(event,context)execution_time=time.time()-start_timetracer.put_annotation(key="TotalExecutionTime",value=str(execution_time))# adding custom headers in response object after lambda executingresponse["headers"]["execution_time"]=execution_timeresponse["headers"]["aws_request_id"]=context.aws_request_idreturnresponse@app.get("/products")defcreate_product()->dict:product:Response=requests.get("https://dummyjson.com/products/1")product.raise_for_status()return{"product":product.json()}@middleware_with_advanced_tracingdeflambda_handler(event:dict,context:LambdaContext)->dict:returnapp.resolve(event,context)
+
+importtimefromtypingimportCallableimportrequestsfromrequestsimportResponsefromaws_lambda_powertools.event_handlerimportAPIGatewayRestResolverfromaws_lambda_powertools.middleware_factoryimportlambda_handler_decoratorfromaws_lambda_powertools.utilities.typingimportLambdaContextapp=APIGatewayRestResolver()@lambda_handler_decorator(trace_execution=True)defmiddleware_with_tracing(handler:Callable[[dict,LambdaContext],dict],event:dict,context:LambdaContext,)->dict:start_time=time.time()response=handler(event,context)execution_time=time.time()-start_time# adding custom headers in response object after lambda executingresponse["headers"]["execution_time"]=execution_timeresponse["headers"]["aws_request_id"]=context.aws_request_idreturnresponse@app.get("/products")defcreate_product()->dict:product:Response=requests.get("https://dummyjson.com/products/1")product.raise_for_status()return{"product":product.json()}@middleware_with_tracingdeflambda_handler(event:dict,context:LambdaContext)->dict:returnapp.resolve(event,context)
+
+When executed, your middleware name will appear in AWS X-Ray Trace details as## middleware_name, in this example the middleware name is ## middleware_with_tracing.
+
+Combining Powertools for AWS Lambda (Python) utilities¶
+
+You can create your own middleware and combine many features of Powertools for AWS Lambda (Python) such as trace, logs, feature flags, validation, jmespath_functions and others to abstract non-functional code.
+
+In the example below, we create a Middleware with the following features:
+
+Logs and traces
+
+Validate if the payload contains a specific header
+
+Extract specific keys from event
+
+Automatically add security headers on every execution
+
+importjsonfromtypingimportCallablefromurllib.parseimportquoteimportboto3importcombining_powertools_utilities_schemaasschemasimportrequestsfromaws_lambda_powertoolsimportLogger,Tracerfromaws_lambda_powertools.event_handlerimportAPIGatewayRestResolverfromaws_lambda_powertools.event_handler.exceptionsimportInternalServerErrorfromaws_lambda_powertools.middleware_factoryimportlambda_handler_decoratorfromaws_lambda_powertools.utilities.feature_flagsimportAppConfigStore,FeatureFlagsfromaws_lambda_powertools.utilities.feature_flags.typesimportJSONTypefromaws_lambda_powertools.utilities.jmespath_utilsimportqueryfromaws_lambda_powertools.utilities.typingimportLambdaContextfromaws_lambda_powertools.utilities.validationimportSchemaValidationError,validateapp=APIGatewayRestResolver()tracer=Tracer()logger=Logger()table_historic=boto3.resource("dynamodb").Table("HistoricTable")app_config=AppConfigStore(environment="dev",application="comments",name="features")feature_flags=FeatureFlags(store=app_config)@lambda_handler_decorator(trace_execution=True)defmiddleware_custom(handler:Callable[[dict,LambdaContext],dict],event:dict,context:LambdaContext,)->dict:# validating the INPUT with the given schema# X-Customer-Id header must be informed in all requeststry:validate(event=event,schema=schemas.INPUT)exceptSchemaValidationErrorase:return{"statusCode":400,"body":json.dumps(str(e)),}# extracting headers and requestContext from eventheaders=query(data=event,envelope="headers")request_context=query(data=event,envelope="requestContext")logger.debug(f"X-Customer-Id => {headers.get('X-Customer-Id')}")tracer.put_annotation(key="CustomerId",value=headers.get("X-Customer-Id"))response=handler(event,context)# automatically adding security headers to all responses# see: https://securityheaders.com/logger.info("Injecting security headers")response["headers"]["Referrer-Policy"]="no-referrer"response["headers"]["Strict-Transport-Security"]="max-age=15552000; includeSubDomains; preload"response["headers"]["X-DNS-Prefetch-Control"]="off"response["headers"]["X-Content-Type-Options"]="nosniff"response["headers"]["X-Permitted-Cross-Domain-Policies"]="none"response["headers"]["X-Download-Options"]="noopen"logger.info("Saving api call in history table")save_api_execution_history(str(event.get("path")),headers,request_context)# return lambda executionreturnresponse@tracer.capture_methoddefsave_api_execution_history(path:str,headers:dict,request_context:dict)->None:try:# using the feature flags utility to check if the new feature "save api call to history" is enabled by default# see: https://docs.aws.amazon.com/powertools/python/latest/utilities/feature_flags/#static-flagssave_history:JSONType=feature_flags.evaluate(name="save_history",default=False)ifsave_history:# saving history in dynamodb tabletracer.put_metadata(key="execution detail",value=request_context)table_historic.put_item(Item={"customer_id":headers.get("X-Customer-Id"),"request_id":request_context.get("requestId"),"path":path,"request_time":request_context.get("requestTime"),"source_ip":request_context.get("identity",{}).get("sourceIp"),"http_method":request_context.get("httpMethod"),},)returnNoneexceptException:# you can add more logic here to handle exceptions or even save this to a DLQ# but not to make this example too long, we just return None since the Lambda has been successfully executedreturnNone@app.get("/comments")@tracer.capture_methoddefget_comments():try:comments:requests.Response=requests.get("https://jsonplaceholder.typicode.com/comments")comments.raise_for_status()return{"comments":comments.json()[:10]}exceptExceptionasexc:raiseInternalServerError(str(exc))fromexc@app.get("/comments/<comment_id>")@tracer.capture_methoddefget_comments_by_id(comment_id:str):try:comment_id=quote(comment_id,safe="")comments:requests.Response=requests.get(f"https://jsonplaceholder.typicode.com/comments/{comment_id}")comments.raise_for_status()return{"comments":comments.json()}exceptExceptionasexc:raiseInternalServerError(str(exc))fromexc@middleware_customdeflambda_handler(event:dict,context:LambdaContext)->dict:returnapp.resolve(event,context)
+
+AWSTemplateFormatVersion:'2010-09-09'Transform:AWS::Serverless-2016-10-31Description:Middleware-powertools-utilitiesexampleGlobals:Function:Timeout:5Runtime:python3.12Tracing:ActiveArchitectures:-x86_64Environment:Variables:POWERTOOLS_LOG_LEVEL:DEBUGPOWERTOOLS_LOGGER_SAMPLE_RATE:0.1POWERTOOLS_LOGGER_LOG_EVENT:truePOWERTOOLS_SERVICE_NAME:middlewareResources:MiddlewareFunction:Type:AWS::Serverless::Function# More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunctionProperties:CodeUri:middleware/Handler:app.lambda_handlerDescription:MiddlewarefunctionPolicies:-AWSLambdaBasicExecutionRole# Managed Policy-Version:'2012-10-17'# Policy DocumentStatement:-Effect:AllowAction:-dynamodb:PutItemResource:!GetAttHistoryTable.Arn-Effect:AllowAction:# https://docs.aws.amazon.com/appconfig/latest/userguide/getting-started-with-appconfig-permissions.html-ssm:GetDocument-ssm:ListDocuments-appconfig:GetLatestConfiguration-appconfig:StartConfigurationSession-appconfig:ListApplications-appconfig:GetApplication-appconfig:ListEnvironments-appconfig:GetEnvironment-appconfig:ListConfigurationProfiles-appconfig:GetConfigurationProfile-appconfig:ListDeploymentStrategies-appconfig:GetDeploymentStrategy-appconfig:GetConfiguration-appconfig:ListDeployments-appconfig:GetDeploymentResource:"*"Events:GetComments:Type:ApiProperties:Path:/commentsMethod:GETGetCommentsById:Type:ApiProperties:Path:/comments/{comment_id}Method:GET# DynamoDB table to store historical dataHistoryTable:Type:AWS::DynamoDB::TableProperties:TableName:"HistoryTable"AttributeDefinitions:-AttributeName:customer_idAttributeType:S-AttributeName:request_idAttributeType:SKeySchema:-AttributeName:customer_idKeyType:HASH-AttributeName:request_idKeyType:"RANGE"BillingMode:PAY_PER_REQUEST# Feature flags using AppConfigFeatureCommentApp:Type:AWS::AppConfig::ApplicationProperties:Description:"Comments Application for feature toggles"Name:commentsFeatureCommentDevEnv:Type:AWS::AppConfig::EnvironmentProperties:ApplicationId:!RefFeatureCommentAppDescription:"Development Environment for the App Config Comments"Name:devFeatureCommentConfigProfile:Type:AWS::AppConfig::ConfigurationProfileProperties:ApplicationId:!RefFeatureCommentAppName:featuresLocationUri:"hosted"HostedConfigVersion:Type:AWS::AppConfig::HostedConfigurationVersionProperties:ApplicationId:!RefFeatureCommentAppConfigurationProfileId:!RefFeatureCommentConfigProfileDescription:'A sample hosted configuration version'Content:|{"save_history":{"default":true}}ContentType:'application/json'# this is just an example# change this values according your deployment strategyBasicDeploymentStrategy:Type:AWS::AppConfig::DeploymentStrategyProperties:Name:"Deployment"Description:"Deployment strategy for comments app."DeploymentDurationInMinutes:1FinalBakeTimeInMinutes:1GrowthFactor:100GrowthType:LINEARReplicateTo:NONEConfigDeployment:Type:AWS::AppConfig::DeploymentProperties:ApplicationId:!RefFeatureCommentAppConfigurationProfileId:!RefFeatureCommentConfigProfileConfigurationVersion:!RefHostedConfigVersionDeploymentStrategyId:!RefBasicDeploymentStrategyEnvironmentId:!RefFeatureCommentDevEnv

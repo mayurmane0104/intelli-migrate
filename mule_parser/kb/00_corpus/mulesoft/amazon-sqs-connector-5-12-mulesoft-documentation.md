@@ -1,0 +1,91 @@
+# Amazon SQS Connector 5.12 | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/amazon-sqs-connector/latest](https://docs.mulesoft.com/amazon-sqs-connector/latest)
+
+---
+
+# Amazon SQS Connector 5.12
+
+Anypoint Connector for Amazon SQS (Amazon SQS Connector) provides an easy way to interface with the Amazon Simple Queue Service (Amazon SQS) API, enabling Mule users to manage SQS queueing services without having to interact with the API directly.
+
+Amazon SQS offers a reliable, highly scalable hosted queue for storing messages as they travel between computers. You can use Amazon SQS to move data between distributed application components and perform different tasks without losing messages or requiring each component to be always available. Amazon SQS makes it easy to build an automated workflow that works closely with Amazon Elastic Compute Cloud (Amazon EC2) and other AWS infrastructure web services.
+
+The AWS SDK for Java provides a Java API for AWS infrastructure services. Amazon SQS Connector is built using the SDK for Java.
+
+For compatibility information and fixed issues, see the Amazon SQS Connector Release Notes.
+
+## Grant Amazon SQS API Permissions to Perform Actions
+
+To use Amazon SQS Connector, you must first configure your AWS user to operate an AWS resource. For the configuration, you must grant API permissions to perform Amazon SQS actions, which enables you to set up access control and write permissions policies that you can attach to an IAM identity. Refer to [Amazon SQS API permissions](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-api-permissions-reference.html) documentation for details.
+
+## Cluster Mode
+
+Amazon SQS Connector supports listening for messages on the primary node only or on all nodes when running in cluster mode. For information, see [Receiving Messages in Cluster Mode](amazon-sqs-connector-config-topics#node-behavior).
+
+## Queue Support
+
+Amazon SQS Connector provides support for two types of queues:
+
+- 
+Standard Queues Standard queues have high throughput. However, using these queues can occasionally result in having duplicate copies of messages delivered out of order. 
+- 
+FIFO Queues FIFO (First-In-First-Out) queues deliver messages in the order in which they are sent. However, these queues have limited throughput. 
+
+For information about creating FIFO queues, see [Additional Configuration Topics](amazon-sqs-connector-config-topics).
+
+## Before You Begin
+
+Before creating an app, you must:
+
+- 
+Have access to the Amazon SQS target resource and Anypoint Platform 
+- 
+Understand how to create a Mule app using Anypoint Studio 
+- 
+Have AWS Identity and Access Management (IAM) credentials 
+
+## Common Use Cases for the Connector
+
+Common use cases for Amazon SQS Connector include:
+
+- 
+**Queue Messaging**
+ Send messages to a queue and retrieve messages from a queue.
+- 
+**Asynchronous Processing Patterns**
+ Improve reliability of loosely-coupled architecture by implementing asynchronous messaging that buffers incoming payloads for consumption at the pace of the consuming services.
+- 
+**Microservice Decoupling**
+ Build a set of loosely coupled systems that can evolve independently and flexibly by implementing a one-way messaging pattern or a request-response messaging.
+- 
+**Workload Distribution**
+ For large workload distribution, maintain a queue of all tasks, efficiently distribute the tasks between the machines or the functions doing the work, and guarantee that every part of the work is only done once.
+- 
+**Batch Job Scheduling**
+ Maintain a queue of jobs, handle retries, track job status, and so on.
+
+For examples of these use cases, refer to [Amazon SQS Connector Examples](amazon-sqs-connector-examples).
+
+## Authentication Types
+
+Amazon SQS Connector connections use the following authentication types:
+
+- 
+Basic 
+ Uses a session token provided by Amazon STS to connect to Amazon SQS
+- 
+Role 
+ Uses the Amazon role ARN that uniquely identifies the role to assume to allow cross-account access
+
+## Next Step
+
+After you complete the prerequisites and experiment with examples, you are ready to create an app with [Anypoint Studio](amazon-sqs-connector-studio).
+
+## See Also
+
+- 
+[Use Exchange to Discover Connectors, Templates, and Examples](../../connectors/introduction/intro-use-exchange)
+- 
+[Amazon SQS Connector on Exchange](https://www.mulesoft.com/exchange/com.mulesoft.connectors/mule-amazon-sqs-connector/)
+- 
+[Salesforce Help](https://help.salesforce.com)

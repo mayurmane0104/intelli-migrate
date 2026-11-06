@@ -1,0 +1,133 @@
+# Public Portal Vanity Domain | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/exchange/portal-vanity-domain](https://docs.mulesoft.com/exchange/portal-vanity-domain)
+
+---
+
+`ACCESS_TOKEN=$(curl https://anypoint.mulesoft.com/accounts/login -XPOST -d "username=YOUR_USERNAME&password=YOUR_PASSWORD" | jq -r ".access_token")`# Public Portal Vanity Domain
+
+This document contains instructions and the necessary NGINX configuration for setting up an organization’s public portal using a vanity domain.
+
+## Register Your Domain
+
+Public portal domains must be registered in Exchange. To register your public portal’s domain:
+
+- 
+Get an access token from an Anypoint Platform user account that has the Organization Administrator permission in the root organization: 
+- 
+Use the access token to register your custom domain: `curl https://anypoint.mulesoft.com/exchange/api/v2/portals/YOUR_ORGANIZATION_DOMAIN/domain -XPUT -d your.custom.domain -H "content-type: text/plain" -H "authorization: bearer $ACCESS_TOKEN"`If this step is not followed, you won’t be able to log in to the portal or perform any actions that need authentication. 
+
+## Set up a reverse proxy
+
+A reverse proxy allows users to access and navigate the vanity domain site exactly as if they were at the MuleSoft site. For example, users could access and navigate `https://developers.robocop.com/path/of/justice/` exactly as if they were at `https://anypoint.mulesoft.com/exchange/portals/robo-cop/`.
+
+This can be achieved through a [reverse proxy](https://en.wikipedia.org/wiki/Reverse_proxy) that reroutes requests to your specific domain to the Anypoint Platform. In the following section, we provide example minimal NGINX configuration rules needed to implement the reverse proxy correctly.
+
+You can set up the reverse proxy on servers other than NGINX, including Apache, content delivery networks (CDNs), and many more. The specific configuration needed for your current web server implementation may need to vary slightly, but the rules should be implemented in the same way.
+
+### Generic configuration
+
+To set up a basic reverse proxy for a portal vanity domain configuration, set up route mapping and custom headers.
+
+#### Route mapping
+
+Set up static resource route mapping for `shared`, `icons`, `exchange/api-console`, and `node_modules`. Regardless of your portal path, these routes need to be at the root level.
+
+For example:
+
+- 
+Route `https://developers.robocop.com/shared`to`https://anypoint.mulesoft.com/shared`.
+- 
+Route `https://developers.robocop.com/icons`to`https://anypoint.mulesoft.com/icons`.
+- 
+Route `https://developers.robocop.com/node_modules`to`https://anypoint.mulesoft.com/node_modules`.
+- 
+Route `https://developers.robocop.com/exchange/api-console`to`https://anypoint.mulesoft.com/exchange/api-console`.
+
+Route `callback` to `https://anypoint.mulesoft.com/exchange/portals/YOUR_ORGANIZATION_DOMAIN/callback`.
+
+For example:
+
+- 
+Route `https://developers.robocop.com/callback`to`https://anypoint.mulesoft.com/exchange/portals/robo-cop/callback`.
+
+Route all your portal traffic to the Anypoint Platform. This depends on the portal path. Your portal path may be any path. The example’s portal path is `path/of/justice/`.
+
+For example:
+
+- 
+Route `https://developers.robocop.com/path/of/justice/`*(and all routes under this path)*`https://anypoint.mulesoft.com/exchange/portals/robo-cop/`.
+
+#### Custom headers
+
+Add headers for each of the routes described previously.
+
+- 
+`X-Forwarded-Path`is the base path of your vanity domain public portal URL, such as`/path/of/justice/`.This path can be any path that begins and ends with a slash ( `/`). It can be the root path represented by a single slash (`/`). This base path of the portal in your vanity domain does not need to match the base path of the portal in the anypoint.mulesoft.com domain.
+- 
+`X-Forwarded-Host`is your public portal vanity domain, such as`developers.robocop.com`.
+
+### Using NGINX
+
+```
+location ~ /(shared|node_modules|icons|exchange/api-console) {
+    proxy_set_header X-Forwarded-Host $http_host;
+    proxy_set_header X-Forwarded-Path ${PUBLIC_PORTAL_PATH};
+    proxy_pass ${ANYPOINT_BASE_URL};
+}
+location /callback {
+    proxy_set_header X-Forwarded-Host $http_host;
+    proxy_set_header X-Forwarded-Path ${PUBLIC_PORTAL_PATH};
+    proxy_pass ${ANYPOINT_BASE_URL}/exchange/portals/${ORGANIZATION_DOMAIN}/callback;
+}
+location ${PUBLIC_PORTAL_PATH} {
+    proxy_set_header X-Forwarded-Host $http_host;
+    proxy_set_header X-Forwarded-Path ${PUBLIC_PORTAL_PATH};
+    proxy_pass ${ANYPOINT_BASE_URL}/exchange/portals/${ORGANIZATION_DOMAIN}/;
+}
+```
+With:
+
+```
+${PUBLIC_PORTAL_PATH}: Your custom path. Must end with a forward slash "/".
+${ANYPOINT_BASE_URL}: Anypoint Platform URL for the desired region.
+${ORGANIZATION_DOMAIN}: Your organization's domain in Anypoint Platform.
+```
+For example, for the `Robocop` organization public portal with an Anypoint Platform domain of `robo-cop` to run on `developers.robocop.com/path/of/justice/`:
+
+```
+${PUBLIC_PORTAL_PATH}: /path/of/justice/
+${ANYPOINT_BASE_URL}: https://anypoint.mulesoft.com
+${ORGANIZATION_DOMAIN}: robo-cop
+```
+| Your server must run using `https`. | 
+
+If set up correctly, you can access and navigate to `https://developers.robocop.com/path/of/justice/` exactly as if you were at `https://anypoint.mulesoft.com/exchange/portals/robo-cop/`.
+
+## Configure Cookie Consent Management for Your Domain
+
+Exchange public portals that do not use vanity domains can use the provided [cookie consent manager](cookies).
+
+After your vanity domain is configured and your site is working, activate cookie consent management by contacting customer support with this information:
+
+- 
+Your organization domain (Example: `robo-cop`)
+- 
+Your registered domain (Example: `developers.robocop.com`)
+
+Customer support provides you a `COOKIE_CONSENT_ID` for the recently registered vanity domain. You cannot transfer this `COOKIE_CONSENT_ID` to other vanity domains.
+
+### Register Your Cookie Consent ID
+
+You must register your `COOKIE_CONSENT_ID` by using the same token you obtained when you registered your domain.
+
+`curl https://anypoint.mulesoft.com/exchange/api/v2/portals/YOUR_ORGANIZATION_DOMAIN/cookieConsentId -XPUT -d COOKIE_CONSENT_ID -H "content-type: text/plain" -H "authorization: bearer $ACCESS_TOKEN"`After registering your `COOKIE_CONSENT_ID`, enter your portal using your vanity domain. The navigation bar displays the Cookie Preferences button.
+
+The `COOKIE_CONSENT_ID` is linked to your registered domain. If you change the domain, repeat these steps to configure cookie consent management for your new domain.
+
+## See Also
+
+- 
+[MuleSoft Trailblazer Community](https://trailhead.salesforce.com/trailblazer-community/neighborhoods/mulesoft)
+- 
+[Salesforce Help](https://help.salesforce.com)

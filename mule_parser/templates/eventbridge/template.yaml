@@ -1,0 +1,7 @@
+Resources:
+  {{resource_prefix}}Schedule:
+    Type: AWS::Events::Rule
+    Properties:
+      Name: {{resource_prefix}}-schedule
+      ScheduleExpression: rate(5 minutes)
+      State: ENABLED

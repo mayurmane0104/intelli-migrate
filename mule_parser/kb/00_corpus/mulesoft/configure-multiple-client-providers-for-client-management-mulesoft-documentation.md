@@ -1,0 +1,135 @@
+# Configure Multiple Client Providers for Client Management | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/api-manager/latest/configure-multiple-credential-providers](https://docs.mulesoft.com/api-manager/latest/configure-multiple-credential-providers)
+
+---
+
+Assign multiple IdPs, including a default, to an environment.
+
+# Configure Multiple Client Providers for Client Management
+
+You can use multiple client providers, to help you enforce security and regulations in your business organization. These client providers, such as, OpenAM and PingFederate, enable you to secure your operational data, such as client credentials and access tokens.
+
+You can use an Anypoint Platform native client provider (default), configure an external client provider, or use both the Anypoint Platform native client provider with the external client provider. To assign separate client providers for different organizations and environments, you must first enable client applications to be authorized using OAuth for the client providers that you want to implement in your organization.
+
+API Manager 2.2.14 introduces multiple client identity provider (IdP) support, enabling your environment to use either the default Anypoint Platform native client IdP or one or more external client IdPs.
+
+You use multiple client providers for:
+
+- 
+Different environments, such as production, QA, and sandbox 
+- 
+Internal and external APIs Even if a client provider is configured for internal APIs, it must be accessible from the public internet so that it can communicate with Anypoint Platform. 
+
+## How Using Multiple External Client Providers Works
+
+When you enable external client providers, they act as authorization servers to issue tokens that enable client applications to access an API. When you request access to that API, the corresponding client ID and client secret are created in the IdP specified in that API specification.
+
+If an API applies the Client ID Enforcement policy but not the OAuth policy, the client application is still created in an external client provider.
+
+When an OAuth policy is deployed to the API gateway, the platform automatically injects IdP configuration (such as the token URL and token introspection URL) to the policy.
+
+If no external IdPs are enabled, Access Manager acts as the default authorization server in that case.
+
+## The Use Case
+
+To better understand how to implement multiple external client providers, imagine a company named "Good Weather" that uses meteorology to forecast changing weather. Good Weather collects quantitative data about the current state of the atmosphere at a given place and, using meteorology, predicts how that current state will change over time.
+
+Good Weather has several sub-organizations running under the root organization. These sub-organizations exist based on the functions they perform, for example, Engineering and Forecasting. The Forecasting department researches and collects recent meterological data from various sources. This data is then consumed by various client applications. While the Engineering department maintains the applications that host the forecasting research data.
+
+Because Good Weather must ensure that its weather-forecasting data is accurate and secure, the weather APIs are accessed only by employees of the Forecasting department. Good Weather also wants to ensure that the production APIs are the single source of truth at all times.
+
+To ensure security and access segregation for different organizations, environments, and APIs, Good Weather IT sets up separate external client providers for the Forecasting department.
+
+## Onboarding Multiple Client Providers
+
+The procedure that you use to onboard multiple client providers differs based on how you have configured client providers and the business organizations in your company:
+
+- 
+No external client providers configured Creating and modifying such environments and APIs involves the same steps as before. The native Anypoint Platform client provider is assigned for such environments. The existing APIs and environment have no impact. 
+- 
+External client providers configured If you have external client providers such as PingFederate configured for your environments, the client provider is automatically ported when you onboard the multiple client providers feature. However, when you create a new environment, you must manually assign the correct client provider to your environment in Access Management. 
+
+**Best Practice**
+
+To secure your APIs, create one external client provider per environment. Assign the existing client provider to your production environment and add the new providers to QA and to other environments, such as the sandbox. However, check the possible impact on managed APIs and their consumers.
+
+Avoid using the same IdP in production and nonproduction environments. You can use the same IdP in multiple production environments or in multiple nonproduction environments.
+
+If you configure multiple client providers, both the native Anypoint Platform client provider and any external client providers can be used in the same environment.
+
+Before implementing multiple client providers, see the [guidelines](#guidelines).
+
+## Guidelines for Implementing Multiple Client Providers
+
+Before you implement multiple client providers in Anypoint Platform, carefully review and understand the following points:
+
+- 
+You cannot change a client provider’s existing API instance when that API: - 
+Has contracts 
+- 
+Has client provider-related policies applied, such as PingFederate and OpenID policies (one exception is when the client provider type remains unchanged) 
+- 
+Belongs to an API group 
+ 
+- 
+- 
+If you previously did not assign an external client provider to an environment when promoting and importing an API, API Manager 2.2.14 and later uses the native provider by default. You can then reassign the appropriate external client provider for that API. 
+- 
+If you assign an external client provider to an environment that was previously using a native provider: - 
+Existing APIs in that environment continue to use the native Anypoint Platform client provider. 
+- 
+New APIs use the new external IdP. 
+ 
+- 
+- 
+You can use either the default native Anypoint Platform client provider and one or more external client providers. There is no need to disable an external provider to use the native Anypoint Platform provider. 
+- 
+If you remove a client provider from an environment, all existing APIs and client applications using that client provider continue to work. 
+- 
+If you delete a client provider from the root organization, all existing APIs and client applications using that client provider default to the native Anypoint Platform client provider. Even though contracts remain intact, policies that authorize against that provider fail because the configuration is deleted. 
+
+## Tasks for Implementing Multiple Client Providers Based on Roles
+
+Based on your role and the needs of your organization, you might perform the following tasks to implement multiple client providers:
+
+| Task | Role | Where to Perform | Notes | 
+|---|---|---|---|
+| Business Group Administrator | Access Management | Using multiple IdPs provides flexibility to choose an IdP in API configuration inside API Manager, which can be useful when multiple teams are using the same environment for building APIs, but still want to use separate IdPs. This also helps in use cases when separate API instances are created for internal and external consumers, and separate IdPs based on a consumer is required. | |
+| Receive notification about possible interruption to API consumers before changing IdP configuration. | Business Group Administrator | Access Management | None | 
+| Review to which client provider an application belongs on the client administrator page to be able to differentiate between different applications with the same name. | API Manager Administrator | Access Management | None | 
+| Configure an API in API Manager to automatically map to a default IdP configured by the business group administrator. The owner can also select a different IdP, if available. | API owner | API manager | None | 
+| When promoting or importing an API from one environment to another, specify an IdP from the target environment. | API owner | API manager | If there is just one (default) IdP specified for the target environment, it is automatically assigned to the API. | 
+| Request access to an API based on the API instance that exists in a specific environment. | Application User | Exchange | When you select the API for which you want to request access, you must first choose the API instance to which you are requesting access. The API instance is filtered based on the environment. | 
+
+## Configuring Multiple Client Providers User Flow
+
+Returning to the Good Weather use case, imagine that the company uses the following flow to implement multiple external client providers in their organization:
+
+![User Flow for Configuring Multiple External Client Providers](_images/multiple-IdP-user-flow.png) 
+
+As shown in the diagram, you first configure your external client provider and assign it to the appropriate environments. When you create or modify an API within a specific environment, the new client provider is displayed. You can reselect the appropriate client provider.
+
+When promoting an API from one environment to another, prevent policy mismatches by doing either of the following:
+
+- 
+Use the same client provider type (for example, PingFederate or OpenAm) in both environments. 
+- 
+Or, delete every client provider-related policy applied to the promoted API. 
+
+As an API consumer, you can request access to an API based on the API instance in a specific environment.
+
+## Configure Multiple Client Providers
+
+To configure multiple external client providers:
+
+- 
+From **Access Management**, first enable[client management](../../access-management/managing-api-clients).As an Anypoint Administrator, you must first enable client applications to be authorized using OAuth for the client providers to be implemented in the organization. 
+- 
+From **Access Management**,[assign client providers](../../access-management/environments#add-an-idp-to-an-existing-environment)to environments.As an Anypoint Administrator, configure a client provider and assign it to specific environments. 
+- 
+From **API Manager**,[create or modify](api-instance-landing-page)APIs using the new IdPs.As an API owner, create an API, import an API from Anypoint Exchange, or modify an API in API Manager. Optionally, either promote an API from one environment to another or import or export an API as described earlier. 
+- 
+From **API Manager**,[configure policies](../../gateway/latest/policies-automated-overview).As an API Manager Administrator, you can apply policies to an API based on the client provider associated with it. 
+- 
+From **Exchange**,[request access](../../exchange/to-request-access)to an API instance within a specific environment for business organization.As an API consumer, you can request access to an API instance from registered client applications using private Exchange or public portals.

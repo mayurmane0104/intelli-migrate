@@ -1,0 +1,86 @@
+# SQL CHECK
+
+**Source:** [https://www.w3schools.com/sql/sql_ref_check.asp](https://www.w3schools.com/sql/sql_ref_check.asp)
+
+---
+
+# SQL CHECK Keyword
+
+## CHECK
+
+The `CHECK` constraint limits the value that can be placed in a 
+column.
+
+## SQL CHECK on CREATE TABLE
+
+The following SQL creates a CHECK constraint on the "Age" column when the "Persons" table is created. The CHECK constraint ensures that you can not have any person below 18 years:
+
+**MySQL:**
+
+```
+CREATE TABLE Persons
+(
+   
+Age int,
+   
+CHECK (Age>=18)
+); 
+```
+**SQL Server / Oracle / MS Access:**
+
+```
+CREATE TABLE Persons
+(
+   
+Age int CHECK (Age>=18)
+); 
+```
+To allow naming of a CHECK constraint, and for defining a CHECK constraint on multiple columns, use the following SQL syntax:
+
+**MySQL / SQL Server / Oracle / MS Access:**
+
+```
+CREATE TABLE Persons
+(
+   
+Age int,
+   
+City varchar(255),
+   
+CONSTRAINT CHK_Person CHECK (Age>=18 AND City='Sandnes')
+); 
+```
+## SQL CHECK on ALTER TABLE
+
+To create a CHECK constraint on the "Age" column when the table is already created, use the following SQL:
+
+**MySQL / SQL Server / Oracle / MS Access:**
+
+```
+ALTER TABLE Persons
+ADD CHECK (Age>=18); 
+```
+To allow naming of a CHECK constraint, and for defining a CHECK constraint on multiple columns, use the following SQL syntax:
+
+**MySQL / SQL Server / Oracle / MS Access:**
+
+```
+ALTER TABLE Persons
+ADD CONSTRAINT CHK_PersonAge CHECK (Age>=18 AND City='Sandnes'); 
+```
+## DROP a CHECK Constraint
+
+To drop a CHECK constraint, use the following SQL:
+
+**SQL Server / Oracle / MS Access:**
+
+```
+ALTER TABLE Persons
+DROP CONSTRAINT CHK_PersonAge; 
+```
+**MySQL:**
+
+```
+ALTER TABLE Persons
+DROP CHECK CHK_PersonAge; 
+```

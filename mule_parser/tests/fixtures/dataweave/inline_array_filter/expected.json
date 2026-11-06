@@ -1,0 +1,10 @@
+{
+  "records": [
+    {
+      "customerId": "CUST-1",
+      "accountRestraints": [
+        { "accountId": "ACCT10002", "status": "Active" }
+      ]
+    }
+  ]
+}

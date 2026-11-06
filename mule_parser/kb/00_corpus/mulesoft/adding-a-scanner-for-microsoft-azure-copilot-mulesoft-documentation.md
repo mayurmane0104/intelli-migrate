@@ -1,0 +1,99 @@
+# Adding a Scanner for Microsoft Azure Copilot | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/exchange/adding-microsoft-copilot-scanner](https://docs.mulesoft.com/exchange/adding-microsoft-copilot-scanner)
+
+---
+
+# Adding a Scanner for Microsoft Azure Copilot
+
+Add a scanner to discover, import, and sync agents from Microsoft Azure Copilot into Exchange. Then you can govern the agents and consume them in other applications.
+
+## Before You Begin
+
+This setup requires specific configurations and access privileges in Microsoft Copilot Studio and Power Platform so the scanner can access and list agents.
+
+- 
+Prerequisites - 
+An App Registration must be completed in the Azure Portal to generate necessary credentials. 
+ 
+- 
+- 
+Required Configuration Values: - 
+Power Platform tenant ID 
+- 
+Power Platform client ID (Application ID) 
+- 
+Power Platform client secret 
+ 
+- 
+- 
+Required Permissions and Roles: Add the registered application as an Application User in Power Platform admin center and assign it the Copilot Studio Scanner Role security role. 
+- 
+Required Scope: Set the scope to Dataverse Environment URL, [https://<org-Id>.crm.dynamics.com](https://<org-Id>.crm.dynamics.com)
+
+## High-level Steps to Configure Microsoft Copilot Studio
+
+To configure Microsoft Copilot Studio before you add a scanner, review these high-level steps. For details, see the [Microsoft Copilot Studio documentation](https://learn.microsoft.com/en-us/microsoft-copilot-studio/).
+
+- 
+Create an app registration: - 
+Create a new app registration, select the account types, and register the application. 
+- 
+Create client secrets and copy the values. 
+- 
+Record these configuration values from the registered application. These values are required when adding a scanner in Exchange: - 
+Client ID (Application ID) 
+- 
+Client Secret 
+- 
+Tenant ID (Directory ID) 
+ 
+- 
+ 
+- 
+- 
+Configure permissions: - 
+In Power Platform, go to **Environments**and select the environment.
+- 
+Create a custom security role with read-only permission to the `bot`and`botcomponents`tables:- 
+Go to **Security roles**and add a new role.
+- 
+Add or select these values in the **Create New Role**panel, and then save:**Field****Value****Role Name**Copilot Studio Scanner Role **Business Unit**Select the business unit. **Description**Read-only access to scan Copilot Studio agent metadata. **Applies To**Copilot Studio scanning and auditing. **Summary of Core Table Privileges**Read access to the `bot`and`botcomponents`tables.
+- 
+From the Details page, enter `bot`to locate the Agent and Agent Component table records.
+- 
+Select **Organization Access**from the**Read**column for both Agent and Agent Component, and then save.
+ 
+- 
+- 
+In Power Platform admin center, create a new app user by selecting **Application users**and adding the app you created.
+- 
+Select the **Business Unit**and edit the**Security Role**by selecting the**Copilot Studio Scanner Role**that you created.
+ 
+- 
+- 
+After you complete these steps, add the scanner in Exchange. 
+
+## Add a Scanner for Microsoft Copilot Studio
+
+- 
+Verify that you are in the business group where you want to add the scanner. 
+- 
+From the sidebar in Exchange, click **Scanners**.
+- 
+Enter a name for the scanner. 
+- 
+From **Scanner Run Configuration**, complete these fields or options:**Field/Option****Value****Run Schedule**Select a frequency and time. **Sync Review**Select **Auto-resolve**.
+- 
+From **Connection Configuration**, complete these fields:**Field****Value****Agent Provider**Select **Microsoft Azure Copilot**.**Authentication Method**Select an option. **Tenant ID**Enter the tenant ID. **Client ID**Enter the client ID. **Client Secret**Enter the client secret. **Scope**Enter the URL. 
+- 
+Click **Test Connection**.If the connection fails, review the **Connection Configuration**settings. Update the settings, and then test the connection again.
+- 
+To send email notifications: - 
+Select **Advanced Settings**and turn on**Send Email Notifications**.
+- 
+Enter an email address. 
+ 
+- 
+- 
+Click **Add Scanner**.

@@ -1,0 +1,7 @@
+# MUnit Studio Plugin | MuleSoft Documentation
+
+**Source:** [https://docs.mulesoft.com/release-notes/munit-studio-plugin/munit-studio-plugin-release-notes](https://docs.mulesoft.com/release-notes/munit-studio-plugin/munit-studio-plugin-release-notes)
+
+---
+
+Copy as Markdown View as Markdown (opens in new tab) View llms.txt (opens in new tab) Open in... ChatGPT (opens in new tab) Claude (opens in new tab) Perplexity (opens in new tab) MUnit Studio Plugin MUnit Studio Plugin 2.7.18 Release Notes MUnit Studio Plugin 2.7.15 Release Notes MUnit Studio Plugin 2.7.14 Release Notes MUnit Studio Plugin 2.7.13 Release Notes MUnit Studio Plugin 2.7.12 Release Notes MUnit Studio Plugin 2.7.11 Release Notes MUnit Studio Plugin 2.7.10 Release Notes MUnit Studio Plugin 2.7.9 Release Notes MUnit Studio Plugin 2.7.8 Release Notes MUnit Studio Plugin 2.7.7 Release Notes MUnit Studio Plugin 2.7.6 Release Notes MUnit Studio Plugin 2.7.5 Release Notes MUnit Studio Plugin 2.7.4 Release Notes MUnit Studio Plugin 2.7.3 Release Notes MUnit Studio Plugin 2.7.2 Release Notes MUnit Studio Plugin 2.7.0 Release Notes MUnit Studio Plugin 2.6.0 Release Notes MUnit Studio Plugin 2.5.1 Release Notes MUnit Studio Plugin 2.5.0 Release Notes MUnit Studio Plugin 2.4.2 Release Notes

@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mule-parser"
+version = "1.0.0"
+description = "MuleSoft 3/4 project parser – structured JSON output"
+requires-python = ">=3.10"
+dependencies = [
+    "lxml>=5.0",
+    "xmltodict>=0.13",
+    "gitpython>=3.1",
+    "pydantic>=2.0",
+    "networkx>=3.0",
+    "fastapi>=0.110",
+    "uvicorn[standard]>=0.29",
+    "python-multipart>=0.0.9",
+]
+
+[project.scripts]
+mule-parser = "mule_parser.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["mule_parser*"]
